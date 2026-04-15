@@ -1,0 +1,213 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String?   // Added for Credentials Login
+  role          UserRole  @default(TEAM)
+  expertId      String?   @unique   // if role = EXPERT, links to Expert record
+  expert        Expert?   @relation(fields: [expertId], references: [id])
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  TEAM
+  EXPERT
+}
+
+// NextAuth tables (required by NextAuth Prisma adapter)
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  @@unique([identifier, token])
+}
+
+// ─── EXPERTS ─────────────────────────────────────────────────────────────────
+
+model Expert {
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  tags        String[]  // e.g. ["SEO", "Paid Ads", "Analytics"]
+  bio         String?
+  user        User?
+  sessions    AnalysisSession[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+// ─── COURSE HIERARCHY ────────────────────────────────────────────────────────
+
+model Course {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  modules     Module[]
+  batches     Batch[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Module {
+  id          String    @id @default(cuid())
+  name        String
+  order       Int       @default(0)
+  courseId    String
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions    SessionNote[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model SessionNote {
+  id              String    @id @default(cuid())
+  name            String    // e.g. "Pixel Implementation - Session 3"
+  content         String?   // what should be inside the session / explicit notes
+  phase           String?   // e.g. "Phase 1 - Meta"
+  prerequisites   String?   // free text
+  keyTopics       String[]  // structured list of topics to be covered
+  expertGaps      String?   // known gaps to watch for
+  moduleId        String
+  module          Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  analysisSessions AnalysisSession[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+// ─── ANALYSIS ────────────────────────────────────────────────────────────────
+
+model AnalysisSession {
+  id                  String          @id @default(cuid())
+  name                String          // e.g. "Pixel Implementation - Rahul - 12 Jan"
+  expertId            String
+  expert              Expert          @relation(fields: [expertId], references: [id])
+  sessionNoteId       String?
+  sessionNote         SessionNote?    @relation(fields: [sessionNoteId], references: [id])
+  transcriptPath      String?         // Supabase Storage path
+  transcriptRaw       String?         // raw .vtt content (if small enough)
+  scheduledDuration   Int?            // minutes
+  v3Status            PipelineStatus  @default(PENDING)
+  v3Error             String?         // Capture failure reason
+  heartbeat           DateTime?       // For monitoring worker progress
+  chapters            AnalysisChapter[]
+  extractionResults   ChapterExtractionResult[]
+  overallAnalysis     SessionOverallAnalysis?
+  batchId             String?
+  batch               Batch?          @relation(fields: [batchId], references: [id])
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+}
+
+enum PipelineStatus {
+  PENDING
+  PREPROCESSING
+  EXTRACTING
+  AGGREGATING
+  SYNTHESISING
+  COMPLETE
+  FAILED
+}
+
+model AnalysisChapter {
+  id              String    @id @default(cuid())
+  sessionId       String
+  session         AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  chapterIndex    Int
+  chapterTitle    String
+  startTime       String    // HH:MM:SS
+  endTime         String    // HH:MM:SS
+  createdAt       DateTime  @default(now())
+
+  @@unique([sessionId, chapterIndex])
+}
+
+model ChapterExtractionResult {
+  id              String    @id @default(cuid())
+  sessionId       String
+  session         AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  chapterIndex    Int
+  chapterTitle    String?
+  task            String    // '3A' | '3B' | '3C'
+  status          String    @default("pending") // pending|processing|complete|failed
+  resultJson      Json?
+  errorMessage    String?
+  attemptCount    Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([sessionId, chapterIndex, task])
+  @@index([sessionId])
+  @@index([sessionId, status])
+}
+
+model SessionOverallAnalysis {
+  id                    String    @id @default(cuid())
+  sessionId             String    @unique
+  session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  status                String    @default("pending")
+  contextSetting        Json?     // Stage 6A output — context classification
+  sessionLogistics      Json?     // Stage 6A output — start/end times, camera
+  sessionCounts         Json?     // computeSessionCounts() output
+  sessionFlow           Json?     // buildSessionFlowTimeline() output
+  studentProfiles       Json?     // buildStudentProfiles() output
+  pedagogicalGaps       Json?     // findPedagogicalGaps() output
+  overallSynthesis      Json?     // Stage 6B output
+  failedChapterIndices  Int[]
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+// ─── BATCH ───────────────────────────────────────────────────────────────────
+
+model Batch {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  courseId    String?
+  course      Course?   @relation(fields: [courseId], references: [id])
+  sessions    AnalysisSession[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
