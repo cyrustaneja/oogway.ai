@@ -12,24 +12,36 @@ export async function GET(
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
+  console.log(`[GET /api/analysis/${id}] Fetching...`);
 
-  const analysis = await prisma.analysisSession.findUnique({
-    where: { id },
-    include: {
-      expert: true,
-      sessionNote: {
-        include: { module: { include: { course: true } } },
+  try {
+    const analysis = await prisma.analysisSession.findUnique({
+      where: { id, deletedAt: null },
+      include: {
+        expert: true,
+        sessionNote: {
+          include: { module: { include: { course: true } } },
+        },
+        chapters: { orderBy: { chapterIndex: "asc" } },
+        extractionResults: { orderBy: { chapterIndex: "asc" } },
+        overallAnalysis: true,
       },
-      chapters: { orderBy: { chapterIndex: "asc" } },
-      extractionResults: { orderBy: { chapterIndex: "asc" } },
-      overallAnalysis: true,
-    },
-  });
+    });
 
-  if (!analysis) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    if (!analysis) {
+      console.warn(`[GET /api/analysis/${id}] Not found or deleted.`);
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
 
-  return NextResponse.json(analysis);
+    console.log(`[GET /api/analysis/${id}] Success: ${analysis.name}`);
+    return NextResponse.json(analysis);
+  } catch (error: any) {
+    console.error(`[GET /api/analysis/${id}] Error:`, error);
+    return NextResponse.json({ error: error.message || "Internal server error" }, { status: 500 });
+  }
 }
+
+import { softDelete } from "@/lib/db/soft-delete";
 
 // DELETE /api/analysis/[id]
 export async function DELETE(
@@ -46,6 +58,6 @@ export async function DELETE(
 
   const { id } = await params;
 
-  await prisma.analysisSession.delete({ where: { id } });
+  await softDelete("analysisSession", id);
   return NextResponse.json({ success: true });
 }

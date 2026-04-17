@@ -8,11 +8,12 @@ interface DashboardLayoutProps {
 
 export function DashboardWrapper({ children, title }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-[#0F172A]">
+    <div className="flex min-h-screen bg-[var(--background)] transition-colors duration-400">
       <Sidebar />
-      <main className="flex-1 ml-64 min-h-screen flex flex-col">
+      <main className="flex-1 ml-64 min-h-screen flex flex-col relative">
         <TopNav title={title} />
-        <div className="flex-1 p-8">
+        {/* Large breathing space container */}
+        <div className="flex-1 p-10 lg:p-12 overflow-y-auto">
           {children}
         </div>
       </main>

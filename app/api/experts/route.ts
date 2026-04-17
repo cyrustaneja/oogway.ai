@@ -13,10 +13,12 @@ export async function GET() {
 
   try {
     const experts = await prisma.expert.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       include: {
         sessions: {
-          select: { id: true }
+          select: { id: true, name: true, v3Status: true, createdAt: true },
+          orderBy: { createdAt: 'desc' }
         }
       }
     });

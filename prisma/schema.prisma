@@ -23,6 +23,9 @@ model User {
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  @@index([deletedAt])
 }
 
 enum UserRole {
@@ -74,6 +77,7 @@ model Expert {
   bio         String?
   user        User?
   sessions    AnalysisSession[]
+  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -86,6 +90,7 @@ model Course {
   description String?
   modules     Module[]
   batches     Batch[]
+  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
@@ -97,8 +102,12 @@ model Module {
   courseId    String
   course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   sessions    SessionNote[]
+  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@index([deletedAt])
+  @@index([courseId])
 }
 
 model SessionNote {
@@ -112,8 +121,12 @@ model SessionNote {
   moduleId        String
   module          Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   analysisSessions AnalysisSession[]
+  deletedAt       DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+
+  @@index([deletedAt])
+  @@index([moduleId])
 }
 
 // ─── ANALYSIS ────────────────────────────────────────────────────────────────
@@ -129,6 +142,7 @@ model AnalysisSession {
   transcriptRaw       String?         // raw .vtt content (if small enough)
   scheduledDuration   Int?            // minutes
   v3Status            PipelineStatus  @default(PENDING)
+  v3Progress          String?         // e.g. "1/6", "3/6 (2/5)"
   v3Error             String?         // Capture failure reason
   heartbeat           DateTime?       // For monitoring worker progress
   chapters            AnalysisChapter[]
@@ -136,8 +150,12 @@ model AnalysisSession {
   overallAnalysis     SessionOverallAnalysis?
   batchId             String?
   batch               Batch?          @relation(fields: [batchId], references: [id])
+  deletedAt           DateTime?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
+
+  @@index([deletedAt])
+  @@index([expertId])
 }
 
 enum PipelineStatus {
@@ -187,13 +205,10 @@ model SessionOverallAnalysis {
   sessionId             String    @unique
   session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   status                String    @default("pending")
-  contextSetting        Json?     // Stage 6A output — context classification
-  sessionLogistics      Json?     // Stage 6A output — start/end times, camera
-  sessionCounts         Json?     // computeSessionCounts() output
-  sessionFlow           Json?     // buildSessionFlowTimeline() output
-  studentProfiles       Json?     // buildStudentProfiles() output
-  pedagogicalGaps       Json?     // findPedagogicalGaps() output
-  overallSynthesis      Json?     // Stage 6B output
+  overallSummary        Json?     
+  expertAnalysis        Json?     
+  studentAnalysis       Json?     
+  sessionFlow           Json?
   failedChapterIndices  Int[]
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -208,6 +223,7 @@ model Batch {
   courseId    String?
   course      Course?   @relation(fields: [courseId], references: [id])
   sessions    AnalysisSession[]
+  deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }

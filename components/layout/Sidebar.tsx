@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "./ThemeToggle";
 import { 
   PlusCircle, 
   BarChart2, 
@@ -15,54 +16,60 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "next-auth/react";
+import { motion } from "framer-motion";
 
 const navItems = [
-  { label: "ALL ANALYSIS", href: "/dashboard", icon: BarChart2 },
-  { label: "EXPERTS", href: "/experts", icon: Users },
-  { label: "BATCHES", href: "/batches", icon: LayoutGrid },
-  { label: "ADD SESSION", href: "/courses", icon: FilePlus },
-  { label: "RECYCLE BIN", href: "/recycle-bin", icon: Trash2 },
-  { label: "CONTROL PANEL", href: "/admin", icon: Settings },
+  { label: "All Analysis", href: "/dashboard", icon: BarChart2 },
+  { label: "Experts", href: "/experts", icon: Users },
+  { label: "Batches", href: "/batches", icon: LayoutGrid },
+  { label: "Course Content", href: "/courses", icon: FilePlus },
+  { label: "Recycle Bin", href: "/recycle-bin", icon: Trash2 },
+  { label: "Control Panel", href: "/admin", icon: Settings },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 h-screen bg-[#0F172A] border-r border-white/5 flex flex-col p-6 fixed left-0 top-0 z-50">
+    <aside className="w-64 h-screen bg-[var(--sidebar-bg)] backdrop-blur-[var(--glass-blur)] border-r border-[var(--card-border)] flex flex-col p-6 fixed left-0 top-0 z-50 shadow-2xl">
+      {/* Glossy Overlay */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent dark:from-white/0" />
+      
       {/* Logo Section */}
-      <div className="mb-10">
+      <div className="mb-10 relative z-10">
         <div className="flex items-center gap-2 mb-1">
-          <div className="w-8 h-8 rounded bg-white flex items-center justify-center">
-            <div className="w-4 h-4 rounded-sm bg-black" />
+          <div className="w-8 h-8 rounded-lg bg-brand-orange flex items-center justify-center shadow-lg shadow-brand-orange/20">
+            <div className="w-4 h-4 rounded-sm bg-white" />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-white outfit">OOGWAY <span className="text-brand-orange">AI</span></h1>
+          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)] outfit">Oogway <span className="text-brand-orange">AI</span></h1>
         </div>
         <div className="flex items-center gap-1.5 opacity-50 ml-1">
-          <span className="text-[10px] font-medium tracking-widest text-slate-400">POWERED BY</span>
-          <span className="text-[10px] font-bold text-white tracking-widest">KRAFTSHALA</span>
+          <span className="text-[10px] font-bold tracking-widest text-[var(--muted)]">Powered By</span>
+          <span className="text-[10px] font-extrabold text-[var(--foreground)] tracking-widest">KRAFTSHALA</span>
         </div>
       </div>
 
       {/* Node Badge */}
-      <div className="mb-8 pl-4 pr-3 py-2 bg-slate-800/40 rounded-full border border-white/5 flex items-center gap-3">
-        <div className="w-2 h-2 rounded-full bg-brand-warning animate-pulse" />
-        <span className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">ADMIN NODE <span className="text-white">#042</span></span>
+      <div className="mb-8 pl-4 pr-3 py-2 bg-white/20 dark:bg-white/5 rounded-full border border-[var(--card-border)] flex items-center gap-3 relative z-10">
+        <div className="w-2 h-2 rounded-full bg-brand-warning animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
+        <span className="text-[10px] font-bold text-[var(--muted)] tracking-widest">Admin Node <span className="text-[var(--foreground)]">#042</span></span>
       </div>
 
       {/* Primary Action */}
       <Link 
         href="/analysis/new"
-        className="group relative flex items-center justify-center gap-3 w-full py-3.5 bg-brand-orange text-white rounded-full font-bold text-xs tracking-wider mb-8 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-orange/20"
+        className="group relative flex items-center justify-center gap-3 w-full py-3.5 bg-brand-orange text-white rounded-full font-bold text-xs tracking-wider mb-8 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-orange/30 overflow-hidden"
       >
-        <PlusCircle className="w-5 h-5" />
-        OOGWAY ANALYSIS
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+        <PlusCircle className="w-5 h-5 relative z-10" />
+        <span className="relative z-10">Oogway Analysis</span>
       </Link>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-1 relative z-10">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
+          
           return (
             <Link
               key={item.href}
@@ -70,28 +77,32 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                 isActive 
-                  ? "bg-white/5 text-brand-orange" 
-                  : "text-slate-400 hover:text-white hover:bg-white/5"
+                  ? "bg-brand-orange/10 text-brand-orange shadow-sm" 
+                  : "text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-white/10"
               )}
             >
-              <item.icon className={cn("w-5 h-5", isActive ? "text-brand-orange" : "text-slate-500 group-hover:text-white")} />
-              <span className="text-[11px] font-bold tracking-widest uppercase">{item.label}</span>
+              <item.icon className={cn("w-5 h-5", isActive ? "text-brand-orange" : "text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]")} />
+              <span className="text-[12px] font-semibold tracking-wide">{item.label}</span>
               {isActive && (
-                <div className="absolute left-0 w-1 h-6 bg-brand-orange rounded-r-full" />
+                <motion.div 
+                  layoutId="sidebar-active"
+                  className="absolute left-0 w-1 h-6 bg-brand-orange rounded-r-full shadow-[2px_0_8px_rgba(243,112,33,0.5)]" 
+                />
               )}
             </Link>
           );
         })}
       </nav>
 
-      {/* Footer / Sign Out */}
-      <div className="pt-6 border-t border-white/5">
+      {/* Footer / Themes & Sign Out */}
+      <div className="pt-4 border-t border-[var(--card-border)] space-y-1 relative z-10">
+        <ThemeToggle />
         <button 
           onClick={() => signOut()}
-          className="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-brand-danger transition-colors group"
+          className="flex items-center gap-3 px-4 py-3 w-full text-[var(--muted)] hover:text-brand-danger transition-colors group"
         >
-          <LogOut className="w-5 h-5 text-slate-500 group-hover:text-brand-danger" />
-          <span className="text-[11px] font-bold tracking-widest uppercase">SIGN OUT</span>
+          <LogOut className="w-5 h-5 text-[var(--muted-foreground)] group-hover:text-brand-danger" />
+          <span className="text-[12px] font-semibold tracking-wide">Sign Out</span>
         </button>
       </div>
     </aside>

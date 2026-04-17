@@ -1,0 +1,55 @@
+
+> oogway-app@0.1.0 build
+> next build
+
+▲ Next.js 16.2.3 (Turbopack)
+- Environments: .env.local, .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.2s
+  Running TypeScript ...
+  Finished TypeScript in 3.4s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/18) ...
+  Generating static pages using 9 workers (4/18) 
+  Generating static pages using 9 workers (8/18) 
+  Generating static pages using 9 workers (13/18) 
+✓ Generating static pages using 9 workers (18/18) in 338ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ƒ /analysis/[id]
+├ ƒ /analysis/new
+├ ƒ /api/admin/users
+├ ƒ /api/analysis
+├ ƒ /api/analysis/[id]
+├ ƒ /api/analysis/[id]/start
+├ ƒ /api/analysis/[id]/upload
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/batches
+├ ƒ /api/courses
+├ ƒ /api/courses/[id]
+├ ƒ /api/courses/[id]/modules
+├ ƒ /api/experts
+├ ƒ /api/experts/[id]
+├ ƒ /api/modules/[id]
+├ ƒ /api/modules/[id]/sessions
+├ ƒ /api/session-notes
+├ ƒ /api/session-notes/[id]
+├ ƒ /api/trash
+├ ƒ /batches
+├ ƒ /courses
+├ ƒ /dashboard
+├ ƒ /experts
+├ ○ /login
+└ ƒ /recycle-bin
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

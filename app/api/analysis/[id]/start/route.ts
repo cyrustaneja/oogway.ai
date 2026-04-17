@@ -5,10 +5,10 @@ import { prisma } from "@/lib/db";
 import { runPipeline } from "@/lib/pipeline/orchestrator";
 import { waitUntil } from "@vercel/functions";
 
-export const maxDuration = 300; // 5 minutes max on Vercel Pro
+export const maxDuration = 300; // 5 minutes max on Vercel
 
 // POST /api/analysis/[id]/start
-// Validates the session is ready, then fires the pipeline as a Vercel background function.
+// Resets any failed/pending state and fires the pipeline.
 export async function POST(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -35,7 +35,7 @@ export async function POST(
   const hasTranscript = !!(analysisSession.transcriptRaw || analysisSession.transcriptPath);
   if (!hasTranscript) {
     return NextResponse.json({
-      error: "No transcript found. Upload a .vtt file first via POST /api/analysis/[id]/upload",
+      error: "No transcript found. Upload a .vtt file first.",
     }, { status: 400 });
   }
 
@@ -45,18 +45,29 @@ export async function POST(
 
   const runningStatuses = ["PREPROCESSING", "EXTRACTING", "AGGREGATING", "SYNTHESISING"];
   if (runningStatuses.includes(analysisSession.v3Status)) {
-    return NextResponse.json({ message: `Pipeline is already running (status: ${analysisSession.v3Status}).` }, { status: 200 });
+    return NextResponse.json({
+      message: `Pipeline is already running (status: ${analysisSession.v3Status}).`,
+    }, { status: 200 });
   }
 
-  // Use Vercel's waitUntil to execute the pipeline securely in the background
-  // without blocking the HTTP response, and keeping the lambda alive for maxDuration.
+  // Reset the session to PENDING and clear any previous error
+  // This ensures the UI shows the correct state when retrying a FAILED session
+  await prisma.analysisSession.update({
+    where: { id },
+    data: {
+      v3Status: "PENDING",
+      v3Error: null,
+      heartbeat: new Date(),
+    },
+  });
+
+  // Fire pipeline in background — waitUntil keeps the lambda alive on Vercel,
+  // and falls back to a fire-and-forget on local dev (Node keeps the process alive).
   waitUntil(
     runPipeline(id).catch((err) => {
-      console.error(`[/api/analysis/${id}/start] Background pipeline failed:`, err.message);
+      console.error(`[/api/analysis/${id}/start] Pipeline failed:`, err.message);
     })
   );
 
   return NextResponse.json({ message: "Pipeline started.", sessionId: id }, { status: 202 });
 }
-
-

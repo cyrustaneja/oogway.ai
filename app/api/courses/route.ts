@@ -9,12 +9,17 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const courses = await prisma.course.findMany({
+    where: { deletedAt: null },
     orderBy: { createdAt: "desc" },
     include: {
       modules: {
+        where: { deletedAt: null },
         orderBy: { order: "asc" },
         include: {
-          sessions: { orderBy: { createdAt: "desc" } },
+          sessions: { 
+            where: { deletedAt: null },
+            orderBy: { createdAt: "desc" } 
+          },
         },
       },
     },
@@ -33,9 +38,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { name, description } = await req.json();
-  if (!name) return NextResponse.json({ error: "name is required." }, { status: 400 });
+  try {
+    const { name, description } = await req.json();
+    if (!name) return NextResponse.json({ error: "name is required." }, { status: 400 });
 
-  const course = await prisma.course.create({ data: { name, description } });
-  return NextResponse.json(course, { status: 201 });
+    const course = await prisma.course.create({ data: { name, description } });
+    return NextResponse.json(course, { status: 201 });
+  } catch (err: any) {
+    console.error("[POST /api/courses] FATAL SAVE ERROR:", err);
+    return NextResponse.json({ 
+      error: "Critical Database Error: Failed to save course structure.",
+      details: err.message
+    }, { status: 500 });
+  }
 }

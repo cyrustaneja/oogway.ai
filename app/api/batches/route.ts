@@ -12,6 +12,11 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       include: {
         course: { select: { id: true, name: true } },
+        sessions: {
+          select: { id: true, name: true, v3Status: true },
+          orderBy: { createdAt: 'desc' },
+          take: 5
+        },
         _count: {
           select: { sessions: true }
         }
