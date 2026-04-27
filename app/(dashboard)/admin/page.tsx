@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { Shield, Users, Activity, BookOpen, Database } from "lucide-react";
 
 import { CreateUserForm } from "@/components/admin/CreateUserForm";
+import { PipelineMonitor } from "@/components/admin/PipelineMonitor";
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
@@ -12,26 +13,33 @@ export default async function AdminPage() {
   if ((session.user as any).role !== "ADMIN") redirect("/dashboard");
 
   const [userCount, expertCount, sessionCount, courseCount, analysisCount] = await Promise.all([
-    prisma.user.count(),
-    prisma.expert.count(),
-    prisma.analysisSession.count(),
-    prisma.course.count(),
-    prisma.sessionOverallAnalysis.count({ where: { status: "complete" } }),
+    prisma.user.count({ where: { deletedAt: null } }),
+    prisma.expert.count({ where: { deletedAt: null } }),
+    prisma.analysisSession.count({ where: { deletedAt: null } }),
+    prisma.course.count({ where: { deletedAt: null } }),
+    prisma.sessionOverallAnalysis.count({ 
+      where: { 
+        status: "complete",
+        session: { deletedAt: null }
+      } 
+    }),
   ]);
 
   const statusCounts = await prisma.analysisSession.groupBy({
+    where: { deletedAt: null },
     by: ["v3Status"],
     _count: { _all: true },
   });
 
   const recentUsers = await prisma.user.findMany({
+    where: { deletedAt: null },
     orderBy: { createdAt: "desc" },
     take: 10,
     select: { id: true, name: true, email: true, role: true, createdAt: true },
   });
 
   const failedSessions = await prisma.analysisSession.findMany({
-    where: { v3Status: "FAILED" },
+    where: { v3Status: "FAILED", deletedAt: null },
     orderBy: { updatedAt: "desc" },
     take: 5,
     include: { expert: { select: { name: true } } },
@@ -75,18 +83,8 @@ export default async function AdminPage() {
         ))}
       </div>
 
-      {/* Pipeline Status Breakdown */}
-      <div className="glass-card p-6">
-        <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-4">Pipeline Status Breakdown</p>
-        <div className="flex flex-wrap gap-3">
-          {statusCounts.map(sc => (
-            <div key={sc.v3Status} className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-white/10">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{sc.v3Status}</span>
-              <span className="text-sm font-bold text-white">{sc._count._all}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Pipeline Monitoring */}
+      <PipelineMonitor />
 
       <div className="grid grid-cols-2 gap-6">
         {/* Recent Users */}

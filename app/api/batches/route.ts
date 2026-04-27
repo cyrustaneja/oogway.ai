@@ -9,10 +9,12 @@ export async function GET() {
 
   try {
     const batches = await prisma.batch.findMany({
+      where: { deletedAt: null },
       orderBy: { createdAt: "desc" },
       include: {
         course: { select: { id: true, name: true } },
         sessions: {
+          where: { deletedAt: null },
           select: { id: true, name: true, v3Status: true },
           orderBy: { createdAt: 'desc' },
           take: 5

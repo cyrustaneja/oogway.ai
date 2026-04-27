@@ -27,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
-      <body className="font-inter antialiased overflow-x-hidden">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`} data-theme="dark">
+      <body className="font-inter antialiased overflow-x-hidden" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

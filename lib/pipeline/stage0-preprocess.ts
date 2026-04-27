@@ -107,13 +107,27 @@ export function serializeTranscript(lines: TranscriptLine[]): string {
 
 /**
  * Main export: given raw VTT string, return clean transcript string.
+ * Tags lines containing administrative keywords (attendance, tech issues, logistics)
+ * as [ADMIN] to help Stage 1 classification.
  */
 export function preprocessWebVTT(rawVtt: string): string {
   const lines = parseVTT(rawVtt);
   if (lines.length === 0) {
     throw new Error("PREPROCESS_EMPTY: No transcript lines extracted. The VTT file may be empty or malformed.");
   }
-  return serializeTranscript(lines);
+
+  const ADMIN_KEYWORDS = [
+    "attendance", "hear me", "share screen", "am i audible", "let me join",
+    "can you see", "recording", "started now", "wait for everyone", "good morning",
+    "good evening", "hall ticket", "exam", "technical issue", "low bandwidth"
+  ];
+
+  const processed = lines.map(line => {
+    const isCandidate = ADMIN_KEYWORDS.some(k => line.text.toLowerCase().includes(k));
+    return `[${line.timestamp}]${isCandidate ? ' [ADMIN]' : ''} ${line.text}`;
+  });
+
+  return processed.join("\n");
 }
 
 /**

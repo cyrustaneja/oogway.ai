@@ -4108,3 +4108,2837 @@ Import traces:
  GET /api/auth/session 200 in 216ms (next.js: 113ms, application-code: 103ms)
  GET /api/auth/session 200 in 88ms (next.js: 66ms, application-code: 22ms)
  GET /api/auth/session 200 in 534ms (next.js: 118ms, application-code: 416ms)
+ GET /admin 200 in 6.2s (next.js: 15ms, proxy.ts: 146ms, application-code: 6.0s)
+ GET /api/auth/session 200 in 648ms (next.js: 81ms, application-code: 567ms)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].expert.count()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:122:132
+
+  119         }
+  120     }
+  121 }),
+→ 122 __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].expert.count(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./lib/db.ts}["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     {imported module ./lib/db.ts}["prisma"].analysisSession.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)
+    at <unknown> (app/(dashboard)/dashboard/page.tsx:23:28)
+    at async DashboardPage (app/(dashboard)/dashboard/page.tsx:22:36)
+  21 |
+  22 |   const [analyses, totalExperts] = await Promise.all([
+> 23 |     prisma.analysisSession.findMany({
+     |                            ^
+  24 |       where,
+  25 |       orderBy: { createdAt: "desc" },
+  26 |       take: 50, {
+  code: 'P2024',
+  clientVersion: '5.14.0',
+  meta: { modelName: 'AnalysisSession', connection_limit: 21, timeout: 10 },
+  digest: '1373253799'
+}
+ GET /dashboard 200 in 10.2s (next.js: 19ms, proxy.ts: 31ms, application-code: 10.2s)
+[browser] Uncaught PrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany(
+Timed out fetching a new connection from the connection pool. More info: http://pris.ly/d/connection-pool (Current connection pool timeout: 10, connection limit: 21)
+    at <unknown> (app/(dashboard)/dashboard/page.tsx:23:28)
+    at Function.all (<anonymous>:1:21)
+    at DashboardPage (app/(dashboard)/dashboard/page.tsx:22:36)
+  21 |
+  22 |   const [analyses, totalExperts] = await Promise.all([
+> 23 |     prisma.analysisSession.findMany({
+     |                            ^
+  24 |       where,
+  25 |       orderBy: { createdAt: "desc" },
+  26 |       take: 50,
+ GET /dashboard 200 in 4.0s (next.js: 2.3s, proxy.ts: 598ms, application-code: 1137ms)
+ GET /api/auth/session 200 in 177ms (next.js: 145ms, application-code: 32ms)
+ GET /dashboard 200 in 7.4s (next.js: 621ms, proxy.ts: 629ms, application-code: 6.1s)
+ GET /dashboard 200 in 132ms (next.js: 19ms, proxy.ts: 76ms, application-code: 37ms)
+ GET /dashboard 200 in 4.1s (next.js: 3ms, proxy.ts: 12ms, application-code: 4.1s)
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 200 in 66ms (next.js: 28ms, proxy.ts: 7ms, application-code: 32ms)
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Fetching...
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Success: Analysis - Ashish Singh Karki - 16 Apr
+ GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7 200 in 3.4s (next.js: 80ms, application-code: 3.4s)
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Fetching...
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Success: Analysis - Ashish Singh Karki - 16 Apr
+ GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7 200 in 3.0s (next.js: 23ms, application-code: 2.9s)
+✓ Compiled in 539ms
+✓ Compiled in 355ms
+✓ Compiled in 367ms
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  [90m657 |[0m           {isRunning && (
+  [90m658 |[0m             <div className=[32m"flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...[0m
+[31m[1m>[0m [90m659 |[0m [32m        <AnimatePresence mode="[0mwait[32m">[0m
+  [90m    |[0m                                    [31m[1m^^[0m
+  [90m660 |[0m [32m          <motion.div [0m
+  [90m661 |[0m [32m            initial={{ opacity: 0 }}[0m
+  [90m662 |[0m [32m            animate={{ opacity: 1 }}[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 650ms (next.js: 114ms, proxy.ts: 378ms, application-code: 159ms)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  [90m657 |[0m           {isRunning && (
+  [90m658 |[0m             <div className=[32m"flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...[0m
+[31m[1m>[0m [90m659 |[0m [32m        <AnimatePresence mode="[0mwait[32m">[0m
+  [90m    |[0m                                    [31m[1m^^[0m
+  [90m660 |[0m [32m          <motion.div [0m
+  [90m661 |[0m [32m            initial={{ opacity: 0 }}[0m
+  [90m662 |[0m [32m            animate={{ opacity: 1 }}[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  [90m657 |[0m           {isRunning && (
+  [90m658 |[0m             <div className=[32m"flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...[0m
+[31m[1m>[0m [90m659 |[0m [32m        <AnimatePresence mode="[0mwait[32m">[0m
+  [90m    |[0m                                    [31m[1m^^[0m
+  [90m660 |[0m [32m          <motion.div [0m
+  [90m661 |[0m [32m            initial={{ opacity: 0 }}[0m
+  [90m662 |[0m [32m            animate={{ opacity: 1 }}[0m
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 341ms (next.js: 133ms, proxy.ts: 161ms, application-code: 48ms)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 263ms (next.js: 164ms, proxy.ts: 72ms, application-code: 28ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:659:36)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:659:36)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:659:36
+Unterminated string constant
+  657 |           {isRunning && (
+  658 |             <div className="flex items-center gap-3 px-6 py-2.5 rounded-full bg-brand-war...
+> 659 |         <AnimatePresence mode="wait">
+      |                                    ^^
+  660 |           <motion.div 
+  661 |             initial={{ opacity: 0 }}
+  662 |             animate={{ opacity: 1 }}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m             [31m[1m^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m729 |[0m                   mainTab === [32m"FLOW"[0m ? [32m"bg-white dark:bg-slate-800 text-brand-orange shad...[0m
+  [90m730 |[0m                 [32m}`[0m}
+[31m[1m>[0m [90m731 |[0m               >
+  [90m    |[0m               [31m[1m^[0m
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+  [90m734 |[0m             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m              [31m[1m^^^^^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 175ms (next.js: 26ms, proxy.ts: 136ms, application-code: 13ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m             [31m[1m^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m729 |[0m                   mainTab === [32m"FLOW"[0m ? [32m"bg-white dark:bg-slate-800 text-brand-orange shad...[0m
+  [90m730 |[0m                 [32m}`[0m}
+[31m[1m>[0m [90m731 |[0m               >
+  [90m    |[0m               [31m[1m^[0m
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+  [90m734 |[0m             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m              [31m[1m^^^^^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 100ms (next.js: 17ms, proxy.ts: 64ms, application-code: 19ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m             [31m[1m^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  [90m729 |[0m                   mainTab === [32m"FLOW"[0m ? [32m"bg-white dark:bg-slate-800 text-brand-orange shad...[0m
+  [90m730 |[0m                 [32m}`[0m}
+[31m[1m>[0m [90m731 |[0m               >
+  [90m    |[0m               [31m[1m^[0m
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+  [90m734 |[0m             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+
+./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  [90m732 |[0m                 [33mTimeline[0m [33mFlow[0m
+  [90m733 |[0m               </button>
+[31m[1m>[0m [90m734 |[0m             </div>
+  [90m    |[0m              [31m[1m^^^^^[0m
+  [90m735 |[0m
+  [90m736 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m737 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 138ms (next.js: 74ms, proxy.ts: 11ms, application-code: 52ms)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET / 500 in 86ms (next.js: 62ms, application-code: 24ms)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET / 500 in 94ms (next.js: 37ms, application-code: 57ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:734:13)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:13
+Expression expected
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |             ^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:731:15
+Unexpected token. Did you mean `{'>'}` or `&gt;`?
+  729 |                   mainTab === "FLOW" ? "bg-white dark:bg-slate-800 text-brand-orange shad...
+  730 |                 }`}
+> 731 |               >
+      |               ^
+  732 |                 Timeline Flow
+  733 |               </button>
+  734 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:734:14
+Unterminated regexp literal
+  732 |                 Timeline Flow
+  733 |               </button>
+> 734 |             </div>
+      |              ^^^^^
+  735 |
+  736 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+  737 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET / 500 in 142ms (next.js: 126ms, application-code: 16ms)
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  [90m727 |[0m         </[33mAnimatePresence[0m>
+  [90m728 |[0m
+[31m[1m>[0m [90m729 |[0m             <div key={mainTab} className=[32m"animate-in fade-in slide-in-from-bottom-6 durat...[0m
+  [90m    |[0m                  [31m[1m^^^[0m
+  [90m730 |[0m               {mainTab === [32m"OVERALL"[0m && <[33mPillarsView[0m oa={oa} />}
+  [90m731 |[0m               {mainTab === [32m"FLOW"[0m && <[33mSessionFlowTimeline[0m flow={oa.sessionFlow} />}
+  [90m732 |[0m             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 164ms (next.js: 26ms, proxy.ts: 133ms, application-code: 5ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:18)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:729:18)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:18)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:729:18)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:18
+Expected '</', got 'ident'
+  727 |         </AnimatePresence>
+  728 |
+> 729 |             <div key={mainTab} className="animate-in fade-in slide-in-from-bottom-6 durat...
+      |                  ^^^
+  730 |               {mainTab === "OVERALL" && <PillarsView oa={oa} />}
+  731 |               {mainTab === "FLOW" && <SessionFlowTimeline flow={oa.sessionFlow} />}
+  732 |             </div>
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+ GET / 500 in 20ms (next.js: 10ms, application-code: 10ms)
+⨯ ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  [90m727 |[0m         </[33mAnimatePresence[0m>
+  [90m728 |[0m       )}
+[31m[1m>[0m [90m729 |[0m       )}
+  [90m    |[0m        [31m[1m^[0m
+  [90m730 |[0m     </div>
+  [90m731 |[0m   );
+  [90m732 |[0m }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 104ms (next.js: 31ms, proxy.ts: 62ms, application-code: 11ms)
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:8)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:729:8)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+[browser] Uncaught Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+
+    at <unknown> (Error: ./app/(dashboard)/analysis/[id]/page.tsx:729:8)
+    at <unknown> (Error: (./app/(dashboard)/analysis/[id]/page.tsx:729:8)
+[browser] ./app/(dashboard)/analysis/[id]/page.tsx:729:8
+Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+  727 |         </AnimatePresence>
+  728 |       )}
+> 729 |       )}
+      |        ^
+  730 |     </div>
+  731 |   );
+  732 | }
+
+Parsing ecmascript source code failed
+
+Import traces:
+  Client Component Browser:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component Browser]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./app/(dashboard)/analysis/[id]/page.tsx [Client Component SSR]
+    ./app/(dashboard)/analysis/[id]/page.tsx [Server Component] 
+✓ Compiled in 965ms
+ GET / 307 in 1340ms (next.js: 209ms, application-code: 1130ms)
+ GET / 307 in 488ms (next.js: 453ms, application-code: 35ms)
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 200 in 2.4s (next.js: 704ms, proxy.ts: 1474ms, application-code: 192ms)
+ GET /api/auth/session 200 in 99ms (next.js: 85ms, application-code: 14ms)
+ GET /api/auth/session 200 in 59ms (next.js: 3ms, application-code: 56ms)
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Fetching...
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at <unknown> (app/api/analysis/[id]/route.ts:18:51)
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                                                   ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 224ms (next.js: 45ms, application-code: 179ms)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany(
+Can't reach database server at `aws-1-ap-northeast-1.pooler.supabase.com:6543`
+
+Please make sure your database server is running at `aws-1-ap-northeast-1.pooler.supabase.com:6543`.
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].expert.count()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:122:132
+
+  119         }
+  120     }
+  121 }),
+→ 122 __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].expert.count(
+Can't reach database server at `aws-1-ap-northeast-1.pooler.supabase.com:6543`
+
+Please make sure your database server is running at `aws-1-ap-northeast-1.pooler.supabase.com:6543`.
+⨯ Error [PrismaClientKnownRequestError]: 
+Invalid `{imported module ./lib/db.ts}["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     {imported module ./lib/db.ts}["prisma"].analysisSession.findMany(
+Can't reach database server at `aws-1-ap-northeast-1.pooler.supabase.com:6543`
+
+Please make sure your database server is running at `aws-1-ap-northeast-1.pooler.supabase.com:6543`.
+    at <unknown> (app/(dashboard)/dashboard/page.tsx:23:28)
+    at async DashboardPage (app/(dashboard)/dashboard/page.tsx:22:36)
+  21 |
+  22 |   const [analyses, totalExperts] = await Promise.all([
+> 23 |     prisma.analysisSession.findMany({
+     |                            ^
+  24 |       where,
+  25 |       orderBy: { createdAt: "desc" },
+  26 |       take: 50, {
+  code: 'P1001',
+  clientVersion: '5.14.0',
+  meta: {
+    modelName: 'AnalysisSession',
+    database_host: 'aws-1-ap-northeast-1.pooler.supabase.com',
+    database_port: 6543
+  },
+  digest: '203873479'
+}
+ GET /dashboard 200 in 5.1s (next.js: 25ms, proxy.ts: 20ms, application-code: 5.1s)
+[browser] Uncaught PrismaClientKnownRequestError: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/ssr/[root-of-the-server]__0j6f82~._.js:86:141
+
+  83     }
+  84 }
+  85 const [analyses, totalExperts] = await Promise.all([
+→ 86     __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findMany(
+Can't reach database server at `aws-1-ap-northeast-1.pooler.supabase.com:6543`
+
+Please make sure your database server is running at `aws-1-ap-northeast-1.pooler.supabase.com:6543`.
+    at <unknown> (app/(dashboard)/dashboard/page.tsx:23:28)
+    at Function.all (<anonymous>:1:21)
+    at DashboardPage (app/(dashboard)/dashboard/page.tsx:22:36)
+  21 |
+  22 |   const [analyses, totalExperts] = await Promise.all([
+> 23 |     prisma.analysisSession.findMany({
+     |                            ^
+  24 |       where,
+  25 |       orderBy: { createdAt: "desc" },
+  26 |       take: 50,
+ GET / 307 in 112ms (next.js: 9ms, application-code: 103ms)
+ GET /api/auth/session 200 in 16ms (next.js: 7ms, application-code: 9ms)
+ GET /dashboard 200 in 4.9s (next.js: 7ms, proxy.ts: 3ms, application-code: 4.9s)
+ GET /analysis/new 200 in 133ms (next.js: 51ms, proxy.ts: 18ms, application-code: 64ms)
+ GET /api/experts 200 in 1477ms (next.js: 89ms, application-code: 1387ms)
+ GET /api/batches 200 in 1830ms (next.js: 118ms, application-code: 1712ms)
+ GET /api/experts 200 in 1276ms (next.js: 3ms, application-code: 1273ms)
+ GET /api/session-notes 200 in 3.1s (next.js: 48ms, application-code: 3.1s)
+ GET /api/batches 200 in 1682ms (next.js: 3ms, application-code: 1679ms)
+ GET /api/session-notes 200 in 1646ms (next.js: 3ms, application-code: 1643ms)
+ GET /api/auth/session 200 in 60ms (next.js: 41ms, application-code: 19ms)
+ POST /api/analysis 201 in 3.0s (next.js: 33ms, application-code: 3.0s)
+ POST /api/analysis/cmo2txlg4000ddjmg64dt5av5/start 202 in 2.6s (next.js: 71ms, application-code: 2.5s)
+ GET /analysis/cmo2txlg4000ddjmg64dt5av5 200 in 54ms (next.js: 12ms, proxy.ts: 15ms, application-code: 27ms)
+[GET /api/analysis/cmo2txlg4000ddjmg64dt5av5] Fetching...
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2txlg4000ddjmg64dt5av5] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at <unknown> (app/api/analysis/[id]/route.ts:18:51)
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                                                   ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2txlg4000ddjmg64dt5av5 500 in 98ms (next.js: 5ms, application-code: 93ms)
+[GET /api/analysis/cmo2txlg4000ddjmg64dt5av5] Fetching...
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2txlg4000ddjmg64dt5av5] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__136hl7_._.js:336:166
+
+  333 const { id } = await params;
+  334 console.log(`[GET /api/analysis/${id}] Fetching...`);
+  335 try {
+→ 336     const analysis = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.findUnique(
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at <unknown> (app/api/analysis/[id]/route.ts:18:51)
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                                                   ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2txlg4000ddjmg64dt5av5 500 in 78ms (next.js: 3ms, application-code: 75ms)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2txlg4000ddjmg64dt5av5"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:33:21.831Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[PIPELINE:cmo2txlg4000ddjmg64dt5av5] ❌ FAILED: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2txlg4000ddjmg64dt5av5"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:33:21.831Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[/api/analysis/cmo2txlg4000ddjmg64dt5av5/start] Pipeline failed: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2txlg4000ddjmg64dt5av5"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:33:21.831Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+ GET /dashboard 200 in 21ms (next.js: 4ms, proxy.ts: 6ms, application-code: 12ms)
+ GET /dashboard 200 in 3.8s (next.js: 13ms, proxy.ts: 22ms, application-code: 3.8s)
+ GET /dashboard 200 in 4.6s (next.js: 1938µs, proxy.ts: 3ms, application-code: 4.6s)
+ DELETE /api/analysis/cmo2txlg4000ddjmg64dt5av5 200 in 1624ms (next.js: 31ms, application-code: 1592ms)
+ DELETE /api/analysis/cmo1bf4hq0005d05ffxikq0f1 200 in 1688ms (next.js: 9ms, application-code: 1679ms)
+ GET /api/auth/session 200 in 54ms (next.js: 33ms, application-code: 21ms)
+ GET /api/auth/session 200 in 226ms (next.js: 111ms, application-code: 114ms)
+ GET / 307 in 125ms (next.js: 18ms, application-code: 108ms)
+ GET /api/auth/session 200 in 53ms (next.js: 36ms, application-code: 17ms)
+ GET /api/auth/session 200 in 5ms (next.js: 822µs, application-code: 5ms)
+ GET /dashboard 200 in 4.7s (next.js: 8ms, proxy.ts: 7ms, application-code: 4.7s)
+ DELETE /api/analysis/cmo2txlg4000ddjmg64dt5av5 200 in 1328ms (next.js: 10ms, application-code: 1318ms)
+ GET /analysis/new 200 in 44ms (next.js: 8ms, proxy.ts: 13ms, application-code: 23ms)
+ GET /api/experts 200 in 1178ms (next.js: 15ms, application-code: 1163ms)
+ GET /api/batches 200 in 1452ms (next.js: 17ms, application-code: 1435ms)
+ GET /api/session-notes 200 in 2.5s (next.js: 13ms, application-code: 2.5s)
+ GET /api/experts 200 in 1337ms (next.js: 4ms, application-code: 1333ms)
+ GET /api/batches 200 in 1583ms (next.js: 3ms, application-code: 1580ms)
+ GET /api/session-notes 200 in 1396ms (next.js: 3ms, application-code: 1393ms)
+ POST /api/analysis 201 in 2.6s (next.js: 14ms, application-code: 2.6s)
+ POST /api/analysis/cmo2ump32000fdjmgw9u4vkt1/start 202 in 2.6s (next.js: 9ms, application-code: 2.6s)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2ump32000fdjmgw9u4vkt1"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:52:52.308Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[PIPELINE:cmo2ump32000fdjmgw9u4vkt1] ❌ FAILED: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2ump32000fdjmgw9u4vkt1"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:52:52.308Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[/api/analysis/cmo2ump32000fdjmgw9u4vkt1/start] Pipeline failed: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2ump32000fdjmgw9u4vkt1"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T11:52:52.308Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+ GET /api/auth/session 200 in 29ms (next.js: 16ms, application-code: 13ms)
+ GET /api/auth/session 200 in 8ms (next.js: 884µs, application-code: 7ms)
+ GET /dashboard 200 in 3.5s (next.js: 10ms, proxy.ts: 7ms, application-code: 3.5s)
+ GET /dashboard 200 in 2.9s (next.js: 3ms, proxy.ts: 4ms, application-code: 2.9s)
+ GET /analysis/cmo1h3yxl0001djmg04y2b8z7 200 in 58ms (next.js: 9ms, proxy.ts: 5ms, application-code: 44ms)
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 109ms (next.js: 25ms, application-code: 83ms)
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo1h3yxl0001djmg04y2b8z7 500 in 44ms (next.js: 1611µs, application-code: 43ms)
+ GET /dashboard 200 in 3.3s (next.js: 7ms, proxy.ts: 8ms, application-code: 3.3s)
+ GET /api/auth/session 200 in 13ms (next.js: 6ms, application-code: 7ms)
+ GET /api/auth/session 200 in 8ms (next.js: 1380µs, application-code: 6ms)
+ GET /dashboard 200 in 3.8s (next.js: 4ms, proxy.ts: 5ms, application-code: 3.7s)
+ DELETE /api/analysis/cmo2ump32000fdjmgw9u4vkt1 200 in 1604ms (next.js: 58ms, application-code: 1545ms)
+ DELETE /api/analysis/cmo2txlg4000ddjmg64dt5av5 200 in 1331ms (next.js: 15ms, application-code: 1316ms)
+ DELETE /api/analysis/cmo1bf4hq0005d05ffxikq0f1 200 in 1738ms (next.js: 44ms, application-code: 1694ms)
+ GET /analysis/new 200 in 90ms (next.js: 10ms, proxy.ts: 51ms, application-code: 29ms)
+ GET /api/experts 200 in 1504ms (next.js: 23ms, application-code: 1481ms)
+ GET /api/batches 200 in 1815ms (next.js: 35ms, application-code: 1780ms)
+ GET /api/experts 200 in 1222ms (next.js: 4ms, application-code: 1219ms)
+ GET /api/batches 200 in 1594ms (next.js: 3ms, application-code: 1591ms)
+ GET /api/session-notes 200 in 3.5s (next.js: 22ms, application-code: 3.5s)
+ GET /api/session-notes 200 in 1896ms (next.js: 4ms, application-code: 1892ms)
+ POST /api/analysis 201 in 3.2s (next.js: 17ms, application-code: 3.2s)
+ POST /api/analysis/cmo2uysir000hdjmgw671l61u/start 202 in 2.4s (next.js: 14ms, application-code: 2.4s)
+ GET /analysis/cmo2uysir000hdjmgw671l61u 200 in 49ms (next.js: 11ms, proxy.ts: 5ms, application-code: 33ms)
+[GET /api/analysis/cmo2uysir000hdjmgw671l61u] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2uysir000hdjmgw671l61u] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2uysir000hdjmgw671l61u 500 in 157ms (next.js: 5ms, application-code: 152ms)
+[GET /api/analysis/cmo2uysir000hdjmgw671l61u] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2uysir000hdjmgw671l61u] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2uysir000hdjmgw671l61u 500 in 77ms (next.js: 3ms, application-code: 75ms)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2uysir000hdjmgw671l61u"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:02:17.486Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[PIPELINE:cmo2uysir000hdjmgw671l61u] ❌ FAILED: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2uysir000hdjmgw671l61u"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:02:17.486Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[/api/analysis/cmo2uysir000hdjmgw671l61u/start] Pipeline failed: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2uysir000hdjmgw671l61u"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:02:17.486Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+ GET /analysis/new 200 in 30ms (next.js: 7ms, proxy.ts: 7ms, application-code: 15ms)
+ GET /api/experts 200 in 1486ms (next.js: 35ms, application-code: 1452ms)
+ GET /api/batches 200 in 1955ms (next.js: 31ms, application-code: 1924ms)
+ GET /api/experts 200 in 1433ms (next.js: 3ms, application-code: 1430ms)
+ GET /dashboard 200 in 5.2s (next.js: 16ms, proxy.ts: 17ms, application-code: 5.2s)
+ GET /api/session-notes 200 in 3.5s (next.js: 33ms, application-code: 3.5s)
+ GET /api/batches 200 in 1964ms (next.js: 3ms, application-code: 1961ms)
+ GET /api/session-notes 200 in 1784ms (next.js: 3ms, application-code: 1781ms)
+ POST /api/analysis 201 in 4.7s (next.js: 11ms, application-code: 4.6s)
+ POST /api/analysis/cmo2v0r5a000jdjmgpe74i063/start 202 in 5.1s (next.js: 7ms, application-code: 5.1s)
+prisma:error 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2v0r5a000jdjmgpe74i063"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:03:53.235Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[PIPELINE:cmo2v0r5a000jdjmgpe74i063] ❌ FAILED: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2v0r5a000jdjmgpe74i063"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:03:53.235Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+[/api/analysis/cmo2v0r5a000jdjmgpe74i063/start] Pipeline failed: 
+Invalid `__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update()` invocation in
+/Users/cyrustaneja/Desktop/Product/Oogway/.next/dev/server/chunks/[root-of-the-server]__0-dynuw._.js:1669:145
+
+  1666 ;
+  1667 ;
+  1668 async function setStatus(sessionId, status, progress) {
+→ 1669     await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["prisma"].analysisSession.update({
+             where: {
+               id: "cmo2v0r5a000jdjmgpe74i063"
+             },
+             data: {
+               v3Status: "PREPROCESSING",
+               v3Progress: "0/6",
+               ~~~~~~~~~~
+               heartbeat: new Date("2026-04-17T12:03:53.235Z"),
+           ?   id?: String | StringFieldUpdateOperationsInput,
+           ?   name?: String | StringFieldUpdateOperationsInput,
+           ?   transcriptPath?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   transcriptRaw?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   scheduledDuration?: Int | NullableIntFieldUpdateOperationsInput | Null,
+           ?   v3Error?: String | NullableStringFieldUpdateOperationsInput | Null,
+           ?   deletedAt?: DateTime | NullableDateTimeFieldUpdateOperationsInput | Null,
+           ?   createdAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   updatedAt?: DateTime | DateTimeFieldUpdateOperationsInput,
+           ?   expert?: ExpertUpdateOneRequiredWithoutSessionsNestedInput,
+           ?   sessionNote?: SessionNoteUpdateOneWithoutAnalysisSessionsNestedInput,
+           ?   chapters?: AnalysisChapterUpdateManyWithoutSessionNestedInput,
+           ?   extractionResults?: ChapterExtractionResultUpdateManyWithoutSessionNestedInput,
+           ?   overallAnalysis?: SessionOverallAnalysisUpdateOneWithoutSessionNestedInput,
+           ?   batch?: BatchUpdateOneWithoutSessionsNestedInput
+             }
+           })
+
+Unknown argument `v3Progress`. Available options are marked with ?.
+ GET /analysis/cmo2v0r5a000jdjmgpe74i063 200 in 89ms (next.js: 19ms, proxy.ts: 37ms, application-code: 34ms)
+[GET /api/analysis/cmo2v0r5a000jdjmgpe74i063] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2v0r5a000jdjmgpe74i063] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2v0r5a000jdjmgpe74i063 500 in 166ms (next.js: 22ms, application-code: 144ms)
+[GET /api/analysis/cmo2v0r5a000jdjmgpe74i063] Fetching...
+prisma:error 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+[GET /api/analysis/cmo2v0r5a000jdjmgpe74i063] Error: Error [PrismaClientUnknownRequestError]: 
+Invalid `prisma.analysisSession.findUnique()` invocation:
+
+
+Unknown nested field 'v2Analysis' for operation findUniqueAnalysisSession does not match any query.
+    at async GET (app/api/analysis/[id]/route.ts:18:22)
+  16 |
+  17 |   try {
+> 18 |     const analysis = await prisma.analysisSession.findUnique({
+     |                      ^
+  19 |       where: { id, deletedAt: null },
+  20 |       include: {
+  21 |         expert: true, {
+  clientVersion: '5.14.0'
+}
+ GET /api/analysis/cmo2v0r5a000jdjmgpe74i063 500 in 65ms (next.js: 3ms, application-code: 62ms)
+[?25h
+--- MARKER ---

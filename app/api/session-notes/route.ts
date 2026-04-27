@@ -9,6 +9,10 @@ export async function GET() {
 
   try {
     const sessions = await prisma.sessionNote.findMany({
+      where: { 
+        deletedAt: null,
+        module: { deletedAt: null }
+      },
       include: {
         module: {
           include: {

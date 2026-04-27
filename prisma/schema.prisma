@@ -5,8 +5,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
@@ -140,6 +141,7 @@ model AnalysisSession {
   sessionNote         SessionNote?    @relation(fields: [sessionNoteId], references: [id])
   transcriptPath      String?         // Supabase Storage path
   transcriptRaw       String?         // raw .vtt content (if small enough)
+  transcript_clean    String?
   scheduledDuration   Int?            // minutes
   v3Status            PipelineStatus  @default(PENDING)
   v3Progress          String?         // e.g. "1/6", "3/6 (2/5)"
@@ -150,10 +152,18 @@ model AnalysisSession {
   overallAnalysis     SessionOverallAnalysis?
   batchId             String?
   batch               Batch?          @relation(fields: [batchId], references: [id])
+  v2Analysis          AnalysisV2?
   deletedAt           DateTime?
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
+  pipeline_stage      String          @default("UPLOADED")
+  next_action_at      DateTime        @default(now())
+  stage_attempts      Json            @default("{}")
+  chapters_json       Json?
+  chapterResults      AnalysisChapterResult[]
+  flatScores          FlatScore[]
+  
   @@index([deletedAt])
   @@index([expertId])
 }
@@ -200,6 +210,19 @@ model ChapterExtractionResult {
   @@index([sessionId, status])
 }
 
+model AnalysisChapterResult {
+  id              String          @id @default(cuid())
+  session_id      String
+  session         AnalysisSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  chapter_index   Int
+  result          Json
+  needs_review    Boolean         @default(false)
+  created_at      DateTime        @default(now())
+
+  @@unique([session_id, chapter_index])
+  @@index([session_id], name: "idx_chapter_result_session")
+}
+
 model SessionOverallAnalysis {
   id                    String    @id @default(cuid())
   sessionId             String    @unique
@@ -212,6 +235,67 @@ model SessionOverallAnalysis {
   failedChapterIndices  Int[]
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+model AnalysisV2 {
+  id                    String    @id @default(cuid())
+  sessionId             String    @unique
+  session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  status                String    @default("pending") // pending | extracting | synthesising | complete | failed | needs_review
+  progress              String?   // e.g. "3/6 (2/5)"
+  
+  // Storage for the 3 pillars + session flow
+  sessionFlow           Json?
+  pillar6A              Json?     // Overall Summary
+  pillar6B              Json?     // Expert Analysis
+  pillar6C              Json?     // Student Analysis
+  epochSummaries        Json?     // Map stage results
+  
+  // Observability
+  verifierResult        Json?     // List of failures if status = needs_review
+  costEstimate          Float?    // Estimated $ cost
+  error                 String?
+  
+  session_flags         Json?
+  accuracy_issues       Json?
+  teaching_depth_map    Json?
+  pacing_map            Json?
+  engagement_by_chapter Json?
+  confusion_summary     Json?
+  unresolved_doubts     Json?
+  topics_missed         Json?
+  context_setup         Json?
+  topics_covered        Json?
+  full_synthesis        Json?     // Complete stage 3 synthesizer output
+  
+  scores                FlatScore[]
+  
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model FlatScore {
+  id                String      @id @default(cuid())
+  session_id        String?
+  session           AnalysisSession? @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  analysisV2Id      String
+  analysisV2        AnalysisV2  @relation(fields: [analysisV2Id], references: [id], onDelete: Cascade)
+  
+  rubric            String
+  score             Float
+  label             String
+  scope             String      // session | chapter | topic | question | doubt
+  
+  pillar            String      // 6A | 6B | 6C
+  chapterIndex      Int?
+  chapter           Int?        // Alias used by handlers
+  topic             String?
+  studentNameRaw    String?
+  timestamp         String?     // HH:MM:SS
+  
+  createdAt         DateTime    @default(now())
+
+  @@index([session_id])
 }
 
 // ─── BATCH ───────────────────────────────────────────────────────────────────

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { softDelete } from "@/lib/db/soft-delete";
 
 // GET /api/modules/[id]
 export async function GET(
@@ -51,5 +52,24 @@ export async function GET(
   } catch (error) {
     console.error("Failed to fetch module:", error);
     return NextResponse.json({ error: "Failed to fetch module history" }, { status: 500 });
+  }
+}
+// DELETE /api/modules/[id]
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session || (session.user as any).role === "EXPERT") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  const { id } = await params;
+  try {
+    await softDelete("module", id);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("Failed to delete module:", error);
+    return NextResponse.json({ error: "Failed to delete module" }, { status: 500 });
   }
 }

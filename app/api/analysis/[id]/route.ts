@@ -25,6 +25,11 @@ export async function GET(
         chapters: { orderBy: { chapterIndex: "asc" } },
         extractionResults: { orderBy: { chapterIndex: "asc" } },
         overallAnalysis: true,
+        v2Analysis: {
+          include: {
+            scores: { orderBy: { createdAt: "asc" } }
+          }
+        }
       },
     });
 

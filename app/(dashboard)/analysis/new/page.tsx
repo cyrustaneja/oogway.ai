@@ -9,6 +9,7 @@ interface SessionNote {
   id: string; 
   name: string; 
   moduleId: string;
+  deletedAt: string | null;
   module: { 
     name: string; 
     courseId: string;
@@ -40,9 +41,10 @@ export default function NewAnalysisPage() {
   const [potentialMatches, setPotentialMatches] = useState<SessionNote[]>([]);
   
   // Transcript inputs
-  const [transcriptMode, setTranscriptMode] = useState<"file" | "paste">("file");
+  const [transcriptMode, setTranscriptMode] = useState<"file" | "paste">("paste");
   const [file, setFile]             = useState<File | null>(null);
   const [pastedText, setPastedText] = useState("");
+  const [isFocused, setIsFocused]   = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -58,31 +60,38 @@ export default function NewAnalysisPage() {
 
   // When session search changes, find matches
   useEffect(() => {
-    if (!sessionSearch.trim()) {
+    if (!sessionSearch.trim() && noteId && !isFocused) {
       setPotentialMatches([]);
       return;
     }
 
-    const selectedBatch = batches.find(b => b.id === batchId);
-    let filtered = allSessions;
+    // Filter sessions to strictly exclude those without modules or with deleted modules
+    const validSessions = allSessions.filter(s => s.module && !s.deletedAt);
     
-    // If batch has a course, prioritize those sessions
-    if (selectedBatch?.courseId) {
-      filtered = allSessions.filter(s => s.module.courseId === selectedBatch.courseId);
-    }
+    const matches = validSessions.filter(s => {
+      if (!sessionSearch.trim()) return true; // Show all if no search
+      return s.name.toLowerCase().includes(sessionSearch.toLowerCase()) ||
+             s.module.name.toLowerCase().includes(sessionSearch.toLowerCase()) ||
+             s.module.course.name.toLowerCase().includes(sessionSearch.toLowerCase());
+    });
+    
+    // Sort matches: sessions in the selected batch's course come first
+    const selectedBatch = batches.find(b => b.id === batchId);
+    const sortedMatches = [...matches].sort((a, b) => {
+      const aInCourse = selectedBatch?.courseId === a.module.courseId ? 1 : 0;
+      const bInCourse = selectedBatch?.courseId === b.module.courseId ? 1 : 0;
+      return bInCourse - aInCourse;
+    });
 
-    const matches = filtered.filter(s => 
-      s.name.toLowerCase().includes(sessionSearch.toLowerCase())
-    );
-    setPotentialMatches(matches);
+    setPotentialMatches(sortedMatches);
 
     // If exactly one match, auto-select it
-    if (matches.length === 1 && sessionSearch.toLowerCase() === matches[0].name.toLowerCase()) {
-      setNoteId(matches[0].id);
-    } else if (matches.length === 0) {
+    if (sortedMatches.length === 1 && sessionSearch.toLowerCase() === sortedMatches[0].name.toLowerCase()) {
+      setNoteId(sortedMatches[0].id);
+    } else if (sortedMatches.length === 0) {
       setNoteId("");
     }
-  }, [sessionSearch, batchId, allSessions, batches]);
+  }, [sessionSearch, batchId, allSessions, batches, noteId, isFocused]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -244,6 +253,8 @@ export default function NewAnalysisPage() {
             <input
               type="text"
               value={sessionSearch}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 200)} // Delay to allow click detection
               onChange={(e) => {
                 setSessionSearch(e.target.value);
                 setNoteId("");
@@ -251,8 +262,16 @@ export default function NewAnalysisPage() {
               placeholder="e.g. Introduction to Programmatic"
               className="w-full bg-slate-900 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
             />
-            {potentialMatches.length > 0 && !noteId && (
-              <div className="absolute z-10 w-full mt-1 bg-slate-900 border border-white/10 rounded-lg shadow-xl max-h-48 overflow-y-auto">
+            <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none transition-transform duration-300 ${isFocused ? 'rotate-180 text-brand-orange' : ''}`} />
+            
+            {/* Dropdown / Search Results */}
+            {(isFocused && !noteId && potentialMatches.length > 0) && (
+              <div className="absolute z-50 w-full mt-1 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-64 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                {(!sessionSearch.trim()) && (
+                  <div className="px-4 py-2 border-b border-white/5 bg-white/5">
+                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Select From Curriculum</p>
+                  </div>
+                )}
                 {potentialMatches.map((m) => (
                   <button
                     key={m.id}
@@ -260,6 +279,7 @@ export default function NewAnalysisPage() {
                     onClick={() => {
                       setNoteId(m.id);
                       setSessionSearch(m.name);
+                      setIsFocused(false);
                     }}
                     className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-brand-orange/10 hover:text-white transition-colors border-b border-white/5 last:border-0"
                   >
@@ -273,24 +293,12 @@ export default function NewAnalysisPage() {
             )}
           </div>
 
-          {selectedMatch && (
-            <div className="flex items-center gap-3 p-3 bg-brand-orange/5 border border-brand-orange/10 rounded-lg">
-              <div className="p-2 rounded-lg bg-brand-orange/10">
-                <BookOpen className="w-4 h-4 text-brand-orange" />
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Enrolled Curriculum</p>
-                <p className="text-xs text-brand-orange font-bold uppercase transition-all">
-                  {selectedMatch.module.course.name} <span className="text-slate-500 mx-1">/</span> {selectedMatch.module.name}
-                </p>
-              </div>
-              <button 
-                type="button" 
-                onClick={() => { setNoteId(""); setSessionSearch(""); }}
-                className="ml-auto p-1.5 text-slate-600 hover:text-white transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
+          {selectedMatch && !isFocused && (
+            <div className="px-4 py-2 border-l-2 border-brand-orange bg-brand-orange/5">
+              <p className="text-[10px] text-brand-orange font-bold uppercase tracking-widest leading-none">Mapped to:</p>
+              <p className="text-[10px] text-slate-400 font-medium uppercase truncate mt-1">
+                {selectedMatch.module.course.name} <span className="text-slate-600 px-1">/</span> {selectedMatch.module.name}
+              </p>
             </div>
           )}
         </div>

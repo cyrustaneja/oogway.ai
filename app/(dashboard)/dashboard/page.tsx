@@ -11,11 +11,11 @@ export default async function DashboardPage() {
   const role = (session.user as any).role;
   const userId = (session.user as any).id;
 
-  let where = {};
+  let where: any = { deletedAt: null };
   if (role === "EXPERT") {
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { expertId: true } });
     if (user?.expertId) {
-      where = { expertId: user.expertId };
+      where.expertId = user.expertId;
     }
   }
 
