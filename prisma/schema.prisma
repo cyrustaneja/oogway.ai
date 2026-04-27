@@ -13,18 +13,18 @@ datasource db {
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  passwordHash  String?   // Added for Credentials Login
-  role          UserRole  @default(TEAM)
-  expertId      String?   @unique   // if role = EXPERT, links to Expert record
-  expert        Expert?   @relation(fields: [expertId], references: [id])
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime?
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String?
+  passwordHash String? // Added for Credentials Login
+  role         UserRole  @default(TEAM)
+  expertId     String?   @unique // if role = EXPERT, links to Expert record
+  expert       Expert?   @relation(fields: [expertId], references: [id])
+  accounts     Account[]
+  sessions     Session[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
 
   @@index([deletedAt])
 }
@@ -37,19 +37,20 @@ enum UserRole {
 
 // NextAuth tables (required by NextAuth Prisma adapter)
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
-  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
 }
 
@@ -65,22 +66,23 @@ model VerificationToken {
   identifier String
   token      String   @unique
   expires    DateTime
+
   @@unique([identifier, token])
 }
 
 // ─── EXPERTS ─────────────────────────────────────────────────────────────────
 
 model Expert {
-  id          String    @id @default(cuid())
-  name        String
-  email       String    @unique
-  tags        String[]  // e.g. ["SEO", "Paid Ads", "Analytics"]
-  bio         String?
-  user        User?
-  sessions    AnalysisSession[]
-  deletedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String            @id @default(cuid())
+  name      String
+  email     String            @unique
+  tags      String[] // e.g. ["SEO", "Paid Ads", "Analytics"]
+  bio       String?
+  user      User?
+  sessions  AnalysisSession[]
+  deletedAt DateTime?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
 }
 
 // ─── COURSE HIERARCHY ────────────────────────────────────────────────────────
@@ -97,34 +99,34 @@ model Course {
 }
 
 model Module {
-  id          String    @id @default(cuid())
-  name        String
-  order       Int       @default(0)
-  courseId    String
-  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sessions    SessionNote[]
-  deletedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String        @id @default(cuid())
+  name      String
+  order     Int           @default(0)
+  courseId  String
+  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions  SessionNote[]
+  deletedAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@index([deletedAt])
   @@index([courseId])
 }
 
 model SessionNote {
-  id              String    @id @default(cuid())
-  name            String    // e.g. "Pixel Implementation - Session 3"
-  content         String?   // what should be inside the session / explicit notes
-  phase           String?   // e.g. "Phase 1 - Meta"
-  prerequisites   String?   // free text
-  keyTopics       String[]  // structured list of topics to be covered
-  expertGaps      String?   // known gaps to watch for
-  moduleId        String
-  module          Module    @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  id               String            @id @default(cuid())
+  name             String // e.g. "Pixel Implementation - Session 3"
+  content          String? // what should be inside the session / explicit notes
+  phase            String? // e.g. "Phase 1 - Meta"
+  prerequisites    String? // free text
+  keyTopics        String[] // structured list of topics to be covered
+  expertGaps       String? // known gaps to watch for
+  moduleId         String
+  module           Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
   analysisSessions AnalysisSession[]
-  deletedAt       DateTime?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  deletedAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   @@index([deletedAt])
   @@index([moduleId])
@@ -133,37 +135,32 @@ model SessionNote {
 // ─── ANALYSIS ────────────────────────────────────────────────────────────────
 
 model AnalysisSession {
-  id                  String          @id @default(cuid())
-  name                String          // e.g. "Pixel Implementation - Rahul - 12 Jan"
-  expertId            String
-  expert              Expert          @relation(fields: [expertId], references: [id])
-  sessionNoteId       String?
-  sessionNote         SessionNote?    @relation(fields: [sessionNoteId], references: [id])
-  transcriptPath      String?         // Supabase Storage path
-  transcriptRaw       String?         // raw .vtt content (if small enough)
-  transcript_clean    String?
-  scheduledDuration   Int?            // minutes
-  v3Status            PipelineStatus  @default(PENDING)
-  v3Progress          String?         // e.g. "1/6", "3/6 (2/5)"
-  v3Error             String?         // Capture failure reason
-  heartbeat           DateTime?       // For monitoring worker progress
-  chapters            AnalysisChapter[]
-  extractionResults   ChapterExtractionResult[]
-  overallAnalysis     SessionOverallAnalysis?
-  batchId             String?
-  batch               Batch?          @relation(fields: [batchId], references: [id])
-  v2Analysis          AnalysisV2?
-  deletedAt           DateTime?
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  id                String         @id @default(cuid())
+  name              String // e.g. "Pixel Implementation - Rahul - 12 Jan"
+  expertId          String
+  expert            Expert         @relation(fields: [expertId], references: [id])
+  sessionNoteId     String?
+  sessionNote       SessionNote?   @relation(fields: [sessionNoteId], references: [id])
+  transcriptPath    String? // Supabase Storage path
+  transcriptRaw     String? // raw .vtt content (if small enough)
+  transcript_clean  String?
+  scheduledDuration Int? // minutes
+  v3Status          PipelineStatus @default(PENDING)
+  v3Progress        String? // e.g. "1/6", "3/6 (2/5)"
+  v3Error           String? // Capture failure reason
+  heartbeat         DateTime? // For monitoring worker progress
+  batchId           String?
+  batch             Batch?         @relation(fields: [batchId], references: [id])
+  v2Analysis        AnalysisV2?
+  deletedAt         DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 
-  pipeline_stage      String          @default("UPLOADED")
-  next_action_at      DateTime        @default(now())
-  stage_attempts      Json            @default("{}")
-  chapters_json       Json?
-  chapterResults      AnalysisChapterResult[]
-  flatScores          FlatScore[]
-  
+  pipeline_stage String   @default("UPLOADED")
+  next_action_at DateTime @default(now())
+  stage_attempts Json     @default("{}")
+  chapters_json  Json?
+
   @@index([deletedAt])
   @@index([expertId])
 }
@@ -178,84 +175,25 @@ enum PipelineStatus {
   FAILED
 }
 
-model AnalysisChapter {
-  id              String    @id @default(cuid())
-  sessionId       String
-  session         AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  chapterIndex    Int
-  chapterTitle    String
-  startTime       String    // HH:MM:SS
-  endTime         String    // HH:MM:SS
-  createdAt       DateTime  @default(now())
-
-  @@unique([sessionId, chapterIndex])
-}
-
-model ChapterExtractionResult {
-  id              String    @id @default(cuid())
-  sessionId       String
-  session         AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  chapterIndex    Int
-  chapterTitle    String?
-  task            String    // '3A' | '3B' | '3C'
-  status          String    @default("pending") // pending|processing|complete|failed
-  resultJson      Json?
-  errorMessage    String?
-  attemptCount    Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  @@unique([sessionId, chapterIndex, task])
-  @@index([sessionId])
-  @@index([sessionId, status])
-}
-
-model AnalysisChapterResult {
-  id              String          @id @default(cuid())
-  session_id      String
-  session         AnalysisSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
-  chapter_index   Int
-  result          Json
-  needs_review    Boolean         @default(false)
-  created_at      DateTime        @default(now())
-
-  @@unique([session_id, chapter_index])
-  @@index([session_id], name: "idx_chapter_result_session")
-}
-
-model SessionOverallAnalysis {
-  id                    String    @id @default(cuid())
-  sessionId             String    @unique
-  session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  status                String    @default("pending")
-  overallSummary        Json?     
-  expertAnalysis        Json?     
-  studentAnalysis       Json?     
-  sessionFlow           Json?
-  failedChapterIndices  Int[]
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-}
-
 model AnalysisV2 {
-  id                    String    @id @default(cuid())
-  sessionId             String    @unique
-  session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  status                String    @default("pending") // pending | extracting | synthesising | complete | failed | needs_review
-  progress              String?   // e.g. "3/6 (2/5)"
-  
+  id        String          @id @default(cuid())
+  sessionId String          @unique
+  session   AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  status    String          @default("pending") // pending | extracting | synthesising | complete | failed | needs_review
+  progress  String? // e.g. "3/6 (2/5)"
+
   // Storage for the 3 pillars + session flow
-  sessionFlow           Json?
-  pillar6A              Json?     // Overall Summary
-  pillar6B              Json?     // Expert Analysis
-  pillar6C              Json?     // Student Analysis
-  epochSummaries        Json?     // Map stage results
-  
+  sessionFlow    Json?
+  pillar6A       Json? // Overall Summary
+  pillar6B       Json? // Expert Analysis
+  pillar6C       Json? // Student Analysis
+  epochSummaries Json? // Map stage results
+
   // Observability
-  verifierResult        Json?     // List of failures if status = needs_review
-  costEstimate          Float?    // Estimated $ cost
-  error                 String?
-  
+  verifierResult Json? // List of failures if status = needs_review
+  costEstimate   Float? // Estimated $ cost
+  error          String?
+
   session_flags         Json?
   accuracy_issues       Json?
   teaching_depth_map    Json?
@@ -266,48 +204,22 @@ model AnalysisV2 {
   topics_missed         Json?
   context_setup         Json?
   topics_covered        Json?
-  full_synthesis        Json?     // Complete stage 3 synthesizer output
-  
-  scores                FlatScore[]
-  
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
-}
+  full_synthesis        Json? // Complete stage 3 synthesizer output
 
-model FlatScore {
-  id                String      @id @default(cuid())
-  session_id        String?
-  session           AnalysisSession? @relation(fields: [session_id], references: [id], onDelete: Cascade)
-  analysisV2Id      String
-  analysisV2        AnalysisV2  @relation(fields: [analysisV2Id], references: [id], onDelete: Cascade)
-  
-  rubric            String
-  score             Float
-  label             String
-  scope             String      // session | chapter | topic | question | doubt
-  
-  pillar            String      // 6A | 6B | 6C
-  chapterIndex      Int?
-  chapter           Int?        // Alias used by handlers
-  topic             String?
-  studentNameRaw    String?
-  timestamp         String?     // HH:MM:SS
-  
-  createdAt         DateTime    @default(now())
-
-  @@index([session_id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ─── BATCH ───────────────────────────────────────────────────────────────────
 
 model Batch {
-  id          String    @id @default(cuid())
+  id          String            @id @default(cuid())
   name        String
   description String?
   courseId    String?
-  course      Course?   @relation(fields: [courseId], references: [id])
+  course      Course?           @relation(fields: [courseId], references: [id])
   sessions    AnalysisSession[]
   deletedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 }
