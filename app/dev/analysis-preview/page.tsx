@@ -36,10 +36,10 @@ export default function DevPreviewPage() {
       </div>
 
       <main className="max-w-4xl mx-auto px-4 py-4 pb-20">
-        <AnalysisHeader data={data} sessionInfo={(data as any).session_info} />
+        <AnalysisHeader data={data} sessionInfo={(data as any).session_info} chapters={SAMPLE_CHAPTERS} />
         
         <div className="space-y-4">
-          <FlagBanner data={data} />
+          <FlagBanner data={data} chapters={SAMPLE_CHAPTERS} />
           
           <div className="mb-8">
             <KeyLearningPoints data={data} />
