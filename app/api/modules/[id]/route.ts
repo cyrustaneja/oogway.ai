@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import { softDelete } from "@/lib/db/soft-delete";
 
@@ -9,8 +8,8 @@ export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
   try {
@@ -59,8 +58,8 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role === "EXPERT") {
+  const token = await getAuthToken();
+  if (!token || (token as any).role === "EXPERT") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 

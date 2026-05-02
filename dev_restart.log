@@ -1,0 +1,2204 @@
+
+> oogway-app@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.29.125:3000
+- Environments: .env.local, .env
+✓ Ready in 380ms
+
+ GET /login?callbackUrl=http%3A%2F%2Flocalhost%3A3000%2Fdashboard 200 in 2.4s (next.js: 1720ms, application-code: 727ms)
+ GET /sessions/cmoib8byj0009xvuitnfywqbi 200 in 2.5s (next.js: 1528ms, application-code: 973ms)
+ GET /sessions/cmokemofu000da9opucna2mj6 200 in 2.5s (next.js: 1519ms, application-code: 984ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 3.6s (next.js: 1951ms, application-code: 1691ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 3.4s (next.js: 1539ms, application-code: 1818ms)
+ GET /dashboard 200 in 4.3s (next.js: 808ms, proxy.ts: 754ms, application-code: 2.7s)
+ GET /api/analysis/cmokemofu000da9opucna2mj6/status 404 in 297ms (next.js: 39ms, application-code: 258ms)
+ GET /api/analysis/cmoib8byj0009xvuitnfywqbi/status 401 in 23ms (next.js: 10ms, application-code: 13ms)
+ GET /api/auth/session 200 in 1531ms (next.js: 1470ms, application-code: 61ms)
+ GET /api/auth/session 200 in 2.1s (next.js: 2.0s, application-code: 73ms)
+ GET /api/auth/session 200 in 18ms (next.js: 6ms, application-code: 11ms)
+ GET /api/auth/session 200 in 21ms (next.js: 3ms, application-code: 17ms)
+ GET /api/auth/session 200 in 15ms (next.js: 2ms, application-code: 13ms)
+ GET /api/auth/session 200 in 14ms (next.js: 3ms, application-code: 11ms)
+ GET /api/auth/session 200 in 20ms (next.js: 4ms, application-code: 16ms)
+ GET /api/auth/session 200 in 13ms (next.js: 4ms, application-code: 10ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 269ms (next.js: 5ms, application-code: 265ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 168ms (next.js: 10ms, application-code: 159ms)
+[Stage1] cmolrw66: duration=28min, min_chapters=2, transcript_chars=24274
+[Stage1] cmolrydd: duration=64min, min_chapters=3, transcript_chars=60195
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 255ms (next.js: 23ms, application-code: 232ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 184ms (next.js: 7ms, application-code: 177ms)
+[call-stage] Stage1[cmolrw66]: OK — 11254ms budget=2000
+[call-stage] retry 1/1 reason=ParseError elapsed=11258ms backoff=0ms
+[call-stage] Stage1[cmolrydd]: OK — 11973ms budget=2000
+[call-stage] Stage1[cmolrydd]: jsonrepair used
+[tick] stage1[cmolrydd] error: [Stage1] Under-segmentation rejected — got 1 chapter(s) but session is 64min which requires at least 3 chapters. Session cmolrydd.
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 195ms (next.js: 6ms, application-code: 189ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 249ms (next.js: 10ms, application-code: 239ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 208ms (next.js: 8ms, application-code: 200ms)
+[call-stage] Stage1[cmolrw66]: OK — 11737ms budget=2000
+[call-stage] Stage1[cmolrw66]: jsonrepair used
+[tick] stage1[cmolrw66] error: [Stage1] Under-segmentation rejected — got 1 chapter(s) but session is 28min which requires at least 2 chapters. Session cmolrw66.
+[tick] Done in 23929ms: claimed=2 advanced=0 failed=2 errors=2
+ POST /api/pipeline/tick 200 in 24.0s (next.js: 78ms, application-code: 23.9s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 244ms (next.js: 4ms, application-code: 240ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 170ms (next.js: 11ms, application-code: 159ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 212ms (next.js: 12ms, application-code: 200ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 183ms (next.js: 6ms, application-code: 176ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 209ms (next.js: 24ms, application-code: 185ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 155ms (next.js: 9ms, application-code: 145ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 199ms (next.js: 17ms, application-code: 182ms)
+[Stage0] Session cmolrw66l00016ic8f928vdhl: quality=Good lang=english tokens≈6069 signals=
+[Stage0] Session cmolryddj00036ic8z0vvmr4s: quality=Good lang=english tokens≈15049 signals=
+[tick] Done in 1719ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 1781ms (next.js: 8ms, application-code: 1773ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 790ms (next.js: 6ms, application-code: 784ms)
+[Stage1] cmolrw66: duration=28min, min_chapters=2, transcript_chars=24274
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=887ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=231ms backoff=3000ms
+[tick] Expired 1 stale sessions
+[Stage1] cmolrydd: duration=64min, min_chapters=3, transcript_chars=60195
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 232ms (next.js: 9ms, application-code: 223ms)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=298ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=290ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=398ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=268ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 142ms (next.js: 4ms, application-code: 138ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 247ms (next.js: 8ms, application-code: 239ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=312ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=275ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 166ms (next.js: 9ms, application-code: 158ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 214ms (next.js: 5ms, application-code: 209ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 283ms (next.js: 9ms, application-code: 274ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 365ms (next.js: 9ms, application-code: 356ms)
+ GET /api/auth/session 200 in 1953ms (next.js: 90ms, application-code: 1863ms)
+ GET /api/auth/session 200 in 99ms (next.js: 49ms, application-code: 49ms)
+ GET /api/auth/session 200 in 98ms (next.js: 23ms, application-code: 75ms)
+ GET /api/auth/session 200 in 1141ms (next.js: 15ms, application-code: 1127ms)
+[call-stage] Stage1[cmolrw66]: no retries left for RateLimit429 (used 4/4) total=37207ms
+[tick] stage1[cmolrw66] error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+[call-stage] Stage1[cmolrydd]: no retries left for RateLimit429 (used 4/4) total=34080ms
+[tick] stage1[cmolrydd] error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+[tick] Done in 39928ms: claimed=1 advanced=0 failed=0 errors=1
+ POST /api/pipeline/tick 200 in 40.0s (next.js: 3ms, application-code: 40.0s)
+[tick] Done in 35256ms: claimed=1 advanced=0 failed=0 errors=1
+ POST /api/pipeline/tick 200 in 35.3s (next.js: 7ms, application-code: 35.3s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 302ms (next.js: 26ms, application-code: 276ms)
+ POST /api/pipeline/tick 200 in 335ms (next.js: 40ms, application-code: 295ms)
+ POST /api/pipeline/tick 200 in 252ms (next.js: 30ms, application-code: 222ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 434ms (next.js: 26ms, application-code: 408ms)
+ POST /api/pipeline/tick 200 in 430ms (next.js: 29ms, application-code: 402ms)
+ POST /api/pipeline/tick 200 in 409ms (next.js: 287ms, application-code: 122ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 457ms (next.js: 71ms, application-code: 386ms)
+ POST /api/pipeline/tick 200 in 207ms (next.js: 77ms, application-code: 130ms)
+ POST /api/pipeline/tick 200 in 193ms (next.js: 13ms, application-code: 180ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 251ms (next.js: 60ms, application-code: 190ms)
+ POST /api/pipeline/tick 200 in 133ms (next.js: 4ms, application-code: 129ms)
+ POST /api/pipeline/tick 200 in 189ms (next.js: 2ms, application-code: 186ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 192ms (next.js: 12ms, application-code: 180ms)
+ POST /api/pipeline/tick 200 in 93ms (next.js: 6ms, application-code: 87ms)
+ POST /api/pipeline/tick 200 in 80ms (next.js: 3ms, application-code: 78ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 228ms (next.js: 19ms, application-code: 209ms)
+ POST /api/pipeline/tick 200 in 83ms (next.js: 3ms, application-code: 79ms)
+ POST /api/pipeline/tick 200 in 78ms (next.js: 3ms, application-code: 75ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 180ms (next.js: 8ms, application-code: 171ms)
+ POST /api/pipeline/tick 200 in 82ms (next.js: 5ms, application-code: 77ms)
+ POST /api/pipeline/tick 200 in 119ms (next.js: 2ms, application-code: 116ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 596ms (next.js: 8ms, application-code: 588ms)
+ POST /api/pipeline/tick 200 in 118ms (next.js: 3ms, application-code: 116ms)
+ POST /api/pipeline/tick 200 in 88ms (next.js: 3ms, application-code: 85ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 176ms (next.js: 9ms, application-code: 167ms)
+ POST /api/pipeline/tick 200 in 165ms (next.js: 53ms, application-code: 112ms)
+ POST /api/pipeline/tick 200 in 123ms (next.js: 3ms, application-code: 119ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ POST /api/pipeline/tick 200 in 92ms (next.js: 2ms, application-code: 90ms)
+ POST /api/pipeline/tick 200 in 92ms (next.js: 3ms, application-code: 90ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 220ms (next.js: 8ms, application-code: 212ms)
+ POST /api/pipeline/tick 200 in 79ms (next.js: 4ms, application-code: 76ms)
+ POST /api/pipeline/tick 200 in 78ms (next.js: 2ms, application-code: 76ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 210ms (next.js: 7ms, application-code: 204ms)
+ POST /api/pipeline/tick 200 in 98ms (next.js: 6ms, application-code: 92ms)
+ POST /api/pipeline/tick 200 in 94ms (next.js: 7ms, application-code: 87ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 200ms (next.js: 10ms, application-code: 190ms)
+ POST /api/pipeline/tick 200 in 116ms (next.js: 3ms, application-code: 113ms)
+ POST /api/pipeline/tick 200 in 80ms (next.js: 3ms, application-code: 76ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 166ms (next.js: 6ms, application-code: 160ms)
+ POST /api/pipeline/tick 200 in 81ms (next.js: 3ms, application-code: 78ms)
+ POST /api/pipeline/tick 200 in 77ms (next.js: 4ms, application-code: 74ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 9ms, application-code: 153ms)
+ POST /api/pipeline/tick 200 in 117ms (next.js: 2ms, application-code: 115ms)
+[Stage1] cmolrw66: duration=28min, min_chapters=2, transcript_chars=24274, model=gemini-2.5-pro (retry #1)
+[Stage1] cmolrydd: duration=64min, min_chapters=3, transcript_chars=60195, model=gemini-2.5-pro (retry #1)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 249ms (next.js: 34ms, application-code: 215ms)
+ POST /api/pipeline/tick 200 in 86ms (next.js: 11ms, application-code: 76ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 215ms (next.js: 7ms, application-code: 208ms)
+ POST /api/pipeline/tick 200 in 79ms (next.js: 3ms, application-code: 76ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 8ms, application-code: 146ms)
+ POST /api/pipeline/tick 200 in 97ms (next.js: 3ms, application-code: 93ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 8ms, application-code: 150ms)
+ POST /api/pipeline/tick 200 in 80ms (next.js: 4ms, application-code: 77ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 200ms (next.js: 5ms, application-code: 195ms)
+[call-stage] Stage1[cmolrw66]: OK — 19704ms budget=2000
+[call-stage] Stage1[cmolrw66]: jsonrepair used
+[Stage1] cmolrw66: accepted 2 chapters (697s – 1538s)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=188ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=265ms backoff=1000ms
+[call-stage] Stage1[cmolrydd]: OK — 21888ms budget=2000
+[call-stage] retry 1/3 reason=ParseError elapsed=21889ms backoff=500ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=183ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=205ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 186ms (next.js: 7ms, application-code: 180ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=173ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=260ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 416ms (next.js: 7ms, application-code: 409ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 199ms (next.js: 8ms, application-code: 192ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=605ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=816ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 239ms (next.js: 8ms, application-code: 231ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 282ms (next.js: 7ms, application-code: 275ms)
+[call-stage] Stage1[cmolrydd]: OK — 18916ms budget=2000
+[call-stage] retry 2/3 reason=ParseError elapsed=18917ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 169ms (next.js: 7ms, application-code: 162ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 166ms (next.js: 7ms, application-code: 160ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33354ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33765ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 34696ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 34.7s (next.js: 5ms, application-code: 34.7s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 191ms (next.js: 7ms, application-code: 183ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=561ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=610ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=199ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=182ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 168ms (next.js: 15ms, application-code: 153ms)
+[call-stage] Stage1[cmolrydd]: OK — 21570ms budget=2000
+[call-stage] retry 3/3 reason=ParseError elapsed=21571ms backoff=0ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=155ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=174ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 229ms (next.js: 12ms, application-code: 217ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 430ms (next.js: 7ms, application-code: 423ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=834ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=867ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 200ms (next.js: 7ms, application-code: 194ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 264ms (next.js: 8ms, application-code: 256ms)
+[call-stage] Stage1[cmolrydd]: OK — 21126ms budget=2000
+[call-stage] Stage1[cmolrydd]: no retries left for ParseError (used 3/3) total=85006ms
+[tick] stage1[cmolrydd] error: Stage1[cmolrydd]: JSON parse failed after jsonrepair. Preview: 
+[tick] Done in 85871ms: claimed=2 advanced=1 failed=0 errors=1
+ POST /api/pipeline/tick 200 in 86s (next.js: 2ms, application-code: 86s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 152ms (next.js: 4ms, application-code: 148ms)
+ POST /api/pipeline/tick 200 in 81ms (next.js: 4ms, application-code: 77ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 152ms (next.js: 4ms, application-code: 147ms)
+ POST /api/pipeline/tick 200 in 275ms (next.js: 3ms, application-code: 272ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=34349ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=34429ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 35270ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.3s (next.js: 4ms, application-code: 35.3s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 241ms (next.js: 4ms, application-code: 238ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+ POST /api/pipeline/tick 200 in 120ms (next.js: 3ms, application-code: 118ms)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=192ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=216ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=161ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=182ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 5ms, application-code: 151ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=155ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=190ms backoff=8000ms
+[Stage1] cmolrydd: duration=64min, min_chapters=3, transcript_chars=60195, model=gemini-2.5-pro (retry #2)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=222ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=578ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 8ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 195ms (next.js: 6ms, application-code: 189ms)
+[call-stage] Stage1[cmolrydd]: OK — 18589ms budget=2000
+[call-stage] retry 1/3 reason=ParseError elapsed=18590ms backoff=500ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 179ms (next.js: 9ms, application-code: 170ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 553ms (next.js: 6ms, application-code: 547ms)
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33372ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33631ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 232ms (next.js: 4ms, application-code: 228ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 34746ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 34.8s (next.js: 4ms, application-code: 34.8s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 197ms (next.js: 6ms, application-code: 191ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=497ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=530ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=159ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=176ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 188ms (next.js: 6ms, application-code: 182ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=143ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=163ms backoff=8000ms
+[call-stage] Stage1[cmolrydd]: OK — 22192ms budget=2000
+[call-stage] retry 2/3 reason=ParseError elapsed=22194ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 168ms (next.js: 14ms, application-code: 154ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=498ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=527ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 193ms (next.js: 8ms, application-code: 185ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 296ms (next.js: 6ms, application-code: 290ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 6ms, application-code: 148ms)
+[call-stage] Stage1[cmolrydd]: OK — 18325ms budget=2000
+[call-stage] retry 3/3 reason=ParseError elapsed=18326ms backoff=0ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 180ms (next.js: 8ms, application-code: 173ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33838ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33949ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 34913ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 34.9s (next.js: 5ms, application-code: 34.9s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 7ms, application-code: 148ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=534ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=603ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 7ms, application-code: 149ms)
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=198ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=158ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=180ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=210ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 229ms (next.js: 22ms, application-code: 206ms)
+[call-stage] Stage1[cmolrydd]: OK — 19947ms budget=2000
+[call-stage] Stage1[cmolrydd]: no retries left for ParseError (used 3/3) total=80563ms
+[tick] stage1[cmolrydd] error: Stage1[cmolrydd]: JSON parse failed after jsonrepair. Preview: 
+[tick] Done in 81411ms: claimed=1 advanced=0 failed=0 errors=1
+ POST /api/pipeline/tick 200 in 81s (next.js: 2ms, application-code: 81s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 387ms (next.js: 7ms, application-code: 380ms)
+ POST /api/pipeline/tick 200 in 87ms (next.js: 3ms, application-code: 83ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=574ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=663ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 7ms, application-code: 148ms)
+ POST /api/pipeline/tick 200 in 78ms (next.js: 1246µs, application-code: 77ms)
+ POST /api/pipeline/tick 200 in 120ms (next.js: 3ms, application-code: 117ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 175ms (next.js: 8ms, application-code: 168ms)
+[Stage1] cmolrydd: duration=64min, min_chapters=3, transcript_chars=60195, model=gemini-2.5-pro (retry #3)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 6ms, application-code: 156ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 249ms (next.js: 6ms, application-code: 243ms)
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33710ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=34137ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 35156ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.2s (next.js: 4ms, application-code: 35.2s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 401ms (next.js: 7ms, application-code: 394ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=501ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=719ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 281ms (next.js: 6ms, application-code: 275ms)
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=267ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=254ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=182ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=340ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 188ms (next.js: 7ms, application-code: 181ms)
+[call-stage] Stage1[cmolrydd]: OK — 21541ms budget=2000
+[call-stage] retry 1/3 reason=ParseError elapsed=21542ms backoff=500ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 205ms (next.js: 6ms, application-code: 199ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=499ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=549ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 8ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 204ms (next.js: 7ms, application-code: 197ms)
+[call-stage] Stage1[cmolrydd]: OK — 18738ms budget=2000
+[call-stage] Stage1[cmolrydd]: jsonrepair used
+[Stage1] cmolrydd: accepted 3 chapters (689s – 4548s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 265ms (next.js: 8ms, application-code: 257ms)
+[tick] Done in 42047ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 42s (next.js: 3ms, application-code: 42s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 234ms (next.js: 7ms, application-code: 227ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=686ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=732ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=781ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=151ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=264ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=295ms backoff=3000ms
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33763ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=34020ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 35054ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.1s (next.js: 4ms, application-code: 35.1s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 8ms, application-code: 148ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=148ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=276ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=420ms backoff=8000ms
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=159ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=168ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=162ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=169ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=158ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=173ms backoff=8000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=153ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=275ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=236ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 210ms (next.js: 8ms, application-code: 202ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 155ms (next.js: 6ms, application-code: 148ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=503ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=564ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 7ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 8ms, application-code: 155ms)
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33676ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34269ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34343ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35400ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.4s (next.js: 4ms, application-code: 35.4s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 205ms (next.js: 8ms, application-code: 198ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33283ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33498ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[tick] Done in 34313ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 34.3s (next.js: 4ms, application-code: 34.3s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 7ms, application-code: 151ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=198ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=515ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=568ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=636ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=649ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=150ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=177ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=168ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=233ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=285ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 7ms, application-code: 147ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=153ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=147ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=166ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=416ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=426ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 203ms (next.js: 10ms, application-code: 193ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=527ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=214ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=502ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=221ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=266ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 9ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 196ms (next.js: 7ms, application-code: 189ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 200ms (next.js: 8ms, application-code: 192ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33571ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33659ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33869ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 188ms (next.js: 3ms, application-code: 184ms)
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=33924ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34128ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35261ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.3s (next.js: 3ms, application-code: 35.3s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 172ms (next.js: 7ms, application-code: 165ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=523ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=549ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=554ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=589ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=643ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=156ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=146ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=155ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=223ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=275ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 8ms, application-code: 149ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=145ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=139ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=153ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=232ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=345ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 202ms (next.js: 7ms, application-code: 196ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=201ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=279ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=534ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=542ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=269ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 6ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 219ms (next.js: 14ms, application-code: 205ms)
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33609ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33866ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=33928ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33978ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34138ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35165ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.2s (next.js: 5ms, application-code: 35.2s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 153ms (next.js: 7ms, application-code: 146ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=204ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=347ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=526ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=527ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=602ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=160ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=266ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=174ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=163ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=247ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=163ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=144ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=143ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=359ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=425ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 208ms (next.js: 9ms, application-code: 199ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=543ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=533ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=550ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=225ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=638ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 538ms (next.js: 9ms, application-code: 529ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 6ms, application-code: 156ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 164ms (next.js: 6ms, application-code: 158ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 195ms (next.js: 6ms, application-code: 189ms)
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33563ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33642ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33968ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34044ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34104ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35167ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.2s (next.js: 4ms, application-code: 35.2s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 188ms (next.js: 7ms, application-code: 181ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=312ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=521ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=539ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=531ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=582ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 155ms (next.js: 6ms, application-code: 148ms)
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=274ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=143ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=146ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=139ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=214ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=146ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=152ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=145ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=287ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=208ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 10ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 215ms (next.js: 12ms, application-code: 203ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=205ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=228ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=513ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=639ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=586ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 171ms (next.js: 7ms, application-code: 163ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 5ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 273ms (next.js: 7ms, application-code: 266ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33660ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33757ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33912ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34167ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34234ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35609ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.6s (next.js: 8ms, application-code: 35.6s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 8ms, application-code: 150ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=207ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=511ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=523ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=611ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=631ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 6ms, application-code: 148ms)
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=155ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=150ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=154ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=225ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=261ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=171ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=149ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=195ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=379ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=385ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 7ms, application-code: 147ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 195ms (next.js: 7ms, application-code: 188ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=499ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=508ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=515ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=218ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=689ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 164ms (next.js: 6ms, application-code: 158ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 8ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 196ms (next.js: 6ms, application-code: 190ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 397ms (next.js: 9ms, application-code: 389ms)
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33587ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33672ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33773ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34040ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34245ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35714ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.7s (next.js: 4ms, application-code: 35.7s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 171ms (next.js: 7ms, application-code: 164ms)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=205ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=264ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=316ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=523ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=536ms backoff=1000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 182ms (next.js: 11ms, application-code: 171ms)
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=163ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=235ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=278ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=187ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=155ms backoff=3000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=164ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=216ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=154ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=276ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=455ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 167ms (next.js: 8ms, application-code: 160ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=258ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=525ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=217ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=558ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=608ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 203ms (next.js: 6ms, application-code: 198ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 171ms (next.js: 6ms, application-code: 165ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 10ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 171ms (next.js: 6ms, application-code: 165ms)
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=33559ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=33607ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=33713ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33928ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34031ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35552ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.6s (next.js: 4ms, application-code: 35.6s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 167ms (next.js: 7ms, application-code: 160ms)
+[Stage2] cmolrw66l00016ic8f928vdhl: processing chapters [1,2] (2 remaining of 2)
+[Stage2] cmolryddj00036ic8z0vvmr4s: processing chapters [1,2,] (3 remaining of 3)
+[transcript-slicer] sliceForStage2: no lines found in window NaN:NaN:NaN–01:15:48, falling back to full transcript
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=270ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=353ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=541ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=537ms backoff=1000ms
+[call-stage] retry 1/4 reason=RateLimit429 elapsed=570ms backoff=1000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=226ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=283ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=169ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=167ms backoff=3000ms
+[call-stage] retry 2/4 reason=RateLimit429 elapsed=223ms backoff=3000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=240ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=153ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=174ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=269ms backoff=8000ms
+[call-stage] retry 3/4 reason=RateLimit429 elapsed=219ms backoff=8000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 165ms (next.js: 9ms, application-code: 156ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 204ms (next.js: 8ms, application-code: 196ms)
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=577ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=504ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=521ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=497ms backoff=20000ms
+[call-stage] retry 4/4 reason=RateLimit429 elapsed=614ms backoff=20000ms
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 152ms (next.js: 6ms, application-code: 146ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 240ms (next.js: 8ms, application-code: 232ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 192ms (next.js: 8ms, application-code: 185ms)
+[call-stage] Stage2[cmolrydd:ch1]: no retries left for RateLimit429 (used 4/4) total=33924ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:ch2]: no retries left for RateLimit429 (used 4/4) total=34006ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch2]: no retries left for RateLimit429 (used 4/4) total=34103ms
+[Stage2] ch2 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrw66:ch1]: no retries left for RateLimit429 (used 4/4) total=34157ms
+[Stage2] ch1 error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[call-stage] Stage2[cmolrydd:chundefined]: no retries left for RateLimit429 (used 4/4) total=34204ms
+[Stage2] chundefined error: Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+    at handleResponseNotOk (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:439:11)
+    at async makeRequest (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:411:9)
+    at async generateContent (.next/dev/server/chunks/[root-of-the-server]__0_l~go9._.js:853:22)
+    at async callStage (lib/pipeline/utils/call-stage.ts:176:11)
+    at async processOneChapter (lib/pipeline/handlers/stage2-chapter-extractor.ts:83:18)
+    at async (lib/pipeline/handlers/stage2-chapter-extractor.ts:236:24)
+    at async Object.handleStage2 [as handler] (lib/pipeline/handlers/stage2-chapter-extractor.ts:220:19)
+    at async withTimeout (app/api/pipeline/tick/route.ts:44:12)
+    at async eval (app/api/pipeline/tick/route.ts:135:11)
+    at async POST (app/api/pipeline/tick/route.ts:126:21)
+  174 |
+  175 |       const result = params.timeoutMs
+> 176 |         ? await withTimeout(generatePromise, params.timeoutMs, params.stageName)
+      |           ^
+  177 |         : await generatePromise
+  178 |
+  179 |       const callMs = Date.now() - attemptStart {
+  status: 404,
+  statusText: 'Not Found',
+  errorDetails: undefined
+}
+[Stage2] cmolrw66l00016ic8f928vdhl: batch done — 0 ok, 2 failed
+[Stage2] cmolryddj00036ic8z0vvmr4s: batch done — 0 ok, 3 failed
+[tick] Done in 35307ms: claimed=2 advanced=2 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 35.3s (next.js: 3ms, application-code: 35.3s)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 218ms (next.js: 8ms, application-code: 210ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 6ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 7ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 197ms (next.js: 7ms, application-code: 190ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 7ms, application-code: 153ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 8ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 213ms (next.js: 6ms, application-code: 207ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 271ms (next.js: 6ms, application-code: 265ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 7ms, application-code: 147ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 155ms (next.js: 6ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 285ms (next.js: 5ms, application-code: 280ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 151ms (next.js: 7ms, application-code: 144ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 168ms (next.js: 6ms, application-code: 162ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 530ms (next.js: 8ms, application-code: 523ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 173ms (next.js: 6ms, application-code: 167ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 5ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 8ms, application-code: 153ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 206ms (next.js: 4ms, application-code: 202ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 6ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 7ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 157ms (next.js: 6ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 190ms (next.js: 7ms, application-code: 183ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 8ms, application-code: 153ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 166ms (next.js: 6ms, application-code: 160ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 199ms (next.js: 8ms, application-code: 191ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 218ms (next.js: 10ms, application-code: 208ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 193ms (next.js: 6ms, application-code: 186ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 154ms (next.js: 7ms, application-code: 147ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 155ms (next.js: 6ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 190ms (next.js: 6ms, application-code: 183ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 175ms (next.js: 4ms, application-code: 171ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 192ms (next.js: 8ms, application-code: 184ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 162ms (next.js: 7ms, application-code: 155ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 192ms (next.js: 6ms, application-code: 186ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 9ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 167ms (next.js: 8ms, application-code: 159ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 194ms (next.js: 7ms, application-code: 187ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 7ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/auth/session 200 in 335ms (next.js: 242ms, application-code: 94ms)
+ GET /api/auth/session 200 in 24ms (next.js: 6ms, application-code: 17ms)
+ GET /api/auth/session 200 in 27ms (next.js: 5ms, application-code: 22ms)
+ GET /api/auth/session 200 in 41ms (next.js: 12ms, application-code: 29ms)
+ GET /api/auth/session 200 in 47ms (next.js: 8ms, application-code: 39ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 383ms (next.js: 162ms, application-code: 221ms)
+ GET /api/auth/session 200 in 32ms (next.js: 5ms, application-code: 27ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 7ms, application-code: 157ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 456ms (next.js: 7ms, application-code: 449ms)
+ GET /api/auth/session 200 in 19ms (next.js: 11ms, application-code: 8ms)
+ GET /api/auth/session 200 in 9ms (next.js: 1406µs, application-code: 7ms)
+ GET /api/auth/session 200 in 7ms (next.js: 1287µs, application-code: 6ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 193ms (next.js: 7ms, application-code: 186ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 170ms (next.js: 8ms, application-code: 162ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 166ms (next.js: 8ms, application-code: 158ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 197ms (next.js: 7ms, application-code: 190ms)
+ GET /sessions/cmolrw66l00016ic8f928vdhl 200 in 358ms (next.js: 8ms, application-code: 350ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 303ms (next.js: 9ms, application-code: 294ms)
+ GET /api/analysis/cmolrw66l00016ic8f928vdhl/status 200 in 206ms (next.js: 3ms, application-code: 203ms)
+ GET /api/analysis/cmolrw66l00016ic8f928vdhl/status 200 in 874ms (next.js: 6ms, application-code: 868ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 179ms (next.js: 7ms, application-code: 173ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 485ms (next.js: 4ms, application-code: 481ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 164ms (next.js: 12ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 150ms (next.js: 4ms, application-code: 146ms)
+ GET /api/auth/session 200 in 37ms (next.js: 16ms, application-code: 21ms)
+ GET /api/auth/session 200 in 24ms (next.js: 4ms, application-code: 20ms)
+ GET /api/auth/session 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /dashboard 200 in 609ms (next.js: 4ms, proxy.ts: 14ms, application-code: 591ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 173ms (next.js: 8ms, application-code: 165ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 190ms (next.js: 5ms, application-code: 185ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 184ms (next.js: 7ms, application-code: 177ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 204ms (next.js: 6ms, application-code: 198ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 160ms (next.js: 7ms, application-code: 153ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 171ms (next.js: 8ms, application-code: 163ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 175ms (next.js: 7ms, application-code: 168ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 206ms (next.js: 7ms, application-code: 200ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 219ms (next.js: 7ms, application-code: 212ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 158ms (next.js: 7ms, application-code: 151ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 9ms, application-code: 149ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 200ms (next.js: 9ms, application-code: 191ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 181ms (next.js: 8ms, application-code: 172ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 159ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 163ms (next.js: 8ms, application-code: 155ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 192ms (next.js: 8ms, application-code: 184ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 243ms (next.js: 9ms, application-code: 234ms)
+ GET /api/auth/session 200 in 66ms (next.js: 22ms, application-code: 44ms)
+ GET /api/auth/session 200 in 16ms (next.js: 2ms, application-code: 13ms)
+ GET /api/auth/session 200 in 8ms (next.js: 1264µs, application-code: 7ms)
+ GET /api/auth/session 200 in 19ms (next.js: 4ms, application-code: 15ms)
+ GET /api/auth/session 200 in 13ms (next.js: 1722µs, application-code: 11ms)
+ GET /api/auth/session 200 in 9ms (next.js: 1604µs, application-code: 7ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 200 in 191ms (next.js: 12ms, application-code: 179ms)
+ GET /dashboard 200 in 721ms (next.js: 4ms, proxy.ts: 9ms, application-code: 708ms)
+ DELETE /api/analysis/cmolryddj00036ic8z0vvmr4s 200 in 880ms (next.js: 656ms, application-code: 224ms)
+ DELETE /api/analysis/cmolrw66l00016ic8f928vdhl 200 in 225ms (next.js: 25ms, application-code: 199ms)
+ GET /analysis/new 200 in 155ms (next.js: 48ms, proxy.ts: 7ms, application-code: 100ms)
+ GET /api/experts 200 in 797ms (next.js: 535ms, application-code: 262ms)
+ GET /api/batches 200 in 818ms (next.js: 228ms, application-code: 589ms)
+ GET /api/session-notes 200 in 869ms (next.js: 419ms, application-code: 451ms)
+ GET /api/experts 200 in 173ms (next.js: 6ms, application-code: 166ms)
+ GET /api/session-notes 200 in 134ms (next.js: 5ms, application-code: 129ms)
+ GET /api/batches 200 in 264ms (next.js: 4ms, application-code: 261ms)
+ GET /api/auth/session 200 in 50ms (next.js: 14ms, application-code: 35ms)
+ GET /api/auth/session 200 in 11ms (next.js: 2ms, application-code: 8ms)
+ GET /api/auth/session 200 in 12ms (next.js: 3ms, application-code: 10ms)
+ GET /api/auth/session 200 in 114ms (next.js: 58ms, application-code: 56ms)
+ GET /api/auth/session 200 in 18ms (next.js: 4ms, application-code: 14ms)
+ GET /api/auth/session 200 in 66ms (next.js: 3ms, application-code: 62ms)
+ GET /api/auth/session 200 in 166ms (next.js: 128ms, application-code: 38ms)
+ POST /api/analysis 201 in 371ms (next.js: 53ms, application-code: 318ms)
+ GET /sessions/cmolsuczc0001mjjtkeun248g 200 in 437ms (next.js: 9ms, application-code: 428ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 8ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 204ms (next.js: 14ms, application-code: 190ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 157ms (next.js: 5ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 5ms, application-code: 157ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 272ms (next.js: 8ms, application-code: 264ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 170ms (next.js: 6ms, application-code: 164ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 171ms (next.js: 5ms, application-code: 166ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 6ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 205ms (next.js: 9ms, application-code: 196ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 214ms (next.js: 45ms, application-code: 168ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 186ms (next.js: 13ms, application-code: 173ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 199ms (next.js: 10ms, application-code: 189ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 172ms (next.js: 14ms, application-code: 158ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 165ms (next.js: 7ms, application-code: 158ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 213ms (next.js: 8ms, application-code: 205ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 7ms, application-code: 200ms)
+ GET /api/auth/session 200 in 318ms (next.js: 171ms, application-code: 147ms)
+ GET /api/auth/session 200 in 24ms (next.js: 10ms, application-code: 14ms)
+ GET /api/auth/session 200 in 34ms (next.js: 16ms, application-code: 18ms)
+ GET /api/auth/session 200 in 22ms (next.js: 3ms, application-code: 19ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 486ms (next.js: 278ms, application-code: 208ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 243ms (next.js: 6ms, application-code: 237ms)
+ GET /api/auth/session 200 in 178ms (next.js: 9ms, application-code: 168ms)
+ GET /api/auth/session 200 in 19ms (next.js: 2ms, application-code: 17ms)
+ GET /api/auth/session 200 in 50ms (next.js: 7ms, application-code: 42ms)
+ GET /api/auth/session 200 in 39ms (next.js: 6ms, application-code: 33ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 10ms, application-code: 197ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 8ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 172ms (next.js: 10ms, application-code: 163ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 7ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 199ms (next.js: 9ms, application-code: 189ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 186ms (next.js: 8ms, application-code: 178ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 165ms (next.js: 6ms, application-code: 159ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 200ms (next.js: 6ms, application-code: 194ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 184ms (next.js: 5ms, application-code: 179ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 167ms (next.js: 7ms, application-code: 160ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 237ms (next.js: 5ms, application-code: 232ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 8ms, application-code: 200ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 157ms (next.js: 5ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 170ms (next.js: 10ms, application-code: 159ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 200ms (next.js: 11ms, application-code: 189ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 157ms (next.js: 7ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 201ms (next.js: 4ms, application-code: 197ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 5ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 173ms (next.js: 17ms, application-code: 156ms)
+ GET /api/auth/session 200 in 17ms (next.js: 5ms, application-code: 11ms)
+ GET /api/auth/session 200 in 7ms (next.js: 1466µs, application-code: 6ms)
+ GET /api/auth/session 200 in 8ms (next.js: 1337µs, application-code: 7ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 210ms (next.js: 8ms, application-code: 203ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 243ms (next.js: 6ms, application-code: 236ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 7ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 211ms (next.js: 7ms, application-code: 205ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 224ms (next.js: 7ms, application-code: 217ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 156ms (next.js: 6ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 181ms (next.js: 21ms, application-code: 160ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 197ms (next.js: 7ms, application-code: 191ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 205ms (next.js: 10ms, application-code: 195ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 459ms (next.js: 11ms, application-code: 448ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 166ms (next.js: 8ms, application-code: 158ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 199ms (next.js: 8ms, application-code: 191ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 7ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 175ms (next.js: 14ms, application-code: 162ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 208ms (next.js: 6ms, application-code: 202ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 10ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 252ms (next.js: 8ms, application-code: 244ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 310ms (next.js: 8ms, application-code: 302ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 343ms (next.js: 6ms, application-code: 337ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 165ms (next.js: 7ms, application-code: 158ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 203ms (next.js: 16ms, application-code: 187ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 221ms (next.js: 7ms, application-code: 214ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 246ms (next.js: 9ms, application-code: 237ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 166ms (next.js: 14ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 209ms (next.js: 10ms, application-code: 199ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 174ms (next.js: 10ms, application-code: 164ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 9ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 203ms (next.js: 9ms, application-code: 194ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 150ms (next.js: 3ms, application-code: 147ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 176ms (next.js: 6ms, application-code: 170ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 154ms (next.js: 4ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 206ms (next.js: 11ms, application-code: 194ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 220ms (next.js: 6ms, application-code: 214ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 187ms (next.js: 8ms, application-code: 179ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 171ms (next.js: 6ms, application-code: 165ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 193ms (next.js: 7ms, application-code: 186ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 10ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 226ms (next.js: 7ms, application-code: 219ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 7ms, application-code: 157ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 409ms (next.js: 8ms, application-code: 401ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 190ms (next.js: 5ms, application-code: 185ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 5ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 5ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 8ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 244ms (next.js: 21ms, application-code: 223ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 10ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 156ms (next.js: 7ms, application-code: 149ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 7ms, application-code: 200ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 157ms (next.js: 8ms, application-code: 149ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 8ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 197ms (next.js: 7ms, application-code: 190ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 169ms (next.js: 9ms, application-code: 160ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 280ms (next.js: 7ms, application-code: 274ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 216ms (next.js: 21ms, application-code: 196ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 169ms (next.js: 10ms, application-code: 159ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 8ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 201ms (next.js: 11ms, application-code: 190ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 9ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 199ms (next.js: 7ms, application-code: 192ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 187ms (next.js: 7ms, application-code: 180ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 279ms (next.js: 7ms, application-code: 272ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 186ms (next.js: 8ms, application-code: 178ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 170ms (next.js: 9ms, application-code: 161ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 10ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 200ms (next.js: 8ms, application-code: 193ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 188ms (next.js: 12ms, application-code: 176ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 172ms (next.js: 8ms, application-code: 164ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 9ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 196ms (next.js: 7ms, application-code: 189ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 9ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 5ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 301ms (next.js: 7ms, application-code: 294ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 247ms (next.js: 6ms, application-code: 242ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 9ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 7ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 7ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 7ms, application-code: 200ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 9ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 182ms (next.js: 5ms, application-code: 177ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 8ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 205ms (next.js: 6ms, application-code: 198ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 180ms (next.js: 8ms, application-code: 171ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 167ms (next.js: 10ms, application-code: 157ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 8ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 206ms (next.js: 8ms, application-code: 198ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 6ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 8ms, application-code: 156ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 7ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 197ms (next.js: 10ms, application-code: 187ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 172ms (next.js: 14ms, application-code: 158ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 7ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 156ms (next.js: 4ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 205ms (next.js: 9ms, application-code: 196ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 66ms (next.js: 6ms, application-code: 60ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 49ms (next.js: 7ms, application-code: 42ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 394ms (next.js: 9ms, application-code: 385ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 347ms (next.js: 24ms, application-code: 323ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 135ms (next.js: 12ms, application-code: 123ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 45ms (next.js: 2ms, application-code: 43ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 57ms (next.js: 5ms, application-code: 52ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 7ms, application-code: 156ms)
+ GET /sessions/cmolrw66l00016ic8f928vdhl 200 in 53ms (next.js: 5ms, application-code: 48ms)
+ GET /api/analysis/cmolrw66l00016ic8f928vdhl/status 404 in 47ms (next.js: 7ms, application-code: 41ms)
+ GET /api/analysis/cmolrw66l00016ic8f928vdhl/status 404 in 49ms (next.js: 4ms, application-code: 45ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 401ms (next.js: 8ms, application-code: 392ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 333ms (next.js: 7ms, application-code: 325ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 7ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 186ms (next.js: 7ms, application-code: 179ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 177ms (next.js: 10ms, application-code: 167ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 209ms (next.js: 6ms, application-code: 203ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 173ms (next.js: 16ms, application-code: 157ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 9ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 161ms (next.js: 6ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 192ms (next.js: 7ms, application-code: 185ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 245ms (next.js: 11ms, application-code: 234ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 155ms (next.js: 5ms, application-code: 149ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 194ms (next.js: 8ms, application-code: 186ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 170ms (next.js: 6ms, application-code: 164ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 8ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 177ms (next.js: 8ms, application-code: 168ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 191ms (next.js: 5ms, application-code: 186ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 188ms (next.js: 25ms, application-code: 163ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 6ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 154ms (next.js: 6ms, application-code: 148ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 223ms (next.js: 13ms, application-code: 209ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 176ms (next.js: 11ms, application-code: 165ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 165ms (next.js: 6ms, application-code: 160ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 168ms (next.js: 17ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 191ms (next.js: 6ms, application-code: 185ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 11ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 165ms (next.js: 12ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 6ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 201ms (next.js: 8ms, application-code: 193ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 191ms (next.js: 19ms, application-code: 172ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 223ms (next.js: 8ms, application-code: 215ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 177ms (next.js: 9ms, application-code: 168ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 193ms (next.js: 5ms, application-code: 188ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 163ms (next.js: 8ms, application-code: 155ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 157ms (next.js: 6ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 174ms (next.js: 12ms, application-code: 161ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 195ms (next.js: 7ms, application-code: 187ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 8ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 8ms, application-code: 150ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 7ms, application-code: 152ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 214ms (next.js: 12ms, application-code: 201ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 9ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 159ms (next.js: 5ms, application-code: 154ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 166ms (next.js: 9ms, application-code: 157ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 208ms (next.js: 16ms, application-code: 192ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 160ms (next.js: 7ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 7ms, application-code: 156ms)
+[Stage0] Session cmolsuczc0001mjjtkeun248g: quality=Good lang=english tokens≈15049 signals=
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 226ms (next.js: 8ms, application-code: 218ms)
+[tick] Done in 1180ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 1196ms (next.js: 3ms, application-code: 1192ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 186ms (next.js: 7ms, application-code: 179ms)
+[Stage1] cmolsucz: duration=64min, min_chapters=3, transcript_chars=60195, model=gemini-2.5-flash
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 185ms (next.js: 6ms, application-code: 179ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 148ms (next.js: 4ms, application-code: 144ms)
+[call-stage] Stage1[cmolsucz]: OK — 11537ms budget=2000
+[call-stage] Stage1[cmolsucz]: jsonrepair used
+[Stage1] Under-segmentation warning — got 1 chapter(s) but session is 64min (minimum 3). Accepting anyway for session cmolsucz.
+[Stage1] cmolsucz: accepted 1 chapters (689s – 872s)
+[tick] Done in 12825ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 12.8s (next.js: 11ms, application-code: 12.8s)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 158ms (next.js: 7ms, application-code: 151ms)
+[Stage2] cmolsuczc0001mjjtkeun248g: processing chapters [1] (1 remaining of 1)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 166ms (next.js: 13ms, application-code: 153ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 189ms (next.js: 26ms, application-code: 163ms)
+[call-stage] Stage2[cmolsucz:ch1]: OK — 12376ms budget=2500
+[Stage2] cmolsuczc0001mjjtkeun248g: all 1 chapters final (0 needs_review), transitioning to EXTRACTED
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 211ms (next.js: 9ms, application-code: 202ms)
+[Stage2] cmolsuczc0001mjjtkeun248g: batch done — 1 ok, 0 failed
+[tick] Done in 13703ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 13.7s (next.js: 7ms, application-code: 13.7s)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 166ms (next.js: 8ms, application-code: 159ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 152ms (next.js: 9ms, application-code: 143ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 207ms (next.js: 9ms, application-code: 198ms)
+[call-stage] Stage3[cmolsucz]: OK — 14063ms budget=6000
+[Stage3] cmolsuczc0001mjjtkeun248g: synthesis complete — 3 learning points
+[tick] Done in 15080ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 15.1s (next.js: 11ms, application-code: 15.1s)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 164ms (next.js: 14ms, application-code: 151ms)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 162ms (next.js: 9ms, application-code: 152ms)
+[call-stage] Stage4[cmolsucz]: OK — 5402ms budget=1000
+[Stage4] cmolsuczc0001mjjtkeun248g: 0 flags generated (0 high, 0 medium, 0 low)
+[tick] Done in 6134ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 6.1s (next.js: 4ms, application-code: 6.1s)
+ GET /api/analysis/cmolsuczc0001mjjtkeun248g/status 200 in 152ms (next.js: 4ms, application-code: 148ms)
+ GET /sessions/cmolsuczc0001mjjtkeun248g 200 in 401ms (next.js: 9ms, application-code: 392ms)
+ GET /api/auth/session 200 in 116ms (next.js: 50ms, application-code: 65ms)
+ GET /api/auth/session 200 in 9ms (next.js: 1873µs, application-code: 7ms)
+ GET /api/auth/session 200 in 7ms (next.js: 1231µs, application-code: 6ms)
+ GET /sessions/cmolryddj00036ic8z0vvmr4s 200 in 122ms (next.js: 8ms, application-code: 114ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 54ms (next.js: 5ms, application-code: 49ms)
+ GET /api/analysis/cmolryddj00036ic8z0vvmr4s/status 404 in 374ms (next.js: 15ms, application-code: 359ms)
+✓ Compiled in 210ms
+✓ Compiled in 112ms
+ DELETE /api/analysis/cmolryddj00036ic8z0vvmr4s 200 in 505ms (next.js: 14ms, application-code: 491ms)
+ DELETE /api/analysis/cmolrw66l00016ic8f928vdhl 200 in 126ms (next.js: 8ms, application-code: 118ms)
+✓ Compiled in 67ms
+ POST /api/pipeline/tick 200 in 227ms (next.js: 19ms, application-code: 207ms)
+[Stage0] Session cmolsuczc0001mjjtkeun248g: quality=Good lang=english tokens≈15049 signals=
+[tick] Done in 495ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 505ms (next.js: 4ms, application-code: 502ms)
+[Stage1] cmolsucz: duration=64min, min_chapters=3, transcript_chars=60195, model=gemini-2.5-flash
+[call-stage] Stage1[cmolsucz]: OK — 11756ms budget=2000
+[call-stage] Stage1[cmolsucz]: jsonrepair used
+[Stage1] Under-segmentation warning — got 1 chapter(s) but session is 64min (minimum 3). Accepting anyway for session cmolsucz.
+[Stage1] cmolsucz: accepted 1 chapters (689s – 835s)
+[tick] Done in 12647ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 12.7s (next.js: 5ms, application-code: 12.7s)
+[Stage2] cmolsuczc0001mjjtkeun248g: processing chapters [1] (1 remaining of 1)
+[call-stage] Stage2[cmolsucz:ch1]: OK — 8192ms budget=2500
+[Stage2] cmolsuczc0001mjjtkeun248g: all 1 chapters final (0 needs_review), transitioning to EXTRACTED
+[Stage2] cmolsuczc0001mjjtkeun248g: batch done — 1 ok, 0 failed
+[tick] Done in 9113ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 9.1s (next.js: 20ms, application-code: 9.1s)
+[call-stage] Stage3[cmolsucz]: OK — 15559ms budget=6000
+[Stage3] cmolsuczc0001mjjtkeun248g: synthesis complete — 6 learning points
+[tick] Done in 16438ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 16.5s (next.js: 5ms, application-code: 16.4s)
+[call-stage] Stage4[cmolsucz]: OK — 6041ms budget=1000
+[Stage4] cmolsuczc0001mjjtkeun248g: 0 flags generated (0 high, 0 medium, 0 low)
+[tick] Done in 6682ms: claimed=1 advanced=1 failed=0 errors=0
+ POST /api/pipeline/tick 200 in 6.7s (next.js: 17ms, application-code: 6.7s)
+ GET /api/auth/session 200 in 144ms (next.js: 101ms, application-code: 43ms)
+ GET /api/auth/session 200 in 15ms (next.js: 3ms, application-code: 12ms)
+ GET /api/auth/session 200 in 15ms (next.js: 5ms, application-code: 10ms)
+[?25h

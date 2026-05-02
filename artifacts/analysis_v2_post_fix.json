@@ -1,0 +1,116 @@
+{
+  "hygiene": {
+    "camera": {
+      "label": "On",
+      "score": 100
+    },
+    "punctuality": {
+      "label": "On Time",
+      "score": 100
+    }
+  },
+  "session_id": "MMP-Aug-2026-Test-Brand-Positioning-Analysis-Vikram-Sharma",
+  "student_log": {
+    "confusion_summary": [],
+    "student_questions": [],
+    "unresolved_doubts": [],
+    "verified_outcomes": [],
+    "engagement_by_chapter": [
+      {
+        "label": "Silent",
+        "score": 1,
+        "chapter": 1
+      }
+    ]
+  },
+  "expert_audit": {
+    "pacing_map": [
+      {
+        "topic": "Introduction to Brand Positioning",
+        "chapter": 1,
+        "pacing_label": "Balanced",
+        "duration_mins": 0.2
+      }
+    ],
+    "example_gaps": [
+      {
+        "topic": "Introduction to Brand Positioning",
+        "chapter": 1,
+        "gap_label": "No Gap"
+      }
+    ],
+    "accuracy_issues": [
+      {
+        "topic": "Introduction to Brand Positioning",
+        "chapter": 1,
+        "concern": "",
+        "timestamp": "",
+        "accuracy_label": "Accurate",
+        "verbatim_quote": "",
+        "flagged_statement": ""
+      }
+    ],
+    "analogies_summary": [],
+    "most_engaged_topic": null,
+    "teaching_depth_map": [
+      {
+        "topic": "Introduction to Brand Positioning",
+        "chapter": 1,
+        "depth_label": "Definitional",
+        "depth_score": 1
+      }
+    ],
+    "most_engaged_student": null,
+    "doubt_resolution_summary": [],
+    "pedagogical_health_summary": "The session began with an accurate and balanced introduction to Brand Positioning, though the teaching depth remained at a definitional level. A notable concern was the complete lack of student engagement throughout the chapter."
+  },
+  "context_setup": {
+    "label": "Full Context",
+    "score": 70,
+    "evidence": [
+      {
+        "timestamp": "00:00:12",
+        "verbatim_quote": "Hello everyone, welcome to today's session on Brand Positioning. Aaj hum baat karenge ki ek brand apne customers ke mind mein kaise ek unique jagah banata hai."
+      }
+    ],
+    "narrative": "The session began with a clear and concise introduction to Brand Positioning, effectively setting the stage for the planned topics."
+  },
+  "session_flags": {
+    "flags": [
+      {
+        "category": "Student Engagement",
+        "severity": "Medium",
+        "rationale": "Students were silent throughout the introductory chapter, indicating a lack of interaction."
+      }
+    ],
+    "low_count": 0,
+    "high_count": 0,
+    "total_flags": 1,
+    "medium_count": 1
+  },
+  "schema_version": "1.0",
+  "topics_covered": [
+    "Introduction to Brand Positioning"
+  ],
+  "key_learning_points": [
+    "Brand positioning is the process by which a brand creates a unique and favorable image in the minds of its target customers."
+  ],
+  "session_completeness": {
+    "label": "Incomplete",
+    "score": 10,
+    "evidence": [
+      {
+        "timestamp": "00:00:12",
+        "verbatim_quote": "Hello everyone, welcome to today's session on Brand Positioning. Aaj hum baat karenge ki ek brand apne customers ke mind mein kaise ek unique jagah banata hai."
+      }
+    ],
+    "rationale": "The session only covered a definitional introduction to Brand Positioning. None of the specific planned topics such as 'Frame of reference', 'Point of difference', 'Target audience definition', 'Common positioning mistakes', or 'Repositioning case studies' were addressed."
+  },
+  "topics_missed_from_notes": [
+    "Frame of reference",
+    "Point of difference",
+    "Target audience definition",
+    "Common positioning mistakes",
+    "Repositioning case studies"
+  ]
+}

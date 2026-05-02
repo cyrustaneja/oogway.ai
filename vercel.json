@@ -1,0 +1,9 @@
+{
+  "crons": [
+    { "path": "/api/pipeline/tick", "schedule": "* * * * *" }
+  ],
+  "functions": {
+    "app/api/pipeline/tick/route.ts": { "maxDuration": 60 },
+    "app/api/pipeline/**": { "maxDuration": 300 }
+  }
+}

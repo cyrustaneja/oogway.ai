@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 
 // POST /api/courses/[id]/modules — add a module to a course
@@ -8,10 +7,10 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
+  const role = (token as any).role;
   if (role !== "ADMIN" && role !== "TEAM") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

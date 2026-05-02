@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 
 // GET /api/analysis/[id]
+// Final Schema Sync: 2026-05-02T12:46:00
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
   console.log(`[GET /api/analysis/${id}] Fetching...`);
@@ -22,14 +22,7 @@ export async function GET(
         sessionNote: {
           include: { module: { include: { course: true } } },
         },
-        chapters: { orderBy: { chapterIndex: "asc" } },
-        extractionResults: { orderBy: { chapterIndex: "asc" } },
-        overallAnalysis: true,
-        v2Analysis: {
-          include: {
-            scores: { orderBy: { createdAt: "asc" } }
-          }
-        }
+        v2Analysis: true
       },
     });
 
@@ -53,10 +46,10 @@ export async function DELETE(
   _req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
+  const role = (token as any).role;
   if (role !== "ADMIN" && role !== "TEAM") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 
 // GET /api/analysis — list all sessions (newest first)
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
-  const userId = (session.user as any).id;
+  const role = (token as any).role;
+  const userId = (token as any).id;
 
   // Filter out soft-deleted sessions and apply role-based visibility
   let where: any = { deletedAt: null };
@@ -25,7 +24,6 @@ export async function GET() {
     include: {
       expert: { select: { id: true, name: true } },
       sessionNote: { select: { id: true, name: true } },
-      overallAnalysis: { select: { status: true } },
     },
   });
 
@@ -34,10 +32,10 @@ export async function GET() {
 
 // POST /api/analysis — create a new AnalysisSession
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
+  const role = (token as any).role;
   if (role === "EXPERT") {
     return NextResponse.json({ error: "Experts cannot create analysis sessions." }, { status: 403 });
   }

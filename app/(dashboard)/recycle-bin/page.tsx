@@ -21,7 +21,7 @@ interface TrashItem {
   deletedAt: string;
 }
 
-const fadeInUp = {
+const fadeInUp: any = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 

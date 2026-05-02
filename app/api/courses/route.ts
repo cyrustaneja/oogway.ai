@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 
 // GET /api/courses — list all courses with nested modules + session notes
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const courses = await prisma.course.findMany({
     where: { deletedAt: null },
@@ -30,10 +29,10 @@ export async function GET() {
 
 // POST /api/courses — create a new course
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const role = (session.user as any).role;
+  const role = (token as any).role;
   if (role !== "ADMIN" && role !== "TEAM") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

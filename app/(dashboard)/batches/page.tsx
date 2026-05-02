@@ -216,9 +216,9 @@ export default function BatchesPage() {
                     </div>
                     <div className="space-y-2">
                       {(b as any).sessions.slice(0, 3).map((s: any) => (
-                        <Link 
-                          key={s.id} 
-                          href={`/analysis/${s.id}`}
+                        <Link
+                          key={s.id}
+                          href={`/sessions/${s.id}`}
                           className="flex items-center justify-between p-2.5 rounded-xl bg-white/40 dark:bg-white/5 border border-transparent hover:border-brand-orange/30 hover:bg-white/60 transition-all pointer-events-auto group/item"
                         >
                           <span className="text-[10px] font-bold text-[var(--foreground)] truncate max-w-[140px] group-hover/item:text-brand-orange">{s.name}</span>

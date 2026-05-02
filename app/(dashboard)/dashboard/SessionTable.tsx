@@ -108,7 +108,7 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
             </div>
             <div className="col-span-1 flex justify-end items-center gap-3">
               <Link
-                href={`/analysis/${a.id}`}
+                href={`/sessions/${a.id}`}
                 className="p-2.5 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] text-[var(--muted-foreground)] hover:text-brand-orange transition-all hover:scale-110 shadow-sm"
               >
                 <ChevronRight className="w-4 h-4" />

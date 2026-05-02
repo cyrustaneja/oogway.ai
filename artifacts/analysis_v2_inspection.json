@@ -1,0 +1,104 @@
+{
+  "hygiene": {
+    "camera": {
+      "label": "Absent",
+      "score": 0
+    },
+    "punctuality": {
+      "label": "Punctual",
+      "score": 100
+    }
+  },
+  "session_id": "MMP-Aug-2026-Test-Brand-Positioning-Vikram-Sharma",
+  "student_log": {
+    "confusion_summary": [],
+    "student_questions": [],
+    "unresolved_doubts": [],
+    "verified_outcomes": [],
+    "engagement_by_chapter": [
+      {
+        "label": "Monologue",
+        "score": 1,
+        "chapter": 1
+      }
+    ]
+  },
+  "expert_audit": {
+    "pacing_map": [
+      {
+        "topic": "Introduction to Brand Positioning & Core Elements",
+        "chapter": 1,
+        "pacing_label": "Balanced",
+        "duration_mins": 5
+      }
+    ],
+    "example_gaps": [
+      {
+        "topic": "Brand Positioning",
+        "chapter": 1,
+        "gap_label": "Absent"
+      }
+    ],
+    "accuracy_issues": [],
+    "analogies_summary": [],
+    "most_engaged_topic": null,
+    "teaching_depth_map": [
+      {
+        "topic": "Brand Positioning",
+        "chapter": 1,
+        "depth_label": "Brief",
+        "depth_score": 2
+      }
+    ],
+    "most_engaged_student": null,
+    "doubt_resolution_summary": [],
+    "pedagogical_health_summary": "The expert provided an accurate and balanced introduction to Brand Positioning. However, the delivery was a monologue with no student interaction or examples, limiting engagement and practical application."
+  },
+  "context_setup": {
+    "label": "Brief",
+    "score": 50,
+    "evidence": [
+      {
+        "timestamp": "00:00:12",
+        "verbatim_quote": "Hello everyone, welcome to today's session on Brand Positioning. Aaj hum baat karenge ki ek brand apne customers ke mind mein kaise ek unique jagah banata hai."
+      }
+    ],
+    "narrative": "The expert provided a brief, direct introduction to Brand Positioning, explaining its core concept at the session's start."
+  },
+  "session_flags": {
+    "flags": [
+      {
+        "category": "Engagement",
+        "severity": "Medium",
+        "rationale": "The expert delivered a direct introduction without any interaction or questions posed to the audience."
+      },
+      {
+        "category": "Pedagogical",
+        "severity": "Low",
+        "rationale": "No examples were provided in this brief introductory utterance."
+      }
+    ],
+    "low_count": 1,
+    "high_count": 0,
+    "total_flags": 2,
+    "medium_count": 1
+  },
+  "schema_version": "1.0.0",
+  "topics_covered": [],
+  "key_learning_points": [
+    "Students were introduced to the fundamental concept of Brand Positioning and its role in establishing a unique market presence."
+  ],
+  "session_completeness": {
+    "label": "Incomplete",
+    "score": 0,
+    "evidence": [],
+    "rationale": "The session only covered a general introduction to Brand Positioning, leaving all specific planned topics untouched."
+  },
+  "topics_missed_from_notes": [
+    "Frame of reference",
+    "Point of difference",
+    "Target audience definition",
+    "Common positioning mistakes",
+    "Repositioning case studies"
+  ]
+}

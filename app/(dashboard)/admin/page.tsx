@@ -17,19 +17,10 @@ export default async function AdminPage() {
     prisma.expert.count({ where: { deletedAt: null } }),
     prisma.analysisSession.count({ where: { deletedAt: null } }),
     prisma.course.count({ where: { deletedAt: null } }),
-    prisma.sessionOverallAnalysis.count({ 
-      where: { 
-        status: "complete",
-        session: { deletedAt: null }
-      } 
-    }),
+    Promise.resolve(0),
   ]);
 
-  const statusCounts = await prisma.analysisSession.groupBy({
-    where: { deletedAt: null },
-    by: ["v3Status"],
-    _count: { _all: true },
-  });
+  const statusCounts: any[] = [];
 
   const recentUsers = await prisma.user.findMany({
     where: { deletedAt: null },

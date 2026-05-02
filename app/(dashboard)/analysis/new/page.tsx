@@ -52,7 +52,7 @@ export default function NewAnalysisPage() {
       fetch("/api/batches").then((r) => r.json()),
       fetch("/api/session-notes").then((r) => r.json()),
     ]).then(([e, b, s]) => {
-      setExperts(e);
+      setExperts(Array.isArray(e) ? e : []);
       setBatches(Array.isArray(b) ? b : []);
       setAllSessions(Array.isArray(s) ? s : []);
     });
@@ -113,15 +113,30 @@ export default function NewAnalysisPage() {
 
     setLoading(true);
     try {
-      // 1. Create session record
+      // 1. Resolve transcript text (paste OR file read inline — no separate upload endpoint).
+      let transcriptText = "";
+      if (transcriptMode === "paste") {
+        transcriptText = pastedText;
+      } else if (transcriptMode === "file" && file) {
+        setUploading(true);
+        transcriptText = await file.text();
+        setUploading(false);
+      }
+
+      if (!transcriptText.trim()) {
+        throw new Error("Transcript content is empty.");
+      }
+
+      // 2. Create session — cron tick will auto-claim it because
+      //    pipeline_stage defaults to 'UPLOADED' and next_action_at defaults to NOW().
       const createRes = await fetch("/api/analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          expertId, 
+        body: JSON.stringify({
+          expertId,
           batchId: batchId || undefined,
           sessionNoteId: noteId || undefined,
-          transcriptRaw: transcriptMode === "paste" ? pastedText : undefined
+          transcriptRaw: transcriptText,
         }),
       });
 
@@ -130,18 +145,6 @@ export default function NewAnalysisPage() {
         throw new Error(err.error || "Failed to create session.");
       }
       const created = await createRes.json();
-
-      // 2. Upload transcript if in file mode
-      if (transcriptMode === "file" && file) {
-        setUploading(true);
-        const fd = new FormData();
-        fd.append("transcript", file);
-        const uploadRes = await fetch(`/api/analysis/${created.id}/upload`, { method: "POST", body: fd });
-        if (!uploadRes.ok) throw new Error("Transcript upload failed.");
-      }
-
-      // 3. Start pipeline
-      await fetch(`/api/analysis/${created.id}/start`, { method: "POST" });
 
       setSessionId(created.id);
     } catch (err: any) {
@@ -166,7 +169,7 @@ export default function NewAnalysisPage() {
         </p>
         <div className="flex gap-3 justify-center">
           <button
-            onClick={() => router.push(`/analysis/${sessionId}`)}
+            onClick={() => router.push(`/sessions/${sessionId}`)}
             className="btn-primary px-6 py-2.5 text-sm font-bold tracking-widest uppercase"
           >
             View Session

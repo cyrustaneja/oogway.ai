@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  
+  const token = await getAuthToken();
+
   // Only Admin can create other admins/team members
-  if (!session || (session.user as any).role !== "ADMIN") {
+  if (!token || (token as any).role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 

@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,32 +8,23 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-// ─── AUTH ─────────────────────────────────────────────────────────────────────
-
 model User {
   id           String    @id @default(cuid())
   email        String    @unique
   name         String?
-  passwordHash String? // Added for Credentials Login
+  passwordHash String?
   role         UserRole  @default(TEAM)
-  expertId     String?   @unique // if role = EXPERT, links to Expert record
-  expert       Expert?   @relation(fields: [expertId], references: [id])
-  accounts     Account[]
-  sessions     Session[]
+  expertId     String?   @unique
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   deletedAt    DateTime?
+  accounts     Account[]
+  sessions     Session[]
+  expert       Expert?   @relation(fields: [expertId], references: [id])
 
   @@index([deletedAt])
 }
 
-enum UserRole {
-  ADMIN
-  TEAM
-  EXPERT
-}
-
-// NextAuth tables (required by NextAuth Prisma adapter)
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -70,32 +59,28 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ─── EXPERTS ─────────────────────────────────────────────────────────────────
-
 model Expert {
   id        String            @id @default(cuid())
   name      String
   email     String            @unique
-  tags      String[] // e.g. ["SEO", "Paid Ads", "Analytics"]
+  tags      String[]
   bio       String?
-  user      User?
-  sessions  AnalysisSession[]
   deletedAt DateTime?
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
+  sessions  AnalysisSession[]
+  user      User?
 }
-
-// ─── COURSE HIERARCHY ────────────────────────────────────────────────────────
 
 model Course {
   id          String    @id @default(cuid())
   name        String
   description String?
-  modules     Module[]
-  batches     Batch[]
   deletedAt   DateTime?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  batches     Batch[]
+  modules     Module[]
 }
 
 model Module {
@@ -103,11 +88,11 @@ model Module {
   name      String
   order     Int           @default(0)
   courseId  String
-  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sessions  SessionNote[]
   deletedAt DateTime?
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
+  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions  SessionNote[]
 
   @@index([deletedAt])
   @@index([courseId])
@@ -115,85 +100,75 @@ model Module {
 
 model SessionNote {
   id               String            @id @default(cuid())
-  name             String // e.g. "Pixel Implementation - Session 3"
-  content          String? // what should be inside the session / explicit notes
-  phase            String? // e.g. "Phase 1 - Meta"
-  prerequisites    String? // free text
-  keyTopics        String[] // structured list of topics to be covered
-  expertGaps       String? // known gaps to watch for
+  name             String
+  content          String?
+  phase            String?
+  prerequisites    String?
+  keyTopics        String[]
+  expertGaps       String?
   moduleId         String
-  module           Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  analysisSessions AnalysisSession[]
   deletedAt        DateTime?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
+  analysisSessions AnalysisSession[]
+  module           Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   @@index([deletedAt])
   @@index([moduleId])
 }
 
-// ─── ANALYSIS ────────────────────────────────────────────────────────────────
-
 model AnalysisSession {
-  id                String         @id @default(cuid())
-  name              String // e.g. "Pixel Implementation - Rahul - 12 Jan"
-  expertId          String
-  expert            Expert         @relation(fields: [expertId], references: [id])
-  sessionNoteId     String?
-  sessionNote       SessionNote?   @relation(fields: [sessionNoteId], references: [id])
-  transcriptPath    String? // Supabase Storage path
-  transcriptRaw     String? // raw .vtt content (if small enough)
-  transcript_clean  String?
-  scheduledDuration Int? // minutes
-  v3Status          PipelineStatus @default(PENDING)
-  v3Progress        String? // e.g. "1/6", "3/6 (2/5)"
-  v3Error           String? // Capture failure reason
-  heartbeat         DateTime? // For monitoring worker progress
-  batchId           String?
-  batch             Batch?         @relation(fields: [batchId], references: [id])
-  v2Analysis        AnalysisV2?
-  deletedAt         DateTime?
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
-
-  pipeline_stage String   @default("UPLOADED")
-  next_action_at DateTime @default(now())
-  stage_attempts Json     @default("{}")
-  chapters_json  Json?
+  id                         String                  @id @default(cuid())
+  name                       String
+  expertId                   String
+  sessionNoteId              String?
+  transcriptPath             String?
+  transcriptRaw              String?
+  transcript_clean           String?
+  scheduledDuration          Int?
+  v3Status                   PipelineStatus          @default(PENDING)
+  v3Progress                 String?
+  v3Error                    String?
+  heartbeat                  DateTime?
+  batchId                    String?
+  deletedAt                  DateTime?
+  createdAt                  DateTime                @default(now())
+  updatedAt                  DateTime                @updatedAt
+  pipeline_stage             String                  @default("UPLOADED")
+  next_action_at             DateTime                @default(now())
+  stage_attempts             Json                    @default("{}")
+  chapters_json              Json?
+  transcript_quality         String?                 @default("Good")
+  transcript_quality_signals Json?                   @default("[]")
+  schema_version             String?                 @default("v1")
+  zoom_recording_id          String?
+  zoom_download_url          String?
+  source                     String?                 @default("manual")
+  AnalysisChapterResult      AnalysisChapterResult[]
+  batch                      Batch?                  @relation(fields: [batchId], references: [id])
+  expert                     Expert                  @relation(fields: [expertId], references: [id])
+  sessionNote                SessionNote?            @relation(fields: [sessionNoteId], references: [id])
+  v2Analysis                 AnalysisV2?
 
   @@index([deletedAt])
   @@index([expertId])
-}
-
-enum PipelineStatus {
-  PENDING
-  PREPROCESSING
-  EXTRACTING
-  AGGREGATING
-  SYNTHESISING
-  COMPLETE
-  FAILED
+  @@index([next_action_at])
+  @@index([pipeline_stage])
 }
 
 model AnalysisV2 {
-  id        String          @id @default(cuid())
-  sessionId String          @unique
-  session   AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  status    String          @default("pending") // pending | extracting | synthesising | complete | failed | needs_review
-  progress  String? // e.g. "3/6 (2/5)"
-
-  // Storage for the 3 pillars + session flow
-  sessionFlow    Json?
-  pillar6A       Json? // Overall Summary
-  pillar6B       Json? // Expert Analysis
-  pillar6C       Json? // Student Analysis
-  epochSummaries Json? // Map stage results
-
-  // Observability
-  verifierResult Json? // List of failures if status = needs_review
-  costEstimate   Float? // Estimated $ cost
-  error          String?
-
+  id                    String          @id @default(cuid())
+  sessionId             String          @unique
+  status                String          @default("pending")
+  progress              String?
+  sessionFlow           Json?
+  pillar6A              Json?
+  pillar6B              Json?
+  pillar6C              Json?
+  epochSummaries        Json?
+  verifierResult        Json?
+  costEstimate          Float?
+  error                 String?
   session_flags         Json?
   accuracy_issues       Json?
   teaching_depth_map    Json?
@@ -204,22 +179,51 @@ model AnalysisV2 {
   topics_missed         Json?
   context_setup         Json?
   topics_covered        Json?
-  full_synthesis        Json? // Complete stage 3 synthesizer output
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  full_synthesis        Json?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  schema_version        String?         @default("v1")
+  session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
-
-// ─── BATCH ───────────────────────────────────────────────────────────────────
 
 model Batch {
   id          String            @id @default(cuid())
   name        String
   description String?
   courseId    String?
-  course      Course?           @relation(fields: [courseId], references: [id])
-  sessions    AnalysisSession[]
   deletedAt   DateTime?
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
+  sessions    AnalysisSession[]
+  course      Course?           @relation(fields: [courseId], references: [id])
+}
+
+model AnalysisChapterResult {
+  id              String          @id
+  session_id      String
+  chapter_index   Int
+  result          Json
+  needs_review    Boolean         @default(false)
+  review_reasons  Json?           @default("[]")
+  created_at      DateTime?       @default(now()) @db.Timestamptz(6)
+  AnalysisSession AnalysisSession @relation(fields: [session_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([session_id, chapter_index])
+  @@index([session_id], map: "idx_chapter_result_session")
+}
+
+enum UserRole {
+  ADMIN
+  TEAM
+  EXPERT
+}
+
+enum PipelineStatus {
+  PENDING
+  PREPROCESSING
+  EXTRACTING
+  AGGREGATING
+  SYNTHESISING
+  COMPLETE
+  FAILED
 }

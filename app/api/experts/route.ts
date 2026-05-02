@@ -1,13 +1,12 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  
-  if (!session || (session.user as any).role !== "ADMIN" && (session.user as any).role !== "TEAM") {
+  const token = await getAuthToken();
+
+  if (!token || (token as any).role !== "ADMIN" && (token as any).role !== "TEAM") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
@@ -29,10 +28,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  
+  const token = await getAuthToken();
+
   // Only Admin or Team can create experts
-  if (!session || ((session.user as any).role !== "ADMIN" && (session.user as any).role !== "TEAM")) {
+  if (!token || ((token as any).role !== "ADMIN" && (token as any).role !== "TEAM")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 

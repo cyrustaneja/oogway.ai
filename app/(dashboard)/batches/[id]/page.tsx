@@ -8,7 +8,7 @@ import Link from "next/link";
 import { SessionTable } from "../../dashboard/SessionTable";
 import { Loader2 } from "lucide-react";
 
-const fadeInUp = {
+const fadeInUp: any = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
     opacity: 1, 
