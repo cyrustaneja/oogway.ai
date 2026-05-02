@@ -3,6 +3,8 @@ import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: Request) {
   const token = await getAuthToken();
 

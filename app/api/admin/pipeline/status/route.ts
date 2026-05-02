@@ -12,7 +12,10 @@
  */
 
 import { NextResponse } from 'next/server'
+import { getAuthToken } from '@/lib/auth-token'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/analysis/[id]
 // Final Schema Sync: 2026-05-02T12:46:00
 export async function GET(
