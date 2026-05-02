@@ -54,7 +54,11 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
         return (
           <div key={a.id} className={`grid grid-cols-12 gap-4 px-8 py-5 items-center hover:bg-[var(--inner-bg)] transition-all duration-300 ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="col-span-4 min-w-0">
-              <p className="text-sm font-bold text-[var(--foreground)] truncate">{a.name}</p>
+              <Link href={`/sessions/${a.id}`} className="group">
+                <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
+                  {a.name}
+                </p>
+              </Link>
               {a.sessionNote ? (
                 <div className="flex items-center gap-1.5 mt-0.5">
                   <Link 
