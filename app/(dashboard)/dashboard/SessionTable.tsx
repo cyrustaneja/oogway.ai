@@ -52,7 +52,7 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
         const isDeleting = deletingId === a.id;
 
         return (
-          <div key={a.id} className={`grid grid-cols-12 gap-4 px-8 py-5 items-center hover:bg-[var(--inner-bg)] transition-all duration-300 ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
+          <div key={a.id} className={`grid grid-cols-13 gap-4 px-8 py-5 items-center hover:bg-[var(--inner-bg)] transition-all duration-300 ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
             <div className="col-span-4 min-w-0">
               <Link href={`/sessions/${a.id}`} className="group">
                 <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
@@ -110,13 +110,15 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
             <div className="col-span-1 text-[11px] font-bold text-[var(--muted)]">
               {new Date(a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
             </div>
-            <div className="col-span-1 flex justify-end items-center gap-3">
-              <Link
-                href={`/sessions/${a.id}`}
-                className="p-2.5 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] text-[var(--muted-foreground)] hover:text-brand-orange transition-all hover:scale-110 shadow-sm"
-              >
+            <Link 
+              href={`/sessions/${a.id}`}
+              className="col-span-1 flex justify-end items-center group/arrow pr-4"
+            >
+              <div className="p-2.5 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
                 <ChevronRight className="w-4 h-4" />
-              </Link>
+              </div>
+            </Link>
+            <div className="col-span-1 flex justify-center items-center">
               <button
                 onClick={() => handleDelete(a.id, a.name)}
                 disabled={isDeleting}
