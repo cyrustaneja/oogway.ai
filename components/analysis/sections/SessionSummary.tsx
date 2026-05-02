@@ -26,7 +26,7 @@ function StatPill({
 }: {
   label: string;
   value: string;
-  tone: string;
+  tone: keyof typeof TOKENS.chip;
 }) {
   return (
     <div className={`flex flex-col items-start px-4 py-3 rounded-2xl border ${TOKENS.chip[tone]}`}>
