@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 /**
  * POST /api/webhooks/zoom — Dormant scaffold for Zoom recording webhooks.
  *
