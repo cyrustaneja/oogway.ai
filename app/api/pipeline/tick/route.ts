@@ -12,6 +12,8 @@
 
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 import { LIMITS } from '@/lib/config/limits'
 import { handlePreprocessor } from '@/lib/pipeline/stage0-preprocessor'
 import { handleStage1 } from '@/lib/pipeline/handlers/stage1-segmenter'

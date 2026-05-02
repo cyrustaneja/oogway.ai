@@ -11,6 +11,8 @@ import { NextResponse } from 'next/server'
 import { getAuthToken } from '@/lib/auth-token'
 import { prisma } from '@/lib/db'
 
+export const dynamic = 'force-dynamic'
+
 const STAGE_ORDER = [
   'UPLOADED',
   'PREPROCESSED',
