@@ -58,7 +58,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                 />
               </div>
               <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">
-                {formatTimestamp(chapter.t_start)} – {formatTimestamp(chapter.t_end)} • {percentage}% of session
+                {formatTimestamp(chapter.t_start ?? 0)} – {formatTimestamp(chapter.t_end ?? 0)} • {percentage}% of session
               </span>
             </div>
           </div>
