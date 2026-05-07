@@ -42,12 +42,59 @@ export async function handleStage3(sessionId: string): Promise<void> {
   const expertName = session.expert?.name ?? 'Unknown'
   const batchName = notes.batch_name ?? session.batch?.name ?? 'Unknown'
 
+  // Bottleneck #3 fix: build a synthesis-ready digest of each chapter instead
+  // of dumping the full raw JSON. The full chapter data stays in the DB —
+  // Stage 3 only needs the pedagogical signals for synthesis.
+  function digestChapter(r: any): any {
+    const res = r.result ?? r
+    return {
+      chapter_num: res.chapter_num,
+      title: res.title,
+      is_teaching: res.is_teaching,
+      what_was_taught: res.what_was_taught,
+      teaching_depth: res.teaching_depth ? { label: res.teaching_depth.label, score: res.teaching_depth.score, rationale: res.teaching_depth.rationale } : undefined,
+      pacing: res.pacing ? { label: res.pacing.label, score: res.pacing.score, rationale: res.pacing.rationale } : undefined,
+      engagement: res.engagement ? { label: res.engagement.label, score: res.engagement.score, rationale: res.engagement.rationale } : undefined,
+      example_gap: res.example_gap ? { label: res.example_gap.label, score: res.example_gap.score, rationale: res.example_gap.rationale } : undefined,
+      analogies: (res.analogies ?? []).map((a: any) => ({ concept_explained: a.concept_explained, quality: a.quality, verbatim_quote: a.verbatim_quote })),
+      doubts: (res.doubts ?? []).map((d: any) => ({ student_name_raw: d.student_name_raw, doubt_verbatim: d.doubt_verbatim, timestamp: d.timestamp, resolution: d.resolution, resolved_flag: d.resolved_flag, resolution_accuracy: d.resolution_accuracy })),
+      confusion_points: res.confusion_points ?? [],
+      unresolved_doubt_flag: res.unresolved_doubt_flag,
+      accuracy_check: res.accuracy_check,
+    }
+  }
+
+  const chapterDigests = chapterResults.map(r => digestChapter(r))
+
+  // ─── CROSS-CHAPTER DEDUPLICATION ───
+  // If the same doubt/question appears in adjacent chapters with identical 
+  // timestamps, only keep the first occurrence to avoid synthesis bloat.
+  const seenDoubts = new Set<string>()
+  for (const ch of chapterDigests) {
+    if (ch.doubts) {
+      ch.doubts = ch.doubts.filter((d: any) => {
+        const key = `${d.timestamp}_${(d.student_name_raw || '').toLowerCase()}_${(d.doubt_verbatim || '').slice(0, 30).toLowerCase()}`
+        if (seenDoubts.has(key)) return false
+        seenDoubts.add(key)
+        return true
+      })
+    }
+  }
+
+  // Safety cap: if the total JSON still exceeds a reasonable ceiling, truncate
+  const totalJson = JSON.stringify(chapterDigests)
+  const MAX_CHARS = LIMITS.stage3ChapterSummaryMaxChars * chapterResults.length
+  const chapters =
+    totalJson.length > MAX_CHARS
+      ? chapterDigests.map(ch => ({ ...ch, what_was_taught: (ch.what_was_taught ?? '').slice(0, 600) }))
+      : chapterDigests
+
   const userPayload = JSON.stringify({
     expert_name: expertName,
     batch_name: batchName,
     session_title: session.name,
     planned_topics: notes.planned_topics,
-    chapters: chapterResults.map(r => r.result),
+    chapters,
   })
 
   const stageName = `Stage3[${sessionId.slice(0, 8)}]`

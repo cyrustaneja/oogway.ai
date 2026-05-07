@@ -30,14 +30,24 @@ LANGUAGE RULES (CRITICAL)
 EVIDENCE RULES (ANTI-HALLUCINATION — ZERO TOLERANCE)
 - Every scored object MUST include a NON-EMPTY `evidence` array of
   { timestamp, verbatim_quote }.
-- `timestamp` is a string like "00:14:23" matching the t_start of the utterance
-  (or close to it).
+- `timestamp` MUST be an **absolute session timestamp** (e.g. "01:14:23")
+  matching the original transcript's time. DO NOT provide relative
+  timestamps (starting from 00:00:00 for each chapter).
 - The `verbatim_quote` MUST be a CONTIGUOUS substring of the chapter
   transcript, ≤ 200 characters. Do not stitch fragments together. Do not insert
   ellipses unless they appear literally in the source.
-- If you cannot find an exact substring match for a claim, DO NOT make the
-  claim. Find a different quote or omit the field.
+- If you cannot find an exact substring match for a claim, find the
+  closest matching contiguous segment. Small punctuation differences are
+  ignored by the validator.
+- JSON RELIABILITY: Ensure every string is properly escaped. Avoid
+  unescaped newlines or double-quotes inside your JSON strings. If a
+  quote contains a " (double quote), escape it as \" or use ' (single
+  quote) instead.
 - Every quote should be the strongest specific evidence — not generic filler.
+- TRANSCRIPT QUALITY: If transcript_quality_local is "Degraded" or "Poor",
+  raise the evidence bar. Only use quotes you are confident are real
+  utterances — not ASR noise. When uncertain, prefer a lower label over
+  an inflated one backed by a garbled quote.
 
 ═══════════════════════════════════════════════════════════════════════════════
 WHAT TO PRODUCE (must match ChapterResult type exactly)
@@ -47,8 +57,8 @@ WHAT TO PRODUCE (must match ChapterResult type exactly)
    - chapter_num: integer (matches input chapter_index)
    - title: string (matches input chapter_title)
    - what_was_taught: 2–4 sentences in English describing what concretely
-     happened. Be specific: NAME the concepts, formulas, frameworks (e.g. AIDA, 
-     ROAS, or KraftShala-specific frameworks), or activities. AVOID vague 
+     happened. Be specific: NAME the concepts, formulas, frameworks (e.g. AIDA,
+     ROAS, or KraftShala-specific frameworks), or activities. AVOID vague
      phrasing like "discussed marketing concepts".
      Good: "Walked through the AIDA funnel stages and mapped each stage to
      specific Meta Ads objectives. Used a B2B SaaS example to show how
@@ -58,7 +68,7 @@ WHAT TO PRODUCE (must match ChapterResult type exactly)
 2. RUBRIC SCORES — teaching_depth, pacing, engagement, example_gap
    Each is a Score object: { score, label, rationale, evidence: [...] }
    - score: integer 0–100
-   - label: from canonical strings (see below)
+   - label: from canonical strings (see SCORE CALIBRATION below)
    - rationale: 1–3 sentences explaining WHY this label, citing specific
      teaching behaviour. Don't restate the label. Be evaluative.
      Good: "Expert defined ROAS but never showed how to compute it from raw
@@ -67,71 +77,211 @@ WHAT TO PRODUCE (must match ChapterResult type exactly)
      Bad: "Definitional because it was definitional."
    - evidence: 1–3 strongest quote+timestamp pairs supporting the rationale.
 
+   ─── SCORE CALIBRATION (use these anchors — do not drift toward the middle) ───
+
+   teaching_depth:
+     "Definitional" → score 10–40
+       10–25: Expert read off a slide/notes verbatim with no elaboration. Signal
+              phrases: "as you can see", "let me read this out", "it's just a
+              quick comparison", listing items verbatim without commentary.
+              Flag in rationale: "Slide-reading pattern detected."
+       25–40: Expert explained the concept but stopped short of any application.
+
+     LIVE DEMO EXCEPTION — do NOT apply slide-reading penalty when:
+       The expert is demonstrating a live tool, platform, or spreadsheet
+       (Excel, Google Sheets, ad platform UI, dashboard, etc.) with running
+       commentary. Narrating a live demo IS teaching, not slide-reading.
+       Signals: "let me show you", "I'll open the platform", "see here on
+       screen", followed by specific click-by-click or field-by-field
+       narration. A live demo with student observation counts as at minimum
+       "Explained" (score ≥50) and as "Deep" if students ask questions during it.
+
+     "Explained"    → score 45–70
+       Expert connected concept to use cases OR gave at least one concrete
+       worked example, live demo, or platform walkthrough.
+     "Deep"         → score 75–100
+       Expert showed the WHY, connected to other concepts, handled edge cases,
+       or had students apply/extend the concept.
+
+   pacing:
+     "Rushed"      → score 10–40
+       Expert covered multiple sub-topics without pausing for questions, or
+       spent <2 min on something that clearly needed more time.
+     "Balanced"    → score 50–80
+       Time per topic felt appropriate; students had space to ask questions.
+     "Overdwelled" → score 30–60
+       Spent significantly more time than the topic warranted.
+
+   engagement:
+     "Silent"      → score 0–30. No meaningful student speech.
+     "Responsive"  → score 35–65. Students answered ONLY when called on.
+     "Active"      → score 70–100. Students INITIATED unprompted exchanges.
+
+   example_gap:
+     "No Gap"      → score 80–100. Concrete, specific examples for every concept.
+     "Minor Gap"   → score 55–75. 1–2 concepts without examples, not critical.
+     "Notable Gap" → score 30–54. Core concepts explained without examples.
+     "Major Gap"   → score 0–29. Almost no concrete examples where clearly needed.
+
+   CALIBRATION CHECK: Before finalising, verify:
+   - If all 4 rubrics score >70 in the same chapter, re-read the chapter.
+     A chapter with no student doubts, no confusion, perfect pacing, deep depth,
+     and no example gaps is rare. Be honest.
+   - If teaching_depth is "Definitional", engagement should rarely exceed 60.
+     Definitional chapters don't generate deep student engagement by definition.
+
+   ─── ENGAGEMENT SCORING RULES (read carefully) ───
+
+   "Active" REQUIRES students to INITIATE speech without being called on:
+   they ask unprompted questions, challenge the expert, build on each other's
+   answers, or volunteer examples. Minimum bar: ≥3 distinct student-initiated
+   exchanges in this chapter.
+
+   "Responsive" = students answer ONLY when the expert asks them directly
+   ("Clear?", "Any questions?", "Rohit, what do you think?"). This is the
+   DEFAULT label for most chapters.
+
+   "Silent" = no student speech at all, or only filler ("yes", "okay", "hmm").
+
+   DO NOT credit "Active" for:
+   - Expert asking "Clear?" and students saying "yes" or staying silent.
+   - Expert calling on a student by name and getting a one-line answer.
+   - Expert check-ins without a substantive student follow-up.
+
+   STUDENT PUSHBACK & ENGAGEMENT: A student pushing back, challenging a fact,
+   or raising a disagreement IS a form of active engagement — it means students
+   are paying close attention and thinking critically. However, the nature matters:
+   - If pushback is present AND the expert resolves it well → engagement "Active",
+     score 70–85. Note in rationale: "Active — student-initiated pushback present."
+   - If pushback is present BUT unresolved or deflected → cap engagement score at
+     55 regardless of label. A class where students disagree and are not heard is
+     not a well-functioning session. Note: "Engagement capped — pushback unresolved."
+   - Multiple pushbacks in the same chapter → always flag in engagement rationale.
+
+   EVIDENCE FOR ENGAGEMENT: Only quote student utterances. Expert speech
+   CANNOT be evidence for the student engagement score.
+
 3. ANALOGIES — array of Analogy objects
-   - concept_explained: the concept the analogy is illustrating, in English
-     (e.g. "Conversion funnel", "Compound interest").
-   - quality: { score, label, rationale } — label from "Weak"|"Partial"|
-     "Strong". Rationale 1 sentence on whether the analogy actually clarifies
-     the concept or muddles it.
+   - concept_explained: the concept the analogy is illustrating, in English.
+   - quality: { score, label, rationale } — label from "Weak"|"Partial"|"Strong".
    - timestamp: "HH:MM:SS"
    - verbatim_quote: the analogy as the expert spoke it (preserve language)
-   - what_it_explains: 1 sentence English description of how the analogy
-     maps onto the underlying concept.
+   - what_it_explains: 1 sentence English description.
    CAPTURE EXHAUSTIVELY. Every analogy, comparison, real-world example, or
-   metaphor the expert uses is a candidate. If the chapter has 4 analogies,
-   output 4 (subject to a hard cap of 5 per chapter).
+   metaphor the expert uses is a candidate. Hard cap: 5 per chapter.
 
 4. DOUBTS — array of Doubt objects
    For EVERY student question, confusion, or "I didn't understand" moment in
    this chapter, emit one Doubt entry. STUDENT QUESTIONS ARE THE SINGLE MOST
-   IMPORTANT SIGNAL of how engagement and depth landed. Missing them is the
-   biggest failure mode.
-   - student_name_raw: name as it appears in the transcript ("Priya",
-     "Rohit", "Anonymous Student" if no name)
+   IMPORTANT SIGNAL. Missing them is the biggest failure mode.
+
+   - student_name_raw: the EXACT name as it appears in the transcript label
+     immediately preceding the doubt (e.g., if the transcript says
+     "Rahul Sharma: sir I have a doubt", use "Rahul Sharma"). Do NOT
+     shorten, summarize, or normalize these names. If the transcript says
+     "Speaker 1", use "Speaker 1". If no name is present, use "Unknown".
    - doubt_verbatim: EXACT text of the student's question (preserve language)
    - timestamp: "HH:MM:SS"
-   - resolution: { score, label, rationale } — label from "Ignored"|
-     "Answered"|"Answered+Anchored"|"Reframed". Rationale should describe
-     the expert's actual response strategy and evaluate its effectiveness.
-     - "Ignored": expert moved on without addressing
-     - "Answered": gave a direct answer but didn't anchor to broader context
-     - "Answered+Anchored": answered AND tied back to a previously taught
-       concept or extended with a follow-up explanation
-     - "Reframed": surfaced the misconception, rebuilt understanding
-   
-   CRITICAL QUALITY CHECK: Did the expert proactively check for understanding?
-   Look for "Clear?", "Any questions?", "Does this make sense?". If found,
-   credit this in the `engagement` rubric rationale.
-   
-   - resolved_flag: boolean. True if the student's question was actually
-     addressed.
-   - resolution_verbatim: the expert's response (preserve language) OR null
-     if ignored.
-   - resolution_accuracy: { score, label, concern } — label from "Correct"|
-     "Needs Review"|"Incorrect Resolution". `concern` is null if Correct,
-     otherwise 1 sentence explaining the issue.
+   - resolution: { score, label, rationale }
+     label from "Ignored"|"Answered"|"Answered+Anchored"|"Reframed"
+     - "Ignored":          expert moved on without addressing
+     - "Answered":         gave a direct answer but no broader context
+     - "Answered+Anchored": answered AND tied back to a prior concept
+     - "Reframed":         surfaced the misconception, rebuilt understanding
+
+   - resolved_flag: boolean. True only if the expert gave a DEFINITIVE, CORRECT
+     answer. If the expert said "let me check" and never returned, or gave an
+     uncertain answer — set resolved_flag = false.
+
+   - resolution_verbatim: expert's response (preserve language) OR null if ignored.
+
+   - resolution_accuracy: { score, label, concern }
+     label from "Correct"|"Needs Review"|"Incorrect Resolution"
+     - "Correct":             Expert's answer was factually accurate.
+     - "Needs Review":        Expert appeared unsure ("let me check", "I think
+                              it is…", "actually, sorry") about a core factual
+                              claim, OR a student challenged the answer and the
+                              expert deferred or agreed with uncertainty.
+     - "Incorrect Resolution": Expert gave a definitive but wrong answer, OR
+                              confirmed an incorrect student assumption.
+     concern: null if "Correct". Otherwise: 1 sentence on what was wrong/uncertain.
+
+   STUDENT PUSHBACK — a critical sub-type of doubt:
+   A pushback is when the student does NOT just ask a question, but:
+   - States a counter-fact: "sir, I think it's 300, not 500"
+   - Challenges the expert's method: "but why would we do it this way?"
+   - Raises a grievance: "why does our batch not have X that the other batch has?"
+
+   When you detect a pushback:
+   - Set resolution.label using the normal labels.
+   - In resolution.rationale, explicitly state: "PUSHBACK — student challenged
+     [what they challenged]. Expert responded by [describe]."
+   - Set resolution_accuracy to "Needs Review" if the expert did not directly
+     address the counter-claim, even if they spoke at length.
+   - Set resolved_flag = false if the factual dispute was not conclusively resolved.
+
    Cap: 5 doubts per chapter (highest-impact ones if more exist).
 
 5. unresolved_doubt_flag: { score, label }
-   Label from "Resolved" | "Left Hanging". Set "Left Hanging" only if at
-   least one student doubt in this chapter went unanswered or was deflected.
+   Label from "Resolved" | "Left Hanging".
+   Set "Left Hanging" if:
+   - At least one student doubt has resolved_flag = false, OR
+   - At least one doubt has resolution_accuracy = "Needs Review" or
+     "Incorrect Resolution"
 
 6. CONFUSION POINTS — array of { topic, severity, why_verbatim, timestamp }
-   Topics where the class was visibly confused (multiple students asking the
-   same thing, expert needing to re-explain, students saying "I didn't
-   understand" / "smajh nahi aaya").
+   Topics where confusion is visible in the classroom. Capture ALL of these:
+
+   (a) A student saying "I didn't understand", "smajh nahi aaya", "ye kya hai",
+       "wait, what?", or asking the same question a previous student asked.
+   (b) The expert saying "let me check", "actually, sorry", "wait, let me
+       re-read", "my mistake" — expert uncertainty IS a confusion signal.
+   (c) A student CHALLENGING or CORRECTING the expert's stated fact (e.g.
+       "sir, I think the budget is X not Y") — treat as Isolated confusion
+       even if only one student speaks.
+   (d) The expert re-explaining the same concept a second time in the same
+       chapter without being asked — signals they sensed confusion.
+
    - severity label: "None" | "Isolated" | "Localized" | "Widespread"
-     - "Isolated"  = one student
-     - "Localized" = 2–3 students
-     - "Widespread" = 4+ students or expert visibly re-teaching
-   - why_verbatim: the strongest student utterance that signals the confusion.
+     - "None"       = no confusion signals detected
+     - "Isolated"   = ONE student OR expert self-corrects once
+     - "Localized"  = 2–3 students OR expert re-explains unprompted once
+     - "Widespread" = 4+ students OR expert visibly re-teaches from scratch
+   - why_verbatim: the strongest student utterance (or expert self-correction)
+     that signals the confusion.
 
 7. accuracy_check: { score, label, flagged_statement, timestamp,
    verbatim_quote, concern }
-   Set `flagged_statement` only if the expert said something factually
-   incorrect, misleading, or significantly outdated. Otherwise:
-   { score: 100, label: "Accurate", flagged_statement: null,
-     timestamp: null, verbatim_quote: null, concern: null }.
+
+   SCOPE — accuracy_check covers TWO types of inaccuracy:
+   (A) CONTENT ACCURACY: Something the expert taught as fact that is wrong,
+       misleading, significantly outdated, or that the expert was visibly
+       unsure about during the lecture/explanation.
+   (B) Q&A ACCURACY: An answer the expert gave to a student question that was
+       factually wrong, uncertain, or left unresolved. If resolution_accuracy
+       on any doubt in this chapter is "Incorrect Resolution" or "Needs Review",
+       you MUST set accuracy_check to at least "Possibly Incorrect" and
+       reference the same fact/claim in flagged_statement.
+
+   TRIGGER RULES:
+   - "Incorrect": Expert stated a wrong fact confidently (either in content or
+     in Q&A answer), with no self-correction.
+   - "Possibly Incorrect": Any of these:
+       • Expert said "let me check", "I think it is…", "wait, is it X or Y?"
+         about a core claim (budget, formula, platform rule, metric).
+       • A student corrected the expert and the expert agreed or deferred.
+       • The expert said "actually, sorry" and changed a stated fact.
+       • Any doubt in this chapter has resolution_accuracy = "Needs Review"
+         or "Incorrect Resolution".
+   - "Accurate": No accuracy concerns in content or Q&A.
+
+   When flagging:
+   flagged_statement = the specific claim that was wrong or uncertain
+   concern = "Expert appeared unsure at time of delivery — verify accuracy."
+             OR describe the specific factual error.
+
+   Default (no issues): { score: 100, label: "Accurate", flagged_statement: null,
+   timestamp: null, verbatim_quote: null, concern: null }.
 
 ═══════════════════════════════════════════════════════════════════════════════
 CANONICAL RUBRIC LABELS — STRICT (DO NOT INVENT NEW LABELS)

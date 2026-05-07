@@ -12,7 +12,8 @@ import {
   Settings, 
   LogOut,
   ChevronRight,
-  LayoutGrid
+  LayoutGrid,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOut } from "next-auth/react";
@@ -27,37 +28,48 @@ const navItems = [
   { label: "Control Panel", href: "/admin", icon: Settings },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isOpen, setIsOpen }: { isOpen?: boolean, setIsOpen?: (open: boolean) => void }) {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 h-screen bg-[var(--sidebar-bg)] backdrop-blur-[var(--glass-blur)] border-r border-[var(--card-border)] flex flex-col p-6 fixed left-0 top-0 z-50 shadow-2xl">
+    <aside className={cn(
+      "w-64 h-screen bg-[var(--sidebar-bg)] backdrop-blur-[var(--glass-blur)] border-r border-[var(--card-border)] flex flex-col p-6 fixed left-0 top-0 z-[100] shadow-2xl transition-transform duration-300 ease-in-out",
+      isOpen ? "translate-x-0" : "-translate-x-full",
+      "lg:translate-x-0" // Always visible on desktop
+    )}>
       {/* Glossy Overlay */}
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-tr from-white/5 to-transparent dark:from-white/0" />
       
       {/* Logo Section */}
-      <div className="mb-10 relative z-10">
-        <div className="flex items-center gap-2 mb-1">
-          <div className="w-8 h-8 rounded-lg bg-brand-orange flex items-center justify-center shadow-lg shadow-brand-orange/20">
-            <div className="w-4 h-4 rounded-sm bg-white" />
+      <div className="mb-10 relative z-10 flex items-center justify-between">
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-lg bg-brand-orange flex items-center justify-center shadow-lg shadow-brand-orange/20">
+              <div className="w-4 h-4 rounded-sm bg-white" />
+            </div>
+            <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)] outfit">Oogway <span className="text-brand-orange">AI</span></h1>
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)] outfit">Oogway <span className="text-brand-orange">AI</span></h1>
+          <div className="flex items-center gap-1.5 opacity-50 ml-1">
+            <span className="text-[10px] font-bold tracking-widest text-[var(--muted)]">Powered By</span>
+            <span className="text-[10px] font-extrabold text-[var(--foreground)] tracking-widest">KRAFTSHALA</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5 opacity-50 ml-1">
-          <span className="text-[10px] font-bold tracking-widest text-[var(--muted)]">Powered By</span>
-          <span className="text-[10px] font-extrabold text-[var(--foreground)] tracking-widest">KRAFTSHALA</span>
-        </div>
+
+        {/* Close Button Mobile */}
+        <button 
+          onClick={() => setIsOpen?.(false)}
+          className="lg:hidden p-2 rounded-xl hover:bg-white/10 text-[var(--muted)]"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Node Badge */}
-      <div className="mb-8 pl-4 pr-3 py-2 bg-white/20 dark:bg-white/5 rounded-full border border-[var(--card-border)] flex items-center gap-3 relative z-10">
-        <div className="w-2 h-2 rounded-full bg-brand-warning animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-        <span className="text-[10px] font-bold text-[var(--muted)] tracking-widest">Admin Node <span className="text-[var(--foreground)]">#042</span></span>
-      </div>
+      {/* Navigation */}
 
       {/* Primary Action */}
       <Link 
         href="/analysis/new"
+        onClick={() => setIsOpen?.(false)}
         className="group relative flex items-center justify-center gap-3 w-full py-3.5 bg-brand-orange text-white rounded-full font-bold text-xs tracking-wider mb-8 transition-all hover:scale-105 active:scale-95 shadow-lg shadow-brand-orange/30 overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -74,6 +86,7 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => setIsOpen?.(false)}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative",
                 isActive 

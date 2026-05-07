@@ -14,30 +14,123 @@
  *  - Quotes shorter than 8 chars are skipped (too short to be meaningful
  *    and too likely to cause false positives).
  *  - Trailing "..." is stripped before the check (AI often truncates quotes).
+ *  - METADATA-AWARE: The verifier strips speaker labels and VTT timestamps
+ *    from the transcript before matching. This means a quote that stitches
+ *    two adjacent utterances (separated by a speaker label / timestamp line
+ *    in the raw VTT) still passes — we compare speech content only, not
+ *    formatting scaffolding.
  */
+
+// Lines that are pure metadata (VTT timestamps or "Speaker: " labels)
+const METADATA_LINE_RE = /^(\d{1,2}:\d{2}:\d{2}|[A-Z][^:]{1,40}:)/
+
+/**
+ * Strip VTT/plain-text metadata lines (timestamps and speaker labels) and
+ * collapse all remaining lines into a single speech-only string.
+ * This lets us match quotes that the AI stitched across utterance boundaries.
+ */
+function stripMetadata(transcript: string): string {
+  return transcript
+    .split('\n')
+    .filter(line => {
+      const trimmed = line.trim()
+      if (!trimmed) return false
+      if (METADATA_LINE_RE.test(trimmed)) return false
+      return true
+    })
+    .join(' ')
+}
 
 function nfc(s: string): string {
   if (!s) return ''
   return s
     .normalize('NFC')
-    .replace(/â€¦/g, '…')
+    // Clean up common VTT encoding garble and smart punctuation
+    .replace(/â€¦/g, '...')
     .replace(/â€™/g, "'")
     .replace(/â€œ/g, '"')
     .replace(/â€/g, '"')
+    .replace(/â€“/g, '-')
+    .replace(/â€”/g, '-')
+    .replace(/â€˜/g, "'")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, '"')
+    .replace(/[\u2026]/g, '...')
+    // Strip punctuation for comparison
+    .replace(/[.,!?;:"'()\[\]{}…\-—]/g, '')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase()
 }
 
 /**
+ * Simple Levenshtein distance for fuzzy matching
+ */
+function levenshtein(a: string, b: string): number {
+  const tmp = []
+  for (let i = 0; i <= a.length; i++) {
+    tmp[i] = [i]
+  }
+  for (let j = 0; j <= b.length; j++) {
+    tmp[0][j] = j
+  }
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      tmp[i][j] = Math.min(
+        tmp[i - 1][j] + 1,
+        tmp[i][j - 1] + 1,
+        tmp[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+      )
+    }
+  }
+  return tmp[a.length][b.length]
+}
+
+/**
+ * Check if the quote exists as a fuzzy substring within the transcript.
+ * We look for a window of text similar in length to the quote.
+ */
+function fuzzyIncludes(transcript: string, quote: string, threshold = 0.12): boolean {
+  if (transcript.includes(quote)) return true
+  
+  const qLen = quote.length
+  if (qLen < 8) return false
+
+  // Multiple anchors: try start, middle, and end to avoid single-typo failures
+  const anchors = [
+    quote.slice(0, 4),
+    quote.slice(Math.floor(qLen / 2), Math.floor(qLen / 2) + 4),
+    quote.slice(-4)
+  ].filter(a => a.length >= 3)
+
+  for (const anchor of anchors) {
+    let idx = transcript.indexOf(anchor)
+    while (idx !== -1) {
+      // Check a window slightly larger than the quote
+      const start = Math.max(0, idx - 10)
+      const end = Math.min(transcript.length, idx + qLen + 10)
+      const candidate = transcript.slice(start, end)
+      
+      // If any substring in this window is close enough, we're good
+      const dist = levenshtein(quote, candidate.slice(0, qLen))
+      if (dist / qLen <= threshold) return true
+      
+      idx = transcript.indexOf(anchor, idx + 1)
+    }
+  }
+  
+  return false
+}
+
+/**
  * Check whether a single quote exists in the transcript.
- * Exported for use in the verification checklist.
+ * Tries two passes:
+ *   1. Against the raw transcript (catches exact matches).
+ *   2. Against the speech-only transcript (catches cross-utterance stitches).
+ * Fuzzy matching is used as a fallback for both.
  */
 export function verifyQuote(chapterTranscript: string, quote: string): boolean {
   if (!quote || !chapterTranscript) return false
-  
-  // Normalize the transcript once
-  const normalizedTranscript = nfc(chapterTranscript)
 
   // Split on any ellipsis-like markers (middle or end)
   const parts = quote
@@ -47,8 +140,20 @@ export function verifyQuote(chapterTranscript: string, quote: string): boolean {
 
   if (parts.length === 0) return true // no verifiable parts; pass through
 
-  // All non-empty parts must exist in the transcript
-  return parts.every(part => normalizedTranscript.includes(part))
+  const normalizedRaw = nfc(chapterTranscript)
+  const normalizedSpeech = nfc(stripMetadata(chapterTranscript))
+
+  return parts.every(part => {
+    // 1. Strict match
+    if (normalizedRaw.includes(part)) return true
+    if (normalizedSpeech.includes(part)) return true
+    
+    // 2. Fuzzy match fallback (10% error allowed)
+    if (fuzzyIncludes(normalizedRaw, part)) return true
+    if (fuzzyIncludes(normalizedSpeech, part)) return true
+    
+    return false
+  })
 }
 
 /**

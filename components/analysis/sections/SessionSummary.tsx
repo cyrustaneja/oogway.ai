@@ -29,9 +29,9 @@ function StatPill({
   tone: keyof typeof TOKENS.chip;
 }) {
   return (
-    <div className={`flex flex-col items-start px-4 py-3 rounded-2xl border ${TOKENS.chip[tone]}`}>
-      <span className="text-[9px] font-bold uppercase tracking-[0.18em] opacity-80">{label}</span>
-      <span className="text-base font-bold mt-0.5 leading-tight">{value}</span>
+    <div className={`flex flex-col items-start px-3 py-2.5 md:px-4 md:py-3 rounded-2xl border ${TOKENS.chip[tone]}`}>
+      <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.18em] opacity-80 truncate w-full">{label}</span>
+      <span className="text-sm md:text-base font-bold mt-0.5 leading-tight truncate w-full">{value}</span>
     </div>
   );
 }
@@ -49,11 +49,18 @@ export function SessionSummary({ data, sessionInfo, chapters }: Props) {
     }
     const ignoredDoubts = ch.doubts?.filter((d: any) => d.resolution?.label === 'Ignored') || [];
     if (ignoredDoubts.length > 0) redCount++;
+    // Confusion
+    const widespreadConfusion = ch.confusion_points?.filter((p: any) => p.severity?.label === 'Widespread') || [];
+    if (widespreadConfusion.length > 0) redCount++;
+    
     if (ch.example_gap?.label === 'Severe Gap') redCount++;
     return count + redCount;
   }, 0);
 
-  // Add flag for Session Incompleteness
+  // Add flag for Session Incompleteness & Context
+  const contextScore = data.context_setup?.score ?? 100;
+  if (contextScore <= 60) autoFlagsCount++;
+
   if (data.session_completeness?.label === 'Incomplete' || (data.topics_missed_from_notes?.length ?? 0) > 0) {
     const existsInAI = aiFlags.some((f: any) => f.category === 'MissedTopics');
     if (!existsInAI) autoFlagsCount++;
@@ -73,35 +80,31 @@ export function SessionSummary({ data, sessionInfo, chapters }: Props) {
   const unresolved = data.student_log?.unresolved_doubts?.length ?? 0;
 
   return (
-    <header className="mb-8">
-      <div className="glass-card p-7 relative overflow-hidden">
+    <header className="mb-6 lg:mb-8">
+      <div className="glass-card p-5 md:p-7 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-60" />
 
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="min-w-0">
-            <p className={TOKENS.sectionEyebrow}>Pedagogical Audit</p>
-            <h1 className="mt-2 text-3xl lg:text-4xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight">
-              {sessionInfo?.expertName || 'Expert'}
-              <span className="text-brand-orange"> · </span>
-              {sessionInfo?.batchName || 'Batch'}
+            <p className={TOKENS.sectionEyebrow}>
+              {sessionInfo?.expertName || 'Expert'} · {sessionInfo?.batchName || 'Batch'}
+            </p>
+            <h1 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight truncate">
+              {sessionInfo?.name || 'Session Analysis'}
             </h1>
-            <div className="flex flex-wrap items-center gap-y-2 gap-x-5 mt-4 text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
+            <div className="flex flex-wrap items-center gap-y-2 gap-x-4 md:gap-x-5 mt-4 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5" />
                 {sessionInfo?.date || '—'}
               </span>
               <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
+                <Clock className="w-3 h-3 md:w-3.5 md:h-3.5" />
                 {sessionInfo?.duration || '—'}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <GraduationCap className="w-3.5 h-3.5" />
-                {sessionInfo?.name || `Schema ${data.schema_version ?? 'v1'}`}
               </span>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 md:gap-3">
             <RubricChip
               rubricKey="hygiene_camera"
               label={data.hygiene?.camera?.label ?? '—'}
@@ -112,14 +115,16 @@ export function SessionSummary({ data, sessionInfo, chapters }: Props) {
               label={data.hygiene?.punctuality?.label ?? '—'}
               rationale="Expert punctuality at session start"
             />
-            <RubricReference />
+            <div className="w-full sm:w-auto mt-2 sm:mt-0">
+              <RubricReference />
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
           <StatPill
             label="Completeness"
-            value={data.session_completeness?.label ? `Completeness: ${data.session_completeness.label}` : '—'}
+            value={data.session_completeness?.label || '—'}
             tone={completenessTone}
           />
           <StatPill

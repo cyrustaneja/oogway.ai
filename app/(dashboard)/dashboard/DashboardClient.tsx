@@ -155,7 +155,7 @@ export default function DashboardClient({
           </div>
         </div>
 
-        <div className="grid grid-cols-12 gap-4 px-8 py-4 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest border-b border-[var(--card-border)]">
+        <div className="hidden lg:grid grid-cols-12 gap-4 px-8 py-4 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest border-b border-[var(--card-border)]">
           <div className="col-span-4">Session Identity</div>
           <div className="col-span-2">Batch / Course</div>
           <div className="col-span-2">Expert Partner</div>

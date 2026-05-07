@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Trash2, Loader2, Target } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string }> = {
   PENDING:       { label: "Queued",       color: "text-[var(--muted)]", dot: "bg-slate-500" },
@@ -46,21 +47,35 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
   }
 
   return (
-    <div className="divide-y divide-[var(--card-border)]">
+    <div className="divide-y divide-[var(--card-border)] overflow-hidden">
       {sessions.map((a) => {
         const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
         const isDeleting = deletingId === a.id;
 
         return (
-          <div key={a.id} className={`grid grid-cols-13 gap-4 px-8 py-5 items-center hover:bg-[var(--inner-bg)] transition-all duration-300 ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
-            <div className="col-span-4 min-w-0">
-              <Link href={`/sessions/${a.id}`} className="group">
-                <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
-                  {a.name}
-                </p>
-              </Link>
+          <div 
+            key={a.id} 
+            className={cn(
+              "flex flex-col lg:grid lg:grid-cols-13 gap-4 lg:gap-4 px-6 lg:px-8 py-6 lg:py-5 items-start lg:items-center hover:bg-[var(--inner-bg)] transition-all duration-300 relative",
+              isDeleting ? 'opacity-50 pointer-events-none' : ''
+            )}
+          >
+            {/* Session Identity - Main Column */}
+            <div className="col-span-4 min-w-0 w-full">
+              <div className="flex items-start justify-between lg:block">
+                <Link href={`/sessions/${a.id}`} className="group block min-w-0">
+                  <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
+                    {a.name}
+                  </p>
+                </Link>
+                {/* Mobile-only status indicator */}
+                <div className="lg:hidden flex items-center gap-2 shrink-0">
+                  <div className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${cfg.color}`}>{cfg.label}</span>
+                </div>
+              </div>
               {a.sessionNote ? (
-                <div className="flex items-center gap-1.5 mt-0.5">
+                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1.5 lg:mt-0.5">
                   <Link 
                     href={`/modules/${a.sessionNote.moduleId}`}
                     className="flex items-center gap-1 text-[10px] text-brand-orange hover:underline font-bold whitespace-nowrap"
@@ -68,65 +83,84 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
                     <Target className="w-2.5 h-2.5" />
                     {a.sessionNote.module?.name || "Unmapped Topic"}
                   </Link>
-                  <span className="text-[10px] text-[var(--muted)] opacity-40">·</span>
+                  <span className="hidden sm:inline text-[10px] text-[var(--muted)] opacity-40">·</span>
                   <Link 
                     href={`/session-notes/${a.sessionNoteId}`}
-                    className="text-[10px] text-[var(--muted)] hover:text-brand-orange font-medium truncate italic hover:underline"
+                    className="text-[10px] text-[var(--muted)] hover:text-brand-orange font-medium truncate italic hover:underline max-w-[200px]"
                   >
                     {a.sessionNote.name}
                   </Link>
                 </div>
               ) : (
-                <p className="text-[10px] text-[var(--muted-foreground)] mt-0.5 truncate font-medium">Standalone Analysis</p>
+                <p className="text-[10px] text-[var(--muted-foreground)] mt-1 lg:mt-0.5 truncate font-medium uppercase tracking-widest">Standalone Analysis</p>
               )}
             </div>
-            <div className="col-span-2 min-w-0">
-              {a.batch?.name ? (
+
+            {/* Mobile Data Row */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full lg:contents border-t border-[var(--inner-border)] lg:border-none pt-4 lg:pt-0">
+              {/* Batch / Course */}
+              <div className="lg:col-span-2 min-w-0 flex flex-col gap-1 lg:block">
+                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Cohort</span>
+                {a.batch?.name ? (
+                  <Link 
+                    href={`/batches/${a.batchId}`}
+                    className="text-[11px] font-bold text-brand-orange hover:underline truncate block"
+                  >
+                    {a.batch.name}
+                  </Link>
+                ) : (
+                  <span className="text-[10px] text-[var(--muted-foreground)] font-bold italic">Unassigned</span>
+                )}
+              </div>
+
+              {/* Expert Partner */}
+              <div className="lg:col-span-2 flex items-center gap-2 min-w-0">
+                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em] mr-1">Expert</span>
+                <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-[var(--foreground)] shrink-0 shadow-sm capitalize">
+                  {a.expert.name[0]}
+                </div>
                 <Link 
-                  href={`/batches/${a.batchId}`}
-                  className="text-[11px] font-bold text-brand-orange hover:underline truncate block"
+                  href={`/experts/${a.expertId}`}
+                  className="text-[11px] font-bold text-[var(--foreground)] opacity-90 truncate hover:text-brand-orange transition-colors"
                 >
-                  {a.batch.name}
+                  {a.expert.name}
                 </Link>
-              ) : (
-                <span className="text-[10px] text-[var(--muted-foreground)] font-bold italic">No Batch Assigned</span>
-              )}
-            </div>
-            <div className="col-span-2 flex items-center gap-2 min-w-0">
-              <div className="w-8 h-8 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center text-[10px] font-bold text-[var(--foreground)] shrink-0 shadow-sm capitalize">
-                {a.expert.name[0]}
               </div>
+
+              {/* Growth Status - Desktop Only Hidden Column */}
+              <div className="hidden lg:flex lg:col-span-2 items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${cfg.dot} shadow-sm`} />
+                <span className={`text-[11px] font-bold tracking-tight ${cfg.color}`}>{cfg.label}</span>
+              </div>
+
+              {/* Timeline */}
+              <div className="lg:col-span-1 text-[11px] font-bold text-[var(--muted)] flex items-center gap-2">
+                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Scanned</span>
+                {new Date(a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex items-center gap-3 w-full lg:w-auto lg:contents mt-4 lg:mt-0 pt-4 lg:pt-0 border-t border-[var(--inner-border)] lg:border-none">
               <Link 
-                href={`/experts/${a.expertId}`}
-                className="text-[11px] font-bold text-[var(--foreground)] opacity-90 truncate hover:text-brand-orange transition-colors"
+                href={`/sessions/${a.id}`}
+                className="lg:col-span-1 flex flex-1 lg:justify-end items-center group/arrow"
               >
-                {a.expert.name}
+                <div className="w-full lg:w-auto flex items-center justify-center gap-2 px-4 py-2 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-orange/5 lg:bg-[var(--inner-bg)] border border-brand-orange/10 lg:border-[var(--inner-border)] text-brand-orange lg:text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
+                  <span className="lg:hidden text-[10px] font-bold uppercase tracking-widest">Open Analysis</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
               </Link>
-            </div>
-            <div className="col-span-2 flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${cfg.dot} shadow-sm`} />
-              <span className={`text-[11px] font-bold tracking-tight ${cfg.color}`}>{cfg.label}</span>
-            </div>
-            <div className="col-span-1 text-[11px] font-bold text-[var(--muted)]">
-              {new Date(a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
-            </div>
-            <Link 
-              href={`/sessions/${a.id}`}
-              className="col-span-1 flex justify-end items-center group/arrow pr-4"
-            >
-              <div className="p-2.5 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
-                <ChevronRight className="w-4 h-4" />
+              <div className="lg:col-span-1 flex justify-center items-center">
+                <button
+                  onClick={() => handleDelete(a.id, a.name)}
+                  disabled={isDeleting}
+                  className="p-3 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-danger/5 border border-brand-danger/10 text-brand-danger hover:bg-brand-danger/20 transition-all hover:scale-110"
+                  title="Delete Session"
+                >
+                  {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                </button>
               </div>
-            </Link>
-            <div className="col-span-1 flex justify-center items-center">
-              <button
-                onClick={() => handleDelete(a.id, a.name)}
-                disabled={isDeleting}
-                className="p-2.5 rounded-full bg-brand-danger/5 border border-brand-danger/10 text-brand-danger hover:bg-brand-danger/20 transition-all hover:scale-110"
-                title="Delete Session"
-              >
-                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-              </button>
             </div>
           </div>
         );

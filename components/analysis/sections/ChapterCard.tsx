@@ -16,6 +16,7 @@ import {
 
 type Props = {
   chapter: ChapterResult;
+  totalDuration?: number;
 };
 
 function MiniLabel({ children }: { children: React.ReactNode }) {
@@ -26,26 +27,40 @@ function MiniLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ChapterCard({ chapter }: Props) {
+export function ChapterCard({ chapter, totalDuration }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const totalDoubts = chapter.doubts?.length ?? 0;
   const totalAnalogies = chapter.analogies?.length ?? 0;
   const totalConfusion = chapter.confusion_points?.length ?? 0;
 
+  const duration = ((chapter as any).t_end || 0) - ((chapter as any).t_start || 0);
+  const percentage = totalDuration ? Math.round((duration / totalDuration) * 100) : 0;
+
   return (
     <div className="rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] overflow-hidden transition-all hover:border-brand-orange/30">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 text-left"
+        className="w-full flex flex-col md:flex-row md:items-center justify-between p-4 text-left gap-4"
       >
-        <div className="flex items-center gap-4 min-w-0">
+        <div className="flex items-center gap-4 min-w-0 flex-1">
           <span className="flex-shrink-0 w-10 h-10 rounded-xl bg-brand-orange/10 border border-brand-orange/20 flex items-center justify-center text-[12px] font-bold text-brand-orange">
             {String(chapter.chapter_num).padStart(2, '0')}
           </span>
-          <div className="min-w-0">
-            <h4 className="text-[14px] font-bold text-[var(--foreground)] tracking-tight truncate">
+          <div className="min-w-0 flex-1">
+            <h4 className="text-[14px] font-bold text-[var(--foreground)] tracking-tight leading-tight truncate">
               {chapter.title}
             </h4>
+            <div className="flex items-center gap-3 mt-1.5">
+              <div className="w-24 h-1 rounded-full bg-[var(--inner-border)] overflow-hidden">
+                <div 
+                  className="h-full bg-brand-orange transition-all duration-500" 
+                  style={{ width: `${Math.max(2, percentage)}%` }} 
+                />
+              </div>
+              <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">
+                {formatTimestamp(chapter.t_start)} – {formatTimestamp(chapter.t_end)} • {percentage}% of session
+              </span>
+            </div>
           </div>
         </div>
 
@@ -161,4 +176,12 @@ export function ChapterCard({ chapter }: Props) {
       )}
     </div>
   );
+}
+
+function formatTimestamp(seconds: number): string {
+  if (!seconds && seconds !== 0) return '00:00:00';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return [h, m, s].map(v => String(v).padStart(2, '0')).join(':');
 }

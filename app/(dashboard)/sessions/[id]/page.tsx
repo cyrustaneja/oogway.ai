@@ -10,6 +10,7 @@ import {
   ExpertStudentToggle,
 } from '@/components/analysis/sections';
 import { AnalysisInProgress } from '@/components/analysis/AnalysisInProgress';
+import { CoachingTipsPanel } from '@/components/analysis/CoachingTipsPanel';
 
 // Force fresh DB read on every request — the page is also re-fetched after
 // the in-progress widget triggers router.refresh() once the pipeline is done.
@@ -47,6 +48,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </div>
 
         <ExpertStudentToggle data={data} />
+
+        {/* ── On-demand Coaching Tips — independent, not part of the pipeline ── */}
+        <CoachingTipsPanel sessionId={id} />
       </div>
     </main>
   );

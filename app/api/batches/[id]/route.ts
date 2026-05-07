@@ -40,3 +40,23 @@ export async function GET(
     return NextResponse.json({ error: "Failed to fetch batch" }, { status: 500 });
   }
 }
+
+// DELETE /api/batches/[id]
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { id } = await params;
+  try {
+    await prisma.batch.update({
+      where: { id },
+      data: { deletedAt: new Date() },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: "Failed to delete batch" }, { status: 500 });
+  }
+}

@@ -52,7 +52,14 @@ export async function getSessionAnalysis(
     data = parsed.data as unknown as SessionAnalysis;
   }
 
-  const chapters = session.AnalysisChapterResult.map(c => c.result) as unknown as ChapterResult[];
+  const chapters = session.AnalysisChapterResult.map(c => {
+    const meta = (session.chapters_json as any[])?.find((m: any) => m.chapter_index === c.chapter_index);
+    return {
+      ...(c.result as any),
+      t_start: meta?.t_start ?? 0,
+      t_end: meta?.t_end ?? 0,
+    };
+  }) as unknown as ChapterResult[];
 
   // Calculate actual duration from last chapter's t_end if scheduledDuration is missing
   let durationMins = session.scheduledDuration || 0;

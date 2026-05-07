@@ -1,9 +1,18 @@
 export const LIMITS = {
   // ─── Concurrency & Scheduling ─────────────────────────────────────────────
-  pipelineConcurrency: parseInt(process.env.PIPELINE_CONCURRENCY ?? '5'),
-  stage2ChaptersInParallel: 3,        // bumped from 2 for throughput at scale
+  pipelineConcurrency: parseInt(process.env.PIPELINE_CONCURRENCY ?? '2'),
+  stage2ChaptersInParallel: 1,        // Sequential processing for maximum reliability
   tickClaimWindowMins: 5,             // sessions stuck >5 min without heartbeat re-queued
   sessionMaxAgeMins: 240,             // sessions stuck >4h → FAILED (covers 2-3hr transcripts)
+
+  // Per-stage lock windows for atomic claim (Bottleneck #4 fix).
+  // Keep these tight: a crash during Stage 2 (fast) should re-queue quickly.
+  // Stage 3 gets the full window because synthesis can genuinely take minutes.
+  tickClaimWindowStage0Ms:  30_000,   // preprocessor: 30s max
+  tickClaimWindowStage1Ms:  90_000,   // segmenter: 90s max
+  tickClaimWindowStage2Ms:  90_000,   // per-batch chapter extraction: 90s max
+  tickClaimWindowStage3Ms: 300_000,   // synthesis: 5 min max (Gemini 2.5 Pro is slow)
+  tickClaimWindowStage4Ms:  60_000,   // flag generator: 60s max
 
   // ─── Token Budgets (initial per call) ─────────────────────────────────────
   stage1TokenBudget: 6000,        // production-ready: supports up to 25+ granular chapters
@@ -43,6 +52,16 @@ export const LIMITS = {
   // stage2MaxValidatorRetries the row stays needs_review=true and Stage 3
   // proceeds without it (downstream code checks needs_review before trusting).
   stage2MaxValidatorRetries: 3,
+
+  // Bottleneck #5 fix: dynamic batch cooldown replacing the old hardcoded 15s.
+  // Set to 5s — the Vercel Cron fires every 60s anyway, so this is effectively
+  // "process on the next available tick" with a 5s buffer for DB write flush.
+  stage2BatchCooldownMs: 5_000,
+
+  // Bottleneck #3 fix: cap the per-chapter payload sent to Stage 3 to avoid
+  // bloating the synthesis prompt. Each chapter's result is trimmed to this
+  // length in characters before being sent. Full data stays in the DB.
+  stage3ChapterSummaryMaxChars: 3_000,
 
   // ─── Chapter Count Safety Net ──────────────────────────────────────────────
   // These are MINIMUMS to catch degenerate 1-chapter outputs. The model should

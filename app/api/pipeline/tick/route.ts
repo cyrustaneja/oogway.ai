@@ -26,12 +26,13 @@ const STAGE_MAP: Record<string, {
   handler: (id: string) => Promise<void>
   timeoutMs: number
   stageKey: string
+  lockWindowMs: number
 }> = {
-  UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                  stageKey: 'stage0' },
-  PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'stage1' },
-  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs * LIMITS.stage2ChaptersInParallel, stageKey: 'stage2' },
-  EXTRACTED:          { handler: handleStage3,       timeoutMs: LIMITS.stage3TimeoutMs,   stageKey: 'stage3' },
-  SYNTHESIZED:        { handler: handleStage4,       timeoutMs: LIMITS.stage4TimeoutMs,   stageKey: 'stage4' },
+  UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                  stageKey: 'stage0', lockWindowMs: LIMITS.tickClaimWindowStage0Ms },
+  PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'stage1', lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
+  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs * LIMITS.stage2ChaptersInParallel, stageKey: 'stage2', lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
+  EXTRACTED:          { handler: handleStage3,       timeoutMs: LIMITS.stage3TimeoutMs,   stageKey: 'stage3', lockWindowMs: LIMITS.tickClaimWindowStage3Ms },
+  SYNTHESIZED:        { handler: handleStage4,       timeoutMs: LIMITS.stage4TimeoutMs,   stageKey: 'stage4', lockWindowMs: LIMITS.tickClaimWindowStage4Ms },
 }
 
 const TERMINAL_STAGES = new Set(['COMPLETE', 'FAILED'])
@@ -104,6 +105,12 @@ export async function POST(req: Request) {
     // into the future as part of the same statement, so the next tick
     // will skip it via the next_action_at <= NOW() filter. heartbeat is
     // also stamped here so monitoring can see "claimed but not yet run".
+    // Claim rows and immediately stamp their next_action_at with a per-stage
+    // lock window (Bottleneck #4 fix). Since the claimed rows come back with
+    // their pipeline_stage, we do a two-step: claim all with a safe 90s window,
+    // then immediately re-stamp each row with its stage-specific window.
+    // The two-step is necessary because a single SQL CTE can't do conditional
+    // UPDATE values based on the returned stage in the same statement.
     const claimed: Array<{ id: string; pipeline_stage: string }> =
       await prisma.$queryRawUnsafe(`
         WITH due AS (
@@ -119,13 +126,25 @@ export async function POST(req: Request) {
         )
         UPDATE "AnalysisSession" s
         SET
-          next_action_at = NOW() + INTERVAL '300 seconds',
+          next_action_at = NOW() + INTERVAL '90 seconds',
           heartbeat = NOW(),
           "updatedAt" = NOW()
         FROM due
         WHERE s.id = due.id
         RETURNING s.id, s.pipeline_stage
       `)
+
+    // Re-stamp each claimed row with its precise per-stage lock window.
+    // This is a tiny write — only fires for claimed sessions (<=5 at a time).
+    for (const row of claimed) {
+      const stageConfig = STAGE_MAP[row.pipeline_stage]
+      if (stageConfig) {
+        await prisma.$executeRawUnsafe(
+          `UPDATE "AnalysisSession" SET next_action_at = NOW() + INTERVAL '${Math.ceil(stageConfig.lockWindowMs / 1000)} seconds' WHERE id = $1`,
+          row.id,
+        )
+      }
+    }
 
     summary.claimed = claimed.length
 

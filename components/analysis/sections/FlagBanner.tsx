@@ -44,6 +44,15 @@ export function FlagBanner({ data, chapters }: Props) {
         rationale: `Ch. ${ch.chapter_num}: ${ignoredDoubts.length} student doubt(s) left unresolved`
       });
     }
+    // Confusion
+    const widespreadConfusion = ch.confusion_points?.filter((p: any) => p.severity?.label === 'Widespread') || [];
+    if (widespreadConfusion.length > 0) {
+      autoFlags.push({
+        category: 'ConfusionWidespread',
+        severity: 'high',
+        rationale: `Ch. ${ch.chapter_num}: Widespread student confusion detected regarding "${ch.title}"`
+      });
+    }
     // Examples
     if (ch.example_gap?.label === 'Severe Gap') {
       autoFlags.push({
@@ -54,7 +63,16 @@ export function FlagBanner({ data, chapters }: Props) {
     }
   });
 
-  // 3. Session Incompleteness Flag
+  // 3. Session Incompleteness & Context Flag
+  const contextScore = data.context_setup?.score ?? 100;
+  if (contextScore <= 60) {
+    autoFlags.push({
+      category: 'ContextMissing',
+      severity: 'medium',
+      rationale: `Context Setting: Session score is ${contextScore}/100. Missing agenda or learning objective framing.`
+    });
+  }
+
   if (data.session_completeness?.label === 'Incomplete' || (data.topics_missed_from_notes?.length ?? 0) > 0) {
     const exists = aiFlags.some((f: any) => f.category === 'MissedTopics');
     if (!exists) {
@@ -92,36 +110,36 @@ export function FlagBanner({ data, chapters }: Props) {
 
   return (
     <div className={`mb-6 rounded-2xl border ${toneClasses} backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300`}>
-      <div className="flex items-center justify-between pr-4">
+      <div className="flex items-center justify-between pr-2 md:pr-4">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex-1 flex items-center justify-between px-5 py-4 text-left focus:outline-none"
+          className="flex-1 flex items-center justify-between px-4 md:px-5 py-4 text-left focus:outline-none min-w-0"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 min-w-0">
             <span
-              className={`flex items-center justify-center w-9 h-9 rounded-xl bg-[var(--inner-bg)] border border-[var(--inner-border)] ${iconColor}`}
+              className={`flex-shrink-0 flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-xl bg-[var(--inner-bg)] border border-[var(--inner-border)] ${iconColor}`}
             >
               <AlertTriangle className="w-4 h-4" />
             </span>
-            <div>
-              <p className="text-[13px] font-bold uppercase tracking-widest text-[var(--foreground)]">
+            <div className="min-w-0">
+              <p className="text-[11px] md:text-[13px] font-bold uppercase tracking-widest text-[var(--foreground)] truncate">
                 {allFlags.length} operational flag
-                {allFlags.length !== 1 ? 's' : ''} detected
+                {allFlags.length !== 1 ? 's' : ''}
               </p>
-              <p className="text-[11px] text-[var(--muted)] font-medium mt-0.5">
-                {highCount > 0 ? 'Critical issues require review' : 'Review session-wide observations'}
+              <p className="text-[10px] md:text-[11px] text-[var(--muted)] font-medium mt-0.5 truncate">
+                {highCount > 0 ? 'Critical review required' : 'Review session-wide notes'}
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2 ml-2 shrink-0">
             {highCount > 0 && (
-              <span className="text-[9px] font-bold tracking-widest uppercase bg-brand-danger/20 text-brand-danger px-2 py-1 rounded-full border border-brand-danger/30">
-                {highCount} High
+              <span className="text-[8px] md:text-[9px] font-bold tracking-widest uppercase bg-brand-danger/20 text-brand-danger px-1.5 py-0.5 md:px-2 md:py-1 rounded-full border border-brand-danger/30">
+                {highCount}<span className="hidden sm:inline ml-1">High</span>
               </span>
             )}
             {medCount > 0 && (
-              <span className="text-[9px] font-bold tracking-widest uppercase bg-brand-warning/20 text-brand-warning px-2 py-1 rounded-full border border-brand-warning/30">
-                {medCount} Med
+              <span className="text-[8px] md:text-[9px] font-bold tracking-widest uppercase bg-brand-warning/20 text-brand-warning px-1.5 py-0.5 md:px-2 md:py-1 rounded-full border border-brand-warning/30">
+                {medCount}<span className="hidden sm:inline ml-1">Med</span>
               </span>
             )}
             <ChevronDown
@@ -133,11 +151,11 @@ export function FlagBanner({ data, chapters }: Props) {
         </button>
         <button
           onClick={() => setIsDismissed(true)}
-          className="p-2 text-[var(--muted)] hover:text-brand-danger transition-colors"
+          className="p-2 text-[var(--muted)] hover:text-brand-danger transition-colors shrink-0"
           title="Dismiss Banner"
         >
-          <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-lg hover:bg-brand-danger/10">
-            Dismiss
+          <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest px-1.5 py-1 md:px-2 md:py-1 rounded-lg hover:bg-brand-danger/10">
+            Hide
           </span>
         </button>
       </div>

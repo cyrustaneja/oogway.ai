@@ -225,32 +225,43 @@ export async function handleStage2(sessionId: string): Promise<void> {
       const consecutiveFailures = stageAttempts[failKey] ?? 0
 
       // Model escalation:
-      //   attempt 1 (failures = 0)  → primary  (gemini-2.5-flash)
-      //   attempt 2+ (failures >= 1) → fallback (gemini-2.5-pro)
-      // Cost stays low: fallback only kicks in for chapters that *flunk* label
-      // validation, not by default.
+      //   attempt 1 (failures = 0) → primary  (gemini-2.5-flash)
+      //   attempt 2+               → fallback (gemini-2.5-pro)
       const model =
         consecutiveFailures >= 1
           ? LIMITS.stage2FallbackModel
           : LIMITS.stage2PrimaryModel
 
       try {
-        const result = await processOneChapter(
+        let result = await processOneChapter(
           sessionId, chapter, transcript, expertName, batchName, stageAttempts, model,
         )
 
-        if (result.needsReview && consecutiveFailures < LIMITS.stage2MaxValidatorRetries) {
-          // Track the failure — next tick will re-process this chapter
-          // (because finalIndices excludes needs_review=true rows below the
-          // retry cap), and with consecutiveFailures>=1 will use fallback.
+        // Bottleneck #2 fix: immediate in-process escalation.
+        // If the primary (Flash) model fails validation AND we still have
+        // retries left AND we haven't already used the fallback, escalate to
+        // Pro right now — no need to wait for the next tick.
+        if (
+          result.needsReview &&
+          model === LIMITS.stage2PrimaryModel &&
+          LIMITS.stage2PrimaryModel !== LIMITS.stage2FallbackModel &&
+          consecutiveFailures < LIMITS.stage2MaxValidatorRetries
+        ) {
+          console.warn(
+            `[Stage2] ch${chapter.chapter_index}: validator failure on primary, ` +
+            `escalating to ${LIMITS.stage2FallbackModel} immediately (same tick)`,
+          )
           stageAttempts[failKey] = consecutiveFailures + 1
+          // Retry with fallback in the same tick
+          result = await processOneChapter(
+            sessionId, chapter, transcript, expertName, batchName, stageAttempts,
+            LIMITS.stage2FallbackModel,
+          )
+        }
 
-          if (consecutiveFailures === 0 && model !== LIMITS.stage2FallbackModel) {
-            console.warn(
-              `[Stage2] ch${chapter.chapter_index}: validator failure on primary model, ` +
-              `next attempt will use ${LIMITS.stage2FallbackModel}`,
-            )
-          } else if (consecutiveFailures + 1 >= LIMITS.stage2MaxValidatorRetries) {
+        if (result.needsReview && (stageAttempts[failKey] ?? 0) < LIMITS.stage2MaxValidatorRetries) {
+          stageAttempts[failKey] = (stageAttempts[failKey] ?? 0) + 1
+          if ((stageAttempts[failKey] ?? 0) >= LIMITS.stage2MaxValidatorRetries) {
             console.warn(
               `[Stage2] ch${chapter.chapter_index}: exhausted ${LIMITS.stage2MaxValidatorRetries} ` +
               `validator retries, accepting needs_review=true and moving on`,
@@ -287,12 +298,14 @@ export async function handleStage2(sessionId: string): Promise<void> {
     return fails >= LIMITS.stage2MaxValidatorRetries ? acc + 1 : acc
   }, 0)
 
-  const BATCH_COOLDOWN_MS = 15_000
   await prisma.analysisSession.update({
     where: { id: sessionId },
     data: {
       stage_attempts: stageAttempts as any,
-      next_action_at: new Date(Date.now() + BATCH_COOLDOWN_MS),
+      // Bottleneck #5 fix: use centralised LIMITS value instead of hardcoded 15s.
+      // In practice the next tick fires at most every 60s (Vercel Cron),
+      // so setting this to 0 effectively means "process on next available tick".
+      next_action_at: new Date(Date.now() + LIMITS.stage2BatchCooldownMs),
       v3Progress: `Extracted ${finalCount} of ${chapters.length} chapters`,
       v3Status: 'EXTRACTING',
     } as any,

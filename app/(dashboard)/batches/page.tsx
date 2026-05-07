@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, X, Loader2, LayoutGrid, Layers, Calendar, Search, ChevronRight } from "lucide-react";
+import { Plus, X, Loader2, LayoutGrid, Layers, Calendar, Search, ChevronRight, Trash2 } from "lucide-react";
 
 interface Batch {
   id: string;
@@ -72,6 +72,16 @@ export default function BatchesPage() {
       setError("An unexpected error occurred");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this batch?")) return;
+    try {
+      const res = await fetch(`/api/batches/${id}`, { method: "DELETE" });
+      if (res.ok) load();
+    } catch (err) {
+      console.error("Failed to delete batch", err);
     }
   };
 
@@ -183,9 +193,17 @@ export default function BatchesPage() {
                 <div className="w-12 h-12 rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center text-brand-orange shadow-lg">
                   <Layers className="w-6 h-6" />
                 </div>
-                <div className="text-right">
-                  <p className="text-[10px] font-bold text-[var(--muted)] tracking-widest">Sessions</p>
-                  <p className="text-2xl font-bold text-[var(--foreground)] tracking-tight">{b._count.sessions}</p>
+                <div className="flex gap-2">
+                  <div className="text-right">
+                    <p className="text-[10px] font-bold text-[var(--muted)] tracking-widest">Sessions</p>
+                    <p className="text-2xl font-bold text-[var(--foreground)] tracking-tight">{b._count.sessions}</p>
+                  </div>
+                  <button 
+                    onClick={() => handleDelete(b.id)}
+                    className="p-2 rounded-xl text-[var(--muted)] hover:text-brand-danger hover:bg-brand-danger/10 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
               

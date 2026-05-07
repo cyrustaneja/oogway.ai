@@ -6,6 +6,7 @@ import { Shield, Users, Activity, BookOpen, Database } from "lucide-react";
 
 import { CreateUserForm } from "@/components/admin/CreateUserForm";
 import { PipelineMonitor } from "@/components/admin/PipelineMonitor";
+import { RecentUsersList } from "@/components/admin/RecentUsersList";
 
 export default async function AdminPage() {
   const session = await getServerSession(authOptions);
@@ -78,26 +79,7 @@ export default async function AdminPage() {
       <PipelineMonitor />
 
       <div className="grid grid-cols-2 gap-6">
-        {/* Recent Users */}
-        <div className="glass-card overflow-hidden">
-          <div className="px-6 py-4 border-b border-white/5">
-            <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase">Recent Users</p>
-          </div>
-          <div className="divide-y divide-white/5">
-            {recentUsers.map(u => (
-              <div key={u.id} className="px-6 py-3 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-bold text-white">{u.name || "(no name)"}</p>
-                  <p className="text-[10px] text-slate-500">{u.email}</p>
-                </div>
-                <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full border ${ROLE_COLOR[u.role] ?? ""}`}>
-                  {u.role}
-                </span>
-              </div>
-            ))}
-            {recentUsers.length === 0 && <p className="px-6 py-4 text-xs text-slate-500">No users found.</p>}
-          </div>
-        </div>
+        <RecentUsersList initialUsers={recentUsers} />
 
         {/* Failed Sessions */}
         <div className="glass-card overflow-hidden">
