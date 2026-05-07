@@ -32,8 +32,34 @@
     --sidebar-bg: rgba(15, 23, 42, 0.6);
     --inner-bg: rgba(255, 255, 255, 0.05); /* Subtle light tint for dark mode */
     --inner-border: rgba(255, 255, 255, 0.1);
+    /* Timeline & Accents */
     --timeline-line: rgba(255, 255, 255, 0.15);
     
+    /* Semantic Chips - Dark Mode (Default) */
+    --chip-red-bg: rgba(239, 68, 68, 0.15);
+    --chip-red-text: #FCA5A5;
+    --chip-red-border: rgba(239, 68, 68, 0.3);
+    
+    --chip-amber-bg: rgba(245, 158, 11, 0.15);
+    --chip-amber-text: #FCD34D;
+    --chip-amber-border: rgba(245, 158, 11, 0.3);
+    
+    --chip-green-bg: rgba(16, 185, 129, 0.15);
+    --chip-green-text: #6EE7B7;
+    --chip-green-border: rgba(16, 185, 129, 0.3);
+
+    --chip-darkgreen-bg: rgba(16, 185, 129, 0.3);
+    --chip-darkgreen-text: #A7F3D0;
+    --chip-darkgreen-border: rgba(16, 185, 129, 0.4);
+
+    --chip-blue-bg: rgba(59, 130, 246, 0.15);
+    --chip-blue-text: #93C5FD;
+    --chip-blue-border: rgba(59, 130, 246, 0.3);
+
+    --chip-orange-bg: rgba(243, 112, 33, 0.15);
+    --chip-orange-text: #FDBA74;
+    --chip-orange-border: rgba(243, 112, 33, 0.3);
+
     /* Dark Mode Specific Glows */
     --glow-1: rgba(243, 112, 33, 0.15);
     --glow-2: rgba(59, 130, 246, 0.12);
@@ -50,12 +76,37 @@
     --muted: #475569;
     --muted-foreground: #64748B;
     --accent: #F37021;
-    --glass-blur: 32px;
+    --glass-blur: 16px;
     --sidebar-bg: rgba(255, 255, 255, 0.6);
     --inner-bg: rgba(15, 23, 42, 0.05); /* Subtle dark tint for light mode */
     --inner-border: rgba(15, 23, 42, 0.08);
     --timeline-line: rgba(15, 23, 42, 0.1);
     
+    /* Semantic Chips - Light Mode (High Contrast) */
+    --chip-red-bg: #FEE2E2;
+    --chip-red-text: #B91C1C;
+    --chip-red-border: #FECACA;
+    
+    --chip-amber-bg: #FEF3C7;
+    --chip-amber-text: #B45309;
+    --chip-amber-border: #FDE68A;
+    
+    --chip-green-bg: #D1FAE5;
+    --chip-green-text: #047857;
+    --chip-green-border: #A7F3D0;
+
+    --chip-darkgreen-bg: #065F46;
+    --chip-darkgreen-text: #ECFDF5;
+    --chip-darkgreen-border: #064E3B;
+
+    --chip-blue-bg: #DBEAFE;
+    --chip-blue-text: #1D4ED8;
+    --chip-blue-border: #BFDBFE;
+
+    --chip-orange-bg: #FFEDD5;
+    --chip-orange-text: #C2410C;
+    --chip-orange-border: #FED7AA;
+
     /* Light Mode Specific Glows */
     --glow-1: rgba(243, 112, 33, 0.15);
     --glow-2: rgba(59, 130, 246, 0.12);
@@ -109,6 +160,8 @@
     box-shadow: var(--card-shadow);
     border-radius: 20px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform: translateZ(0);
+    will-change: transform, backdrop-filter;
   }
 
   .liquid-input {

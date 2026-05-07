@@ -15,7 +15,7 @@ type Props = {
 export function SessionFlow({ chapters }: Props) {
   const isEmpty = !chapters || chapters.length === 0;
   const totalDuration = chapters.length > 0 
-    ? Math.max(...chapters.map(c => (c as any).t_end || 0)) || 1
+    ? Math.max(...chapters.map(c => c.t_end || 0)) || 1
     : 1;
 
   return (
