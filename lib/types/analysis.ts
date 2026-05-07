@@ -34,6 +34,8 @@ export type ChapterResult = {
   chapter_num: number; 
   title: string; 
   what_was_taught: string; 
+  t_start: number;
+  t_end: number;
   is_teaching: boolean; 
   teaching_depth: Score | null; 
   pacing: Score | null; 

@@ -33,7 +33,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
   const totalAnalogies = chapter.analogies?.length ?? 0;
   const totalConfusion = chapter.confusion_points?.length ?? 0;
 
-  const duration = ((chapter as any).t_end || 0) - ((chapter as any).t_start || 0);
+  const duration = (chapter.t_end || 0) - (chapter.t_start || 0);
   const percentage = totalDuration ? Math.round((duration / totalDuration) * 100) : 0;
 
   return (
