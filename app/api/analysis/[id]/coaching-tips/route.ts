@@ -104,7 +104,7 @@ export async function POST(
 
     console.log(`[CoachingTips] ${id}: ${totalTips} tips generated`)
 
-    return NextResponse.json({
+    const responseData = {
       session_id:     id,
       expert_name:    expertName,
       session_title:  session.name,
@@ -114,12 +114,64 @@ export async function POST(
       engagement_tips: result.engagement_tips ?? [],
       doubt_tips:      result.doubt_tips      ?? [],
       total_tips:      totalTips,
-    })
+    }
+
+    // ─── PERSISTENCE (Zero Schema Change) ───
+    // Store inside the existing full_synthesis JSONB column
+    try {
+      const updatedSynthesis = {
+        ...(v2.full_synthesis as any),
+        on_demand_coaching: responseData
+      }
+
+      await prisma.analysisV2.update({
+        where: { sessionId: id },
+        data: { 
+          full_synthesis: updatedSynthesis,
+          updatedAt: new Date()
+        }
+      })
+    } catch (dbErr) {
+      console.warn(`[CoachingTips] ${id}: failed to persist tips:`, dbErr)
+      // We don't fail the request if persistence fails, but we log it.
+    }
+
+    return NextResponse.json(responseData)
   } catch (err: any) {
     console.error(`[CoachingTips] ${id}: generation failed:`, err?.message ?? err)
     return NextResponse.json(
       { error: 'Tip generation failed. Please try again.' },
       { status: 500 },
     )
+  }
+}
+
+/**
+ * GET /api/analysis/[id]/coaching-tips
+ * Returns existing tips if they've already been generated.
+ */
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const token = await getAuthToken()
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  const { id } = await params
+
+  try {
+    const v2 = await prisma.analysisV2.findUnique({
+      where: { sessionId: id },
+      select: { full_synthesis: true }
+    })
+
+    const coaching = (v2?.full_synthesis as any)?.on_demand_coaching
+    if (!coaching) {
+      return NextResponse.json({ exists: false })
+    }
+
+    return NextResponse.json({ exists: true, ...coaching })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }

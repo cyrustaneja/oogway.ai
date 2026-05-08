@@ -333,11 +333,34 @@ export function CoachingTipsPanel({ sessionId }: Props) {
   >('idle');
   const [result,    setResult]    = useState<CoachingResult | null>(null);
   const [errorMsg,  setErrorMsg]  = useState<string | null>(null);
-  const [dismissed, setDismissed] = useState(false);
+  const [isSectionHidden, setIsSectionHidden] = useState(false);
+
+  // ── Auto-load existing tips ─────────────────────────────────────────────
+  React.useEffect(() => {
+    async function checkExisting() {
+      try {
+        const res = await fetch(`/api/analysis/${sessionId}/coaching-tips`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.exists) {
+          setResult(data);
+          setState('done');
+          // Start hidden if already existing to keep view clean
+          setIsSectionHidden(true);
+        }
+      } catch (err) {
+        console.warn('Failed to check existing coaching tips:', err);
+      }
+    }
+    checkExisting();
+  }, [sessionId]);
 
   async function generate() {
     setState('loading');
     setErrorMsg(null);
+    setIsSectionHidden(false);
 
     try {
       const res = await fetch(`/api/analysis/${sessionId}/coaching-tips`, {
@@ -370,11 +393,11 @@ export function CoachingTipsPanel({ sessionId }: Props) {
           <div>
             <p className={TOKENS.sectionEyebrow}>On-demand · Master Teacher</p>
             <h2 className="text-[15px] font-bold text-[var(--foreground)] tracking-tight mt-1">
-              Get Coaching Tips
+              Teaching Tips
             </h2>
             <p className="text-[12px] text-[var(--muted)] mt-1 leading-relaxed max-w-sm">
               Instant, prescriptive advice on examples, topic delivery, engagement
-              techniques, and doubt handling — generated fresh from this session's audit.
+              techniques, and doubt handling.
             </p>
           </div>
         </div>
@@ -434,7 +457,7 @@ export function CoachingTipsPanel({ sessionId }: Props) {
   }
 
   // ── Done: full tips panel ────────────────────────────────────────────────
-  if (!result || dismissed) return null;
+  if (!result) return null;
 
   const totalTips = result.total_tips;
 
@@ -462,34 +485,45 @@ export function CoachingTipsPanel({ sessionId }: Props) {
 
         <div className="flex items-center gap-2 shrink-0">
           <button
+            onClick={() => setIsSectionHidden(!isSectionHidden)}
+            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[var(--inner-border)] text-[10px] font-bold uppercase tracking-widest text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--surface)] transition-all"
+          >
+            {isSectionHidden ? 'Show Tips' : 'Hide Section'}
+            {isSectionHidden ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
+          </button>
+          <button
             onClick={generate}
             title="Regenerate tips"
             className="p-2 rounded-lg border border-[var(--inner-border)] text-[var(--muted)] hover:text-brand-orange hover:border-brand-orange/30 transition-colors"
           >
             <Loader2 className="w-3.5 h-3.5" />
           </button>
-          <button
-            onClick={() => setDismissed(true)}
-            title="Dismiss"
-            className="p-2 rounded-lg border border-[var(--inner-border)] text-[var(--muted)] hover:text-brand-danger hover:border-brand-danger/30 transition-colors"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
         </div>
       </div>
 
       {/* Category sections */}
-      {CATEGORIES.map(cat => (
-        <CategorySection
-          key={cat.key}
-          category={cat}
-          tips={result[cat.key]}
-        />
-      ))}
+      <AnimatePresence>
+        {!isSectionHidden && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="space-y-4 overflow-hidden"
+          >
+            {CATEGORIES.map(cat => (
+              <CategorySection
+                key={cat.key}
+                category={cat}
+                tips={result[cat.key]}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <p className="text-center text-[10px] text-[var(--muted)] font-medium tracking-wider uppercase">
-        Generated {new Date(result.generated_at).toLocaleTimeString()} · Based on Stage 3 synthesis · Not stored
+        Generated {new Date(result.generated_at).toLocaleTimeString()} · Persisted in Session Data
       </p>
     </motion.div>
   );

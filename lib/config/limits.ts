@@ -83,6 +83,6 @@ export const LIMITS = {
   stage1FallbackModel: 'gemini-2.5-pro',
   stage2PrimaryModel: 'gemini-2.5-flash',
   stage2FallbackModel: 'gemini-2.5-pro',
-  stage3Model: 'gemini-2.5-pro',
-  stage4Model: 'gemini-2.5-pro',
+  stage3Model: 'gemini-2.5-flash',
+  stage4Model: 'gemini-2.5-flash',
 }

@@ -14,13 +14,13 @@
 
 export const TOKENS = {
   chip: {
-    red:       'bg-brand-danger/15  text-brand-danger  border-brand-danger/30',
-    amber:     'bg-brand-warning/15 text-brand-warning border-brand-warning/30',
-    green:     'bg-brand-success/15 text-brand-success border-brand-success/30',
-    darkgreen: 'bg-brand-success/30 text-emerald-200   border-brand-success/40',
-    blue:      'bg-brand-info/15    text-brand-info    border-brand-info/30',
-    orange:    'bg-brand-orange/15  text-brand-orange  border-brand-orange/30',
-    grey:      'bg-[var(--inner-bg)] text-[var(--muted)] border-[var(--inner-border)]',
+    red:       'bg-[var(--chip-red-bg)]       text-[var(--chip-red-text)]       border-[var(--chip-red-border)]',
+    amber:     'bg-[var(--chip-amber-bg)]     text-[var(--chip-amber-text)]     border-[var(--chip-amber-border)]',
+    green:     'bg-[var(--chip-green-bg)]     text-[var(--chip-green-text)]     border-[var(--chip-green-border)]',
+    darkgreen: 'bg-[var(--chip-darkgreen-bg)] text-[var(--chip-darkgreen-text)] border-[var(--chip-darkgreen-border)]',
+    blue:      'bg-[var(--chip-blue-bg)]      text-[var(--chip-blue-text)]      border-[var(--chip-blue-border)]',
+    orange:    'bg-[var(--chip-orange-bg)]    text-[var(--chip-orange-text)]    border-[var(--chip-orange-border)]',
+    grey:      'bg-[var(--inner-bg)]          text-[var(--muted)]              border-[var(--inner-border)]',
   },
 
   /** Glass-style outer card (uses .glass-card from globals.css) */
