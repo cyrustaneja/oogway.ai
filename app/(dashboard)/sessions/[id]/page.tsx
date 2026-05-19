@@ -28,7 +28,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-8 pb-24 animate-in fade-in duration-500">
-      <AnalysisHeader data={data} sessionInfo={(data as any).session_info} chapters={chapters} />
+      <AnalysisHeader data={data} sessionId={id} sessionInfo={(data as any).session_info} chapters={chapters} />
 
       <div className="space-y-6">
         <FlagBanner data={data} chapters={chapters} />

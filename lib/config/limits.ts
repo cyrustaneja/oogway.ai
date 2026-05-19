@@ -1,7 +1,7 @@
 export const LIMITS = {
   // ─── Concurrency & Scheduling ─────────────────────────────────────────────
-  pipelineConcurrency: parseInt(process.env.PIPELINE_CONCURRENCY ?? '2'),
-  stage2ChaptersInParallel: 1,        // Sequential processing for maximum reliability
+  pipelineConcurrency: parseInt(process.env.PIPELINE_CONCURRENCY ?? '5'),
+  stage2ChaptersInParallel: 1,        // Reverted to 1 to avoid 429s
   tickClaimWindowMins: 5,             // sessions stuck >5 min without heartbeat re-queued
   sessionMaxAgeMins: 240,             // sessions stuck >4h → FAILED (covers 2-3hr transcripts)
 
@@ -48,20 +48,18 @@ export const LIMITS = {
   // Stage 2 chapter-level validator retries: how many times we'll re-run the
   // AI for a chapter that failed label-validator or quote-verifier before
   // accepting the (still flagged) result and moving on.
-  // Sequence: attempt 1 = primary model. attempts 2-3 = fallback model. After
-  // stage2MaxValidatorRetries the row stays needs_review=true and Stage 3
-  // proceeds without it (downstream code checks needs_review before trusting).
-  stage2MaxValidatorRetries: 3,
+  // Set to 1 as per user request for accurate analysis on Flash: allows 1 attempt
+  // to self-correct a hallucinated quote, then guarantees the pipeline moves on.
+  stage2MaxValidatorRetries: 1,
 
   // Bottleneck #5 fix: dynamic batch cooldown replacing the old hardcoded 15s.
-  // Set to 5s — the Vercel Cron fires every 60s anyway, so this is effectively
-  // "process on the next available tick" with a 5s buffer for DB write flush.
-  stage2BatchCooldownMs: 5_000,
+  // Set to 4s — tuned to precisely hit 15 RPM limit (60s / 4s = 15) for maximum efficiency on the Gemini Free Tier.
+  stage2BatchCooldownMs: 4_000,
 
   // Bottleneck #3 fix: cap the per-chapter payload sent to Stage 3 to avoid
   // bloating the synthesis prompt. Each chapter's result is trimmed to this
-  // length in characters before being sent. Full data stays in the DB.
-  stage3ChapterSummaryMaxChars: 3_000,
+  // length in characters before being sent. Bumped to 6000 to "fetch everything".
+  stage3ChapterSummaryMaxChars: 6_000,
 
   // ─── Chapter Count Safety Net ──────────────────────────────────────────────
   // These are MINIMUMS to catch degenerate 1-chapter outputs. The model should
@@ -69,14 +67,13 @@ export const LIMITS = {
   // a floor, not a goal. Format: [maxMinutes, minChapters] tested in order.
   // A 78-min session covering 3 topics should produce 3–5 chapters, not 8.
   chapterMinimums: [
-    [20,  2],   // < 20 min → at least 2
-    [45,  2],   // 20–45 min → at least 2
-    [75,  3],   // 45–75 min → at least 3
-    [120, 3],   // 75–120 min → at least 3
-    [180, 4],   // 120–180 min → at least 4
-    [240, 5],   // 180–240 min → at least 5
+    [30,  2],   // < 30 min → at least 2
+    [60,  3],   // 30–60 min → at least 3
+    [120, 4],   // 60–120 min → at least 4
+    [180, 5],   // 120–180 min → at least 5
+    [240, 6],   // 180–240 min → at least 6
   ] as [number, number][],
-  chapterMinimumDefault: 6,  // > 240 min
+  chapterMinimumDefault: 4,  // > 240 min
 
   // ─── Model Names ──────────────────────────────────────────────────────────
   stage1Model: 'gemini-2.5-flash',

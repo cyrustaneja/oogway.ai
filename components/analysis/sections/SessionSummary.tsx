@@ -1,14 +1,15 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { SessionAnalysis, ChapterResult } from '@/lib/types/analysis';
 import { TOKENS, chipKeyForLabel, chipKeyForScore } from '@/lib/ui/tokens';
 import { RubricChip } from '../primitives/RubricChip';
 import { RubricReference } from '../RubricReference';
-import { Calendar, Clock, GraduationCap } from 'lucide-react';
+import { Calendar, Clock, FileDown, Loader2 } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
+  sessionId: string;
   sessionInfo?: {
     name: string;
     expertName: string;
@@ -36,7 +37,7 @@ function StatPill({
   );
 }
 
-export function SessionSummary({ data, sessionInfo, chapters }: Props) {
+export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props) {
   const completenessTone = chipKeyForLabel(data.session_completeness?.label);
   
   // Robust flag detection (AI + Auto-detect from Red rubrics + Incompleteness)
@@ -79,6 +80,33 @@ export function SessionSummary({ data, sessionInfo, chapters }: Props) {
   const totalDoubts = (data.expert_audit?.doubt_resolution_summary?.length ?? 0);
   const unresolved = data.student_log?.unresolved_doubts?.length ?? 0;
 
+  const [downloading, setDownloading] = useState(false);
+
+  async function handleExportPDF() {
+    setDownloading(true);
+    try {
+      const res = await fetch(`/api/sessions/${sessionId}/pdf`);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`PDF generation failed: ${text}`);
+      }
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `${(sessionInfo?.name || 'session-analysis').replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      console.error('[EXPORT_PDF_ERROR]', e);
+      alert('Failed to generate PDF. Please try again or check the console.');
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   return (
     <header className="mb-6 lg:mb-8">
       <div className="glass-card p-5 md:p-7 relative overflow-hidden">
@@ -115,8 +143,23 @@ export function SessionSummary({ data, sessionInfo, chapters }: Props) {
               label={data.hygiene?.punctuality?.label ?? '—'}
               rationale="Expert punctuality at session start"
             />
-            <div className="w-full sm:w-auto mt-2 sm:mt-0">
+            <div className="w-full sm:w-auto mt-2 sm:mt-0 flex items-center gap-2">
               <RubricReference />
+              <button
+                id="export-pdf-btn"
+                onClick={handleExportPDF}
+                disabled={downloading}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest
+                  bg-brand-orange/10 border border-brand-orange/30 text-brand-orange
+                  hover:bg-brand-orange/20 hover:border-brand-orange/60
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  transition-all duration-150 whitespace-nowrap"
+              >
+                {downloading
+                  ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  : <FileDown className="w-3.5 h-3.5" />}
+                {downloading ? 'Generating…' : 'Export PDF'}
+              </button>
             </div>
           </div>
         </div>

@@ -91,18 +91,18 @@ HARD RULES (ZERO TOLERANCE — failures here invalidate the run)
    covered 4 real topics in 90 minutes, output 4–6 chapters (topics + admin/
    Q&A blocks). Do NOT pad with artificial splits just to hit a count.
 
-    The host provides a `min_chapters_required` value as a safety floor. You MUST output at least this many chapters. 
+    The host provides a `min_chapters_required` value as a safety floor. 
     
-    However, for production-grade audits, you must prioritize GRANULARITY. A 90-120 minute session should naturally result in 8–14 chapters. Do NOT lump multiple curriculum topics into a single chapter.
+    CRITICAL CONSTRAINT: You MUST output between min_chapters_required and 10 chapters. NEVER exceed 12 chapters. 
+    
+    If the transcript is very long, you MUST lump related sub-topics, Q&A, and examples into larger thematic chapters. For example, instead of separate chapters for "PCA Setup", "PCA Targeting", and "PCA Budgeting", create a single "Deep Dive: PCA Configuration & Setup" chapter.
     
     Create a new chapter whenever:
-    - The expert moves from a general concept to a specific example.
-    - The expert moves from teaching to a case study.
-    - The expert addresses a student doubt that leads into a 2+ minute explanation.
-    - There is a shift in the curriculum topic (refer to `planned_topics`).
-   HOWEVER, do NOT group multiple teaching topics into one chapter. If you 
-   see the expert moving from "Introductions" to "Audiences" or from 
-   "Audiences" to "Creative Types", these MUST be separate chapters.
+    - The expert moves to a fundamentally new curriculum topic (refer to `planned_topics`).
+    - There is a shift in the format (lecture to activity or sustained Q&A).
+    - A significant new section of the agenda begins.
+    
+    Do NOT split a single continuous explanation into multiple chapters just because it is long.
 
 6. SEGMENT BY MEANINGFUL TOPIC SHIFTS
    Create a new chapter when ANY of these is true:

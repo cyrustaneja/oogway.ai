@@ -255,7 +255,7 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
       }
 
       // All other classes: optional backoff, then retry
-      const backoffMs = policy.backoffMs[attemptN] ?? 0
+      const backoffMs = policy.backoffMs[attemptN] ?? (policy.backoffMs.length > 0 ? policy.backoffMs[policy.backoffMs.length - 1] : 2000)
       retryCount[errClass]++
 
       console.warn(

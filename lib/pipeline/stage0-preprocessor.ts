@@ -192,6 +192,21 @@ export async function handlePreprocessor(sessionId: string): Promise<void> {
   if (!session) throw new Error(`[Stage0] Session ${sessionId} not found`)
 
   const raw: string = (session as any).transcriptRaw ?? ''
+  
+  if (!session.expertId || !session.batchId) {
+    await prisma.analysisSession.update({
+      where: { id: sessionId },
+      data: {
+        pipeline_stage: 'FAILED',
+        v3Status: 'FAILED',
+        v3Error: 'Analysis aborted: Missing required session metadata (expert or batch).',
+        next_action_at: new Date(),
+      } as any,
+    })
+    console.error(`[Stage0] Session ${sessionId}: missing expertId or batchId`)
+    return
+  }
+
   if (!raw.trim()) {
     await prisma.analysisSession.update({
       where: { id: sessionId },
