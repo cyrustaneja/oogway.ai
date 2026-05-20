@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Activity, Sparkles, Search, Plus, Filter, X } from "lucide-react";
@@ -43,7 +44,9 @@ export default function DashboardClient({
   });
 
   const clearFilters = () => {
-    router.push("/dashboard");
+    React.startTransition(() => {
+      router.push("/dashboard");
+    });
   };
 
   const activeFilterLabel = expertName ? `Expert: ${expertName}` : batchName ? `Batch: ${batchName}` : null;

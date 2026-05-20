@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function resetSession() {
-  const sessionId = "cmoskn7hu0009j4a085pe4hrh";
+  const sessionId = "cmpcjao01000168bhn9vqsl21"; // Dipak Anand
 
   console.log(`Resetting session ${sessionId} with fresh timestamps...`);
 
@@ -13,8 +13,9 @@ async function resetSession() {
     await prisma.analysisSession.update({
       where: { id: sessionId },
       data: {
-        pipeline_stage: "PREPROCESSED", // Skip Stage 0/1 since we already have chapters
+        pipeline_stage: "UPLOADED", // Start from the very beginning to test Stage 0 validations
         v3Status: "PENDING",
+        chapters_json: null,
         next_action_at: new Date(),
         createdAt: new Date(), 
         v3Progress: "Force starting from Stage 2...",

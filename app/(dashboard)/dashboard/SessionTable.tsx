@@ -146,8 +146,8 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
                 href={`/sessions/${a.id}`}
                 className="lg:col-span-1 flex flex-1 lg:justify-end items-center group/arrow"
               >
-                <div className="w-full lg:w-auto flex items-center justify-center gap-2 px-4 py-2 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-orange/5 lg:bg-[var(--inner-bg)] border border-brand-orange/10 lg:border-[var(--inner-border)] text-brand-orange lg:text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
-                  <span className="lg:hidden text-[10px] font-bold uppercase tracking-widest">Open Analysis</span>
+                <div className="w-full lg:w-auto flex items-center justify-center gap-2 px-4 py-2 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-orange/5 lg:bg-[var(--inner-bg)] border border-brand-orange/10 lg:border-[var(--inner-border)] text-brand-orange lg:text-[var(--foreground)] dark:lg:text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
+                  <span className="lg:hidden text-[10px] font-bold uppercase tracking-widest text-brand-orange lg:text-inherit">Open Analysis</span>
                   <ChevronRight className="w-4 h-4" />
                 </div>
               </Link>

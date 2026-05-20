@@ -128,7 +128,9 @@ export function AnalysisInProgress({ sessionId }: Props) {
         if (data.isReady && Date.now() - lastReadyAt.current > 1000) {
           lastReadyAt.current = Date.now();
           // Refresh the server-rendered shell so getSessionAnalysis runs again
-          router.refresh();
+          React.startTransition(() => {
+            router.refresh();
+          });
         }
       } catch (e: any) {
         setPollError(e?.message ?? 'Network error');
