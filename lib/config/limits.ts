@@ -8,11 +8,11 @@ export const LIMITS = {
   // Per-stage lock windows for atomic claim (Bottleneck #4 fix).
   // Keep these tight: a crash during Stage 2 (fast) should re-queue quickly.
   // Stage 3 gets the full window because synthesis can genuinely take minutes.
-  tickClaimWindowStage0Ms:  30_000,   // preprocessor: 30s max
-  tickClaimWindowStage1Ms:  90_000,   // segmenter: 90s max
-  tickClaimWindowStage2Ms:  90_000,   // per-batch chapter extraction: 90s max
-  tickClaimWindowStage3Ms: 300_000,   // synthesis: 5 min max (Gemini 2.5 Pro is slow)
-  tickClaimWindowStage4Ms:  60_000,   // flag generator: 60s max
+  tickClaimWindowStage0Ms:  45_000,   // 45s (handler timeout 30s)
+  tickClaimWindowStage1Ms: 330_000,   // 5.5 min (handler timeout 5 min)
+  tickClaimWindowStage2Ms: 330_000,   // 5.5 min (handler timeout 5 min)
+  tickClaimWindowStage3Ms: 330_000,   // 5.5 min (handler timeout 5 min)
+  tickClaimWindowStage4Ms:  90_000,   // 90s (handler timeout 60s)
 
   // ─── Token Budgets (initial per call) ─────────────────────────────────────
   stage1TokenBudget: 6000,        // production-ready: supports up to 25+ granular chapters

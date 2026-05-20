@@ -74,8 +74,9 @@ function classifyError(err: any): ErrorClass {
   if (
     msg.includes('429') ||
     status === 429 ||
-    msg.toLowerCase().includes('rate') ||
-    msg.toLowerCase().includes('quota')
+    msg.toLowerCase().includes('rate limit') ||
+    msg.toLowerCase().includes('quota') ||
+    msg.toLowerCase().includes('too many requests')
   ) return 'RateLimit429'
 
   if (
