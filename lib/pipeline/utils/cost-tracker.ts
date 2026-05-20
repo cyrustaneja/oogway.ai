@@ -6,6 +6,10 @@ const PRICING = {
     input: 0.075, // per 1M tokens
     output: 0.30, // per 1M tokens
   },
+  'gemini-2.0-flash': {
+    input: 0.10, // Pricing for Gemini 2.0 Flash is roughly 0.10 input / 0.40 output 
+    output: 0.40,
+  },
   'gemini-2.5-flash': {
     input: 0.075,
     output: 0.30,
