@@ -1,7 +1,7 @@
 export const LIMITS = {
   // ─── Concurrency & Scheduling ─────────────────────────────────────────────
   pipelineConcurrency: parseInt(process.env.PIPELINE_CONCURRENCY ?? '5'),
-  stage2ChaptersInParallel: 1,        // Reverted to 1 to avoid 429s
+  stage2ChaptersInParallel: parseInt(process.env.STAGE2_CHAPTERS_IN_PARALLEL ?? '3'), // Set to 3 for faster parallel chapter extraction on paid keys
   tickClaimWindowMins: 5,             // sessions stuck >5 min without heartbeat re-queued
   sessionMaxAgeMins: 240,             // sessions stuck >4h → FAILED (covers 2-3hr transcripts)
 

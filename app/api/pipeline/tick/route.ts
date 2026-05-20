@@ -14,6 +14,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 300 // allow up to 5 minutes for serverless functions on Vercel Pro
+
 import { LIMITS } from '@/lib/config/limits'
 import { handlePreprocessor } from '@/lib/pipeline/stage0-preprocessor'
 import { handleStage1 } from '@/lib/pipeline/handlers/stage1-segmenter'
@@ -30,7 +32,7 @@ const STAGE_MAP: Record<string, {
 }> = {
   UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                  stageKey: 'stage0', lockWindowMs: LIMITS.tickClaimWindowStage0Ms },
   PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'stage1', lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
-  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs * LIMITS.stage2ChaptersInParallel, stageKey: 'stage2', lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
+  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs,   stageKey: 'stage2', lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
   EXTRACTED:          { handler: handleStage3,       timeoutMs: LIMITS.stage3TimeoutMs,   stageKey: 'stage3', lockWindowMs: LIMITS.tickClaimWindowStage3Ms },
   SYNTHESIZED:        { handler: handleStage4,       timeoutMs: LIMITS.stage4TimeoutMs,   stageKey: 'stage4', lockWindowMs: LIMITS.tickClaimWindowStage4Ms },
 }
