@@ -1,8 +1,11 @@
 "use client";
 
+import React, { startTransition, memo } from "react";
+
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight, Trash2, Loader2, Target } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string }> = {

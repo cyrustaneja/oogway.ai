@@ -24,6 +24,7 @@ import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { LIMITS } from '@/lib/config/limits'
 import { callStage } from '@/lib/pipeline/utils/call-stage'
+import { trackCost } from '@/lib/pipeline/utils/cost-tracker'
 import { sliceForStage2 } from '@/lib/pipeline/utils/transcript-slicer'
 import { validateChapterLabels } from '@/lib/pipeline/utils/label-validator'
 import { verifyChapterQuotes } from '@/lib/pipeline/utils/quote-verifier'
@@ -91,6 +92,7 @@ async function processOneChapter(
     maxBudget: LIMITS.stage2TokenCap,
     stageName,
     timeoutMs: LIMITS.stage2TimeoutMs,
+    onUsage: (usage) => trackCost(sessionId, model, usage),
   })
 
   // Apply output caps

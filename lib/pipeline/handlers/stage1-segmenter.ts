@@ -79,6 +79,8 @@ function computeTranscriptDurationSeconds(transcript: string): number {
   return Math.max(0, lastTs - firstTs)
 }
 
+import { trackCost } from '@/lib/pipeline/utils/cost-tracker'
+
 // ── Internal: single segmentation attempt ────────────────────────────────────
 
 async function attemptSegmentation(
@@ -100,6 +102,7 @@ async function attemptSegmentation(
     maxBudget: LIMITS.stage1TokenCap,
     stageName: `Stage1[${sessionId.slice(0, 8)}]`,
     timeoutMs: LIMITS.stage1TimeoutMs,
+    onUsage: (usage) => trackCost(sessionId, model, usage),
   })
 }
 

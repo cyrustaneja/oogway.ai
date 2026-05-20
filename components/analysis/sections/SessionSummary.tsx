@@ -5,7 +5,7 @@ import { SessionAnalysis, ChapterResult } from '@/lib/types/analysis';
 import { TOKENS, chipKeyForLabel, chipKeyForScore } from '@/lib/ui/tokens';
 import { RubricChip } from '../primitives/RubricChip';
 import { RubricReference } from '../RubricReference';
-import { Calendar, Clock, FileDown, Loader2 } from 'lucide-react';
+import { Calendar, Clock, FileDown, Loader2, Coins } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
@@ -16,6 +16,7 @@ type Props = {
     batchName: string;
     date: string;
     duration: string;
+    costEstimate?: number | null;
   };
   chapters: ChapterResult[];
 };
@@ -129,6 +130,12 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props
                 <Clock className="w-3 h-3 md:w-3.5 md:h-3.5" />
                 {sessionInfo?.duration || '—'}
               </span>
+              {sessionInfo?.costEstimate != null && (
+                <span className="flex items-center gap-1.5 opacity-90 text-brand-orange hover:underline cursor-default" title="Estimated AI cost based on input/output tokens">
+                  <Coins className="w-3 h-3 md:w-3.5 md:h-3.5" />
+                  Cost estimation for this analysis: ${sessionInfo.costEstimate < 0.01 ? sessionInfo.costEstimate.toFixed(3) : sessionInfo.costEstimate.toFixed(2)}
+                </span>
+              )}
             </div>
           </div>
 

@@ -81,6 +81,7 @@ export async function getSessionAnalysis(
       batchName: session.batch?.name || 'Unknown Batch',
       date: session.createdAt ? session.createdAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : 'Unknown Date',
       duration: `${durationMins} mins`,
+      costEstimate: session.v2Analysis.costEstimate,
     },
   } as any;
 

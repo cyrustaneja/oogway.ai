@@ -11,6 +11,7 @@ import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { LIMITS } from '@/lib/config/limits'
 import { callStage } from '@/lib/pipeline/utils/call-stage'
+import { trackCost } from '@/lib/pipeline/utils/cost-tracker'
 import { stage4ResponseSchema } from '@/lib/pipeline/schemas/stage4.schema'
 
 function getPrompt() {
@@ -56,6 +57,7 @@ export async function handleStage4(sessionId: string): Promise<void> {
       maxBudget: LIMITS.stage4TokenCap,
       stageName,
       timeoutMs: LIMITS.stage4TimeoutMs,
+      onUsage: (usage) => trackCost(sessionId, LIMITS.stage4Model, usage),
     })
     flags = flagResult.flags ?? []
   } catch (err: any) {

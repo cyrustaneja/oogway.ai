@@ -35,6 +35,7 @@ export type StageCallParams = {
   maxBudget: number
   stageName: string
   timeoutMs?: number    // hard timeout per call attempt
+  onUsage?: (usage: { promptTokens: number; completionTokens: number; totalTokens: number }) => void
 }
 
 // ── Internal Error Classification ────────────────────────────────────────────
@@ -197,6 +198,15 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
 
       const callMs = Date.now() - attemptStart
       console.log(`[call-stage] ${params.stageName}: OK — ${callMs}ms budget=${budget}`)
+
+      if (params.onUsage && result.response.usageMetadata) {
+        const usage = result.response.usageMetadata
+        params.onUsage({
+          promptTokens: usage.promptTokenCount ?? 0,
+          completionTokens: usage.candidatesTokenCount ?? 0,
+          totalTokens: usage.totalTokenCount ?? 0,
+        })
+      }
 
       const text = result.response.text()
 

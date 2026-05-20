@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpenCheck, X } from 'lucide-react';
 import { RUBRICS } from '@/lib/config/rubrics';
@@ -29,8 +30,8 @@ export function RubricReference() {
       </button>
 
       <AnimatePresence>
-        {open && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8">
+        {open && typeof document !== 'undefined' && createPortal(
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -42,7 +43,7 @@ export function RubricReference() {
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }}
-              className="glass-card w-full max-w-3xl max-h-[85vh] overflow-hidden relative shadow-2xl flex flex-col"
+              className="glass-card w-full max-w-3xl max-h-[85vh] overflow-hidden relative shadow-2xl flex flex-col z-10"
             >
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-60" />
 
@@ -113,7 +114,8 @@ export function RubricReference() {
                 ))}
               </div>
             </motion.div>
-          </div>
+          </div>,
+          document.body
         )}
       </AnimatePresence>
     </>

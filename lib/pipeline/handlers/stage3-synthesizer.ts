@@ -11,6 +11,7 @@ import path from 'path'
 import { prisma } from '@/lib/prisma'
 import { LIMITS } from '@/lib/config/limits'
 import { callStage } from '@/lib/pipeline/utils/call-stage'
+import { trackCost } from '@/lib/pipeline/utils/cost-tracker'
 import { getSessionNotes } from '@/lib/pipeline/utils/session-notes'
 import { stage3ResponseSchema } from '@/lib/pipeline/schemas/stage3.schema'
 import { SessionAnalysisSchema } from '@/lib/pipeline/schemas/contract.zod'
@@ -108,6 +109,7 @@ export async function handleStage3(sessionId: string): Promise<void> {
     maxBudget: LIMITS.stage3TokenCap,
     stageName,
     timeoutMs: LIMITS.stage3TimeoutMs,
+    onUsage: (usage) => trackCost(sessionId, LIMITS.stage3Model, usage),
   })
 
   // RUNTIME CONTRACT GUARD — warn but accept. The UI has EmptyState
