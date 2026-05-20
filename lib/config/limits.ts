@@ -76,10 +76,10 @@ export const LIMITS = {
   chapterMinimumDefault: 4,  // > 240 min
 
   // ─── Model Names ──────────────────────────────────────────────────────────
-  stage1Model: 'gemini-2.0-flash',
-  stage1FallbackModel: 'gemini-2.0-flash',
-  stage2PrimaryModel: 'gemini-2.0-flash',
-  stage2FallbackModel: 'gemini-2.0-flash',
-  stage3Model: 'gemini-2.0-flash',
-  stage4Model: 'gemini-2.0-flash',
+  stage1Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.0-flash',
+  stage1FallbackModel: process.env.GEMINI_MODEL_FLASH || 'gemini-2.0-flash',
+  stage2PrimaryModel: process.env.GEMINI_MODEL_FLASH || 'gemini-2.0-flash',
+  stage2FallbackModel: process.env.GEMINI_MODEL_PRO || 'gemini-2.0-pro-exp',
+  stage3Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.0-flash',
+  stage4Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.0-flash',
 }
