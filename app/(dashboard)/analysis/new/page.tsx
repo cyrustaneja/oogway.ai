@@ -161,10 +161,10 @@ export default function NewAnalysisPage() {
         <div className="w-16 h-16 rounded-full bg-brand-success/10 border border-brand-success/20 flex items-center justify-center mx-auto">
           <CheckCircle className="w-8 h-8 text-brand-success" />
         </div>
-        <h2 className="text-2xl font-bold text-white" style={{ fontFamily: "var(--font-outfit)" }}>
+        <h2 className="text-2xl font-bold text-[var(--foreground)]" style={{ fontFamily: "var(--font-outfit)" }}>
           Pipeline Started
         </h2>
-        <p className="text-slate-400 text-sm leading-relaxed">
+        <p className="text-[var(--muted)] text-sm leading-relaxed">
           The analysis pipeline is running in the background. Results will appear on the session page as each stage completes.
         </p>
         <div className="flex gap-3 justify-center">
@@ -176,7 +176,7 @@ export default function NewAnalysisPage() {
           </button>
           <button
             onClick={() => router.push("/dashboard")}
-            className="px-6 py-2.5 rounded-lg border border-white/10 text-sm font-bold tracking-widest text-slate-300 hover:border-white/30 transition-colors uppercase"
+            className="px-6 py-2.5 rounded-lg border border-[var(--inner-border)] bg-[var(--inner-bg)] text-sm font-bold tracking-widest text-[var(--foreground)] opacity-80 hover:opacity-100 hover:border-[var(--muted)] transition-all uppercase"
           >
             Dashboard
           </button>
@@ -190,12 +190,12 @@ export default function NewAnalysisPage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div className="flex items-center gap-3">
-        <button onClick={() => router.back()} className="text-slate-500 hover:text-white transition-colors">
+        <button onClick={() => router.back()} className="text-[var(--muted)] hover:text-[var(--foreground)] transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-outfit)" }}>New Session Audit</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Start AI analysis by providing the session transcript</p>
+          <h1 className="text-xl font-bold text-[var(--foreground)]" style={{ fontFamily: "var(--font-outfit)" }}>New Session Audit</h1>
+          <p className="text-xs text-[var(--muted)] mt-0.5">Start AI analysis by providing the session transcript</p>
         </div>
       </div>
 
@@ -209,12 +209,12 @@ export default function NewAnalysisPage() {
         <div className="grid grid-cols-2 gap-4">
           {/* Expert */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase mb-2">Expert *</label>
+            <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase mb-2">Expert *</label>
             <div className="relative">
               <select
                 value={expertId}
                 onChange={(e) => setExpertId(e.target.value)}
-                className="w-full appearance-none bg-slate-900/50 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
+                className="w-full appearance-none bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
                 required
               >
                 <option value="">Select expert...</option>
@@ -228,12 +228,12 @@ export default function NewAnalysisPage() {
 
           {/* Batch */}
           <div>
-            <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase mb-2">Batch / Cohort</label>
+            <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase mb-2">Batch / Cohort</label>
             <div className="relative">
               <select
                 value={batchId}
                 onChange={(e) => setBatchId(e.target.value)}
-                className="w-full appearance-none bg-slate-900/50 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
+                className="w-full appearance-none bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
               >
                 <option value="">Select batch...</option>
                 {batches.map((b) => (
@@ -249,8 +249,8 @@ export default function NewAnalysisPage() {
 
         {/* Searchable Session Note */}
         <div className="space-y-4">
-          <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase mb-2">
-            Curriculum Mapping <span className="text-slate-600 normal-case font-normal ml-1">(Search session name)</span>
+          <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase mb-2">
+            Curriculum Mapping <span className="text-[var(--muted)] opacity-75 normal-case font-normal ml-1">(Search session name)</span>
           </label>
           <div className="relative">
             <input
@@ -263,16 +263,16 @@ export default function NewAnalysisPage() {
                 setNoteId("");
               }}
               placeholder="e.g. Introduction to Programmatic"
-              className="w-full bg-slate-900 border border-white/10 rounded-lg py-3 px-4 text-white text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
+              className="w-full bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
             />
-            <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none transition-transform duration-300 ${isFocused ? 'rotate-180 text-brand-orange' : ''}`} />
+            <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none transition-transform duration-300 ${isFocused ? 'rotate-180 text-brand-orange' : ''}`} />
             
             {/* Dropdown / Search Results */}
             {(isFocused && !noteId && potentialMatches.length > 0) && (
-              <div className="absolute z-50 w-full mt-1 bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-64 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute z-50 w-full mt-1 bg-[var(--card-bg)] backdrop-blur-xl border border-[var(--inner-border)] rounded-xl shadow-2xl max-h-64 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 {(!sessionSearch.trim()) && (
-                  <div className="px-4 py-2 border-b border-white/5 bg-white/5">
-                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Select From Curriculum</p>
+                  <div className="px-4 py-2 border-b border-[var(--inner-border)] bg-[var(--inner-bg)]">
+                    <p className="text-[9px] font-bold text-[var(--muted)] uppercase tracking-widest">Select From Curriculum</p>
                   </div>
                 )}
                 {potentialMatches.map((m) => (
@@ -284,10 +284,10 @@ export default function NewAnalysisPage() {
                       setSessionSearch(m.name);
                       setIsFocused(false);
                     }}
-                    className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:bg-brand-orange/10 hover:text-white transition-colors border-b border-white/5 last:border-0"
+                    className="w-full text-left px-4 py-2 text-xs text-[var(--foreground)] opacity-80 hover:bg-brand-orange/10 hover:opacity-100 transition-colors border-b border-[var(--inner-border)] last:border-0"
                   >
                     <div className="font-bold uppercase tracking-wider">{m.name}</div>
-                    <div className="text-[10px] text-slate-500 italic mt-0.5">
+                    <div className="text-[10px] text-[var(--muted)] italic mt-0.5">
                       {m.module.course.name} → {m.module.name}
                     </div>
                   </button>
@@ -299,8 +299,8 @@ export default function NewAnalysisPage() {
           {selectedMatch && !isFocused && (
             <div className="px-4 py-2 border-l-2 border-brand-orange bg-brand-orange/5">
               <p className="text-[10px] text-brand-orange font-bold uppercase tracking-widest leading-none">Mapped to:</p>
-              <p className="text-[10px] text-slate-400 font-medium uppercase truncate mt-1">
-                {selectedMatch.module.course.name} <span className="text-slate-600 px-1">/</span> {selectedMatch.module.name}
+              <p className="text-[10px] text-[var(--muted)] font-medium uppercase truncate mt-1">
+                {selectedMatch.module.course.name} <span className="opacity-50 px-1">/</span> {selectedMatch.module.name}
               </p>
             </div>
           )}
@@ -309,19 +309,19 @@ export default function NewAnalysisPage() {
         {/* Transcript Input */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase">Transcript Data *</label>
-            <div className="flex bg-slate-900/80 p-1 rounded-lg border border-white/5">
+            <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase">Transcript Data *</label>
+            <div className="flex bg-[var(--inner-bg)] p-1 rounded-lg border border-[var(--inner-border)]">
               <button 
                 type="button"
                 onClick={() => setTranscriptMode("file")}
-                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "file" ? "bg-brand-orange text-white" : "text-slate-500 hover:text-white"}`}
+                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "file" ? "bg-brand-orange text-white" : "text-[var(--muted)] hover:text-[var(--foreground)]"}`}
               >
                 VTT File
               </button>
               <button 
                 type="button"
                 onClick={() => setTranscriptMode("paste")}
-                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "paste" ? "bg-brand-orange text-white" : "text-slate-500 hover:text-white"}`}
+                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "paste" ? "bg-brand-orange text-white" : "text-[var(--muted)] hover:text-[var(--foreground)]"}`}
               >
                 Copy-Paste
               </button>
@@ -329,12 +329,12 @@ export default function NewAnalysisPage() {
           </div>
 
           {transcriptMode === "file" ? (
-            <label className="flex flex-col items-center justify-center gap-3 w-full h-40 border-2 border-dashed border-white/10 rounded-xl cursor-pointer hover:border-brand-orange/40 transition-colors bg-slate-900/30">
-              <Upload className="w-8 h-8 text-slate-600" />
+            <label className="flex flex-col items-center justify-center gap-3 w-full h-40 border-2 border-dashed border-[var(--inner-border)] rounded-xl cursor-pointer hover:border-brand-orange/40 transition-colors bg-[var(--inner-bg)]">
+              <Upload className="w-8 h-8 text-[var(--muted)]" />
               {file ? (
                 <span className="text-sm font-bold text-brand-success">{file.name}</span>
               ) : (
-                <span className="text-sm text-slate-500">Upload .vtt file</span>
+                <span className="text-sm text-[var(--muted)]">Upload .vtt file</span>
               )}
               <input
                 type="file"
@@ -348,7 +348,7 @@ export default function NewAnalysisPage() {
               value={pastedText}
               onChange={(e) => setPastedText(e.target.value)}
               placeholder="00:00:00.000 --> 00:00:05.000\nHello everyone, welcome to the session..."
-              className="w-full h-40 bg-slate-900/50 border border-white/10 rounded-xl py-3 px-4 text-white text-sm focus:outline-none focus:border-brand-orange/50 transition-colors resize-none font-mono"
+              className="w-full h-40 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors resize-none font-mono"
             />
           )}
         </div>
