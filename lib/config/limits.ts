@@ -79,7 +79,7 @@ export const LIMITS = {
   stage1Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.5-flash',
   stage1FallbackModel: process.env.GEMINI_MODEL_FLASH || 'gemini-2.5-flash',
   stage2PrimaryModel: process.env.GEMINI_MODEL_FLASH || 'gemini-2.5-flash',
-  stage2FallbackModel: process.env.GEMINI_MODEL_PRO || 'gemini-2.5-pro',
+  stage2FallbackModel: process.env.GEMINI_MODEL_PRO || 'gemini-2.5-flash',
   stage3Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.5-flash',
   stage4Model: process.env.GEMINI_MODEL_FLASH || 'gemini-2.5-flash',
 }
