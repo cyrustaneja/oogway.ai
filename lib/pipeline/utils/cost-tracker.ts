@@ -21,6 +21,10 @@ const PRICING = {
   'gemini-2.0-pro-exp': {
     input: 0, // Experimental models are currently free
     output: 0,
+  },
+  'gemini-2.5-pro': {
+    input: 1.25,
+    output: 10.00,
   }
 }
 
