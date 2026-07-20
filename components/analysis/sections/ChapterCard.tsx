@@ -17,6 +17,8 @@ import {
 type Props = {
   chapter: ChapterResult;
   totalDuration?: number;
+  hasIssue?: boolean;
+  onTimestampClick?: (t: string) => void;
 };
 
 function MiniLabel({ children }: { children: React.ReactNode }) {
@@ -27,17 +29,22 @@ function MiniLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function ChapterCard({ chapter, totalDuration }: Props) {
+import { useVideoPreview } from '@/components/analysis/VideoPreviewContext';
+
+export function ChapterCard({ chapter, totalDuration, hasIssue, onTimestampClick }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const totalDoubts = chapter.doubts?.length ?? 0;
-  const totalAnalogies = chapter.analogies?.length ?? 0;
-  const totalConfusion = chapter.confusion_points?.length ?? 0;
+  const { showPreview, hidePreview } = useVideoPreview();
+
 
   const duration = (chapter.t_end || 0) - (chapter.t_start || 0);
   const percentage = totalDuration ? Math.round((duration / totalDuration) * 100) : 0;
 
   return (
-    <div className="rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] overflow-hidden transition-all hover:border-brand-orange/30">
+    <div className={`rounded-2xl bg-[var(--inner-bg)] border overflow-hidden transition-all ${
+      hasIssue 
+        ? 'border-red-500/60 shadow-[0_4px_12px_rgba(239,68,68,0.15)] hover:border-red-500' 
+        : 'border-[var(--inner-border)] hover:border-brand-orange/30'
+    }`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex flex-col md:flex-row md:items-center justify-between p-4 text-left gap-4"
@@ -57,9 +64,17 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                   style={{ width: `${Math.max(2, percentage)}%` }} 
                 />
               </div>
-              <span className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-wider">
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (onTimestampClick) onTimestampClick(formatTimestamp(chapter.t_start ?? 0));
+                }}
+                onMouseEnter={(e) => showPreview(formatTimestamp(chapter.t_start ?? 0), e)}
+                onMouseLeave={hidePreview}
+                className="text-[10px] font-bold text-[var(--muted)] hover:text-brand-orange uppercase tracking-wider cursor-pointer"
+              >
                 {formatTimestamp(chapter.t_start ?? 0)} – {formatTimestamp(chapter.t_end ?? 0)} • {percentage}% of session
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -116,6 +131,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                         <EvidenceQuote
                           quote={chapter.teaching_depth.evidence[0].verbatim_quote}
                           timestamp={chapter.teaching_depth.evidence[0].timestamp}
+                          onTimestampClick={onTimestampClick}
                         />
                       )}
                     </div>
@@ -131,6 +147,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                         <EvidenceQuote
                           quote={chapter.pacing.evidence[0].verbatim_quote}
                           timestamp={chapter.pacing.evidence[0].timestamp}
+                          onTimestampClick={onTimestampClick}
                         />
                       )}
                     </div>
@@ -145,6 +162,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                         <EvidenceQuote
                           quote={chapter.accuracy_check.verbatim_quote}
                           timestamp={chapter.accuracy_check.timestamp ?? ''}
+                          onTimestampClick={onTimestampClick}
                         />
                       )}
                     </div>
@@ -165,6 +183,7 @@ export function ChapterCard({ chapter, totalDuration }: Props) {
                       <EvidenceQuote
                         quote={chapter.example_gap.evidence[0].verbatim_quote}
                         timestamp={chapter.example_gap.evidence[0].timestamp}
+                        onTimestampClick={onTimestampClick}
                       />
                     </div>
                   )}

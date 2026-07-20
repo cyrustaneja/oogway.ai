@@ -20,6 +20,7 @@ OUTPUT — strict JSON matching the response schema. No prose, no markdown.
 ═══════════════════════════════════════════════════════════════════════════════
 
 LANGUAGE RULES
+- Use simple, conversational, and jargon-free language throughout the entire analysis.
 - All synthesis-level analytical text (narrative, key_learning_points,
   rationale, summary, why-strings) MUST be in clear English.
 - When you cite student or expert speech, preserve the original language
@@ -47,10 +48,10 @@ WHAT TO PRODUCE (must match SessionAnalysis exactly)
    - topics_missed_from_notes: array of planned_topics that were NOT covered
      anywhere in the chapters.
 
-3. key_learning_points — exactly 4–6 items
-   These are the takeaways a student should leave with. Each item is one
-   crisp English sentence. Pull from `what_was_taught`, strong analogies,
-   and accuracy-check statements. NEVER more than 6 items.
+3. key_learning_points — exactly 3–5 items
+   These are the takeaways a student should leave with. Each item must be a 
+   short, conversational, and simple English sentence. Pull from `what_was_taught`, strong analogies,
+   and accuracy-check statements. NEVER more than 5 items.
 
 4. expert_audit
    a. pedagogical_health_summary
@@ -89,8 +90,9 @@ WHAT TO PRODUCE (must match SessionAnalysis exactly)
 
    d. analogies_summary
       EVERY analogy from EVERY chapter:
-      { concept, quality_label, verbatim_quote, chapter, rationale, flagged }
+      { concept, quality_label, verbatim_quote, chapter, rationale, flagged, timestamp }
       - flagged: true if quality_label is "Weak"
+      - timestamp: the timestamp of the analogy verbatim quote from the chapter analogies list
 
    e. example_gaps
       ONE entry per teaching chapter where example_gap.label is anything

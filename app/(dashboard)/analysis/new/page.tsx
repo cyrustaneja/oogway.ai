@@ -40,10 +40,11 @@ export default function NewAnalysisPage() {
   const [noteId, setNoteId]         = useState("");
   const [potentialMatches, setPotentialMatches] = useState<SessionNote[]>([]);
   
-  // Transcript inputs
-  const [transcriptMode, setTranscriptMode] = useState<"file" | "paste">("paste");
-  const [file, setFile]             = useState<File | null>(null);
-  const [pastedText, setPastedText] = useState("");
+  // Asset links
+  const [videoUrl, setVideoUrl] = useState("");
+  const [transcriptMode, setTranscriptMode] = useState<'url' | 'manual'>('url');
+  const [transcriptUrl, setTranscriptUrl] = useState("");
+  const [transcriptText, setTranscriptText] = useState("");
   const [isFocused, setIsFocused]   = useState(false);
 
   useEffect(() => {
@@ -102,33 +103,23 @@ export default function NewAnalysisPage() {
       return;
     }
 
-    if (transcriptMode === "file" && !file) {
-      setError("Please upload a .vtt transcript file.");
+    if (!videoUrl.trim()) {
+      setError("Video link is required.");
       return;
     }
-    if (transcriptMode === "paste" && !pastedText.trim()) {
-      setError("Please paste the transcript content.");
+
+    if (transcriptMode === 'url' && !transcriptUrl.trim()) {
+      setError("Please provide a Transcript URL.");
+      return;
+    }
+    
+    if (transcriptMode === 'manual' && !transcriptText.trim()) {
+      setError("Please paste the manual transcript text.");
       return;
     }
 
     setLoading(true);
     try {
-      // 1. Resolve transcript text (paste OR file read inline — no separate upload endpoint).
-      let transcriptText = "";
-      if (transcriptMode === "paste") {
-        transcriptText = pastedText;
-      } else if (transcriptMode === "file" && file) {
-        setUploading(true);
-        transcriptText = await file.text();
-        setUploading(false);
-      }
-
-      if (!transcriptText.trim()) {
-        throw new Error("Transcript content is empty.");
-      }
-
-      // 2. Create session — cron tick will auto-claim it because
-      //    pipeline_stage defaults to 'UPLOADED' and next_action_at defaults to NOW().
       const createRes = await fetch("/api/analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -136,7 +127,9 @@ export default function NewAnalysisPage() {
           expertId,
           batchId: batchId || undefined,
           sessionNoteId: noteId || undefined,
-          transcriptRaw: transcriptText,
+          videoUrl: videoUrl.trim(),
+          transcriptUrl: transcriptMode === 'url' ? transcriptUrl.trim() : undefined,
+          transcriptText: transcriptMode === 'manual' ? transcriptText.trim() : undefined,
         }),
       });
 
@@ -306,51 +299,61 @@ export default function NewAnalysisPage() {
           )}
         </div>
 
-        {/* Transcript Input */}
+        {/* Asset Inputs */}
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase">Transcript Data *</label>
-            <div className="flex bg-[var(--inner-bg)] p-1 rounded-lg border border-[var(--inner-border)]">
-              <button 
-                type="button"
-                onClick={() => setTranscriptMode("file")}
-                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "file" ? "bg-brand-orange text-white" : "text-[var(--muted)] hover:text-[var(--foreground)]"}`}
-              >
-                VTT File
-              </button>
-              <button 
-                type="button"
-                onClick={() => setTranscriptMode("paste")}
-                className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === "paste" ? "bg-brand-orange text-white" : "text-[var(--muted)] hover:text-[var(--foreground)]"}`}
-              >
-                Copy-Paste
-              </button>
-            </div>
+          <div>
+            <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase mb-2">Video Link *</label>
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://..."
+              className="w-full bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
+              required
+            />
           </div>
 
-          {transcriptMode === "file" ? (
-            <label className="flex flex-col items-center justify-center gap-3 w-full h-40 border-2 border-dashed border-[var(--inner-border)] rounded-xl cursor-pointer hover:border-brand-orange/40 transition-colors bg-[var(--inner-bg)]">
-              <Upload className="w-8 h-8 text-[var(--muted)]" />
-              {file ? (
-                <span className="text-sm font-bold text-brand-success">{file.name}</span>
-              ) : (
-                <span className="text-sm text-[var(--muted)]">Upload .vtt file</span>
-              )}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-[11px] font-bold text-[var(--muted)] tracking-widest uppercase">Transcript *</label>
+              <div className="flex bg-[var(--inner-bg)] rounded-lg p-0.5 border border-[var(--inner-border)]">
+                <button
+                  type="button"
+                  onClick={() => setTranscriptMode('url')}
+                  className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors ${transcriptMode === 'url' ? 'bg-[var(--layer-2)] text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
+                >
+                  Link
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setTranscriptMode('manual')}
+                  className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-colors ${transcriptMode === 'manual' ? 'bg-[var(--layer-2)] text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
+                >
+                  Manual Text
+                </button>
+              </div>
+            </div>
+
+            {transcriptMode === 'url' ? (
               <input
-                type="file"
-                accept=".vtt,.txt"
-                className="hidden"
-                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                type="url"
+                value={transcriptUrl}
+                onChange={(e) => setTranscriptUrl(e.target.value)}
+                placeholder="https://... (VTT link)"
+                className="w-full bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors"
+                required={transcriptMode === 'url'}
               />
-            </label>
-          ) : (
-            <textarea
-              value={pastedText}
-              onChange={(e) => setPastedText(e.target.value)}
-              placeholder="00:00:00.000 --> 00:00:05.000\nHello everyone, welcome to the session..."
-              className="w-full h-40 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors resize-none font-mono"
-            />
-          )}
+            ) : (
+              <textarea
+                value={transcriptText}
+                onChange={(e) => setTranscriptText(e.target.value)}
+                placeholder="Paste the raw transcript text here..."
+                rows={6}
+                className="w-full bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-lg py-3 px-4 text-[var(--foreground)] text-sm focus:outline-none focus:border-brand-orange/50 transition-colors resize-y"
+                required={transcriptMode === 'manual'}
+              />
+            )}
+          </div>
         </div>
 
         <button
@@ -364,7 +367,7 @@ export default function NewAnalysisPage() {
               {uploading ? "Uploading transcript..." : "Initializing..."}
             </>
           ) : (
-            "Start Oogway Analysis"
+            "Start Analysis"
           )}
         </button>
       </form>

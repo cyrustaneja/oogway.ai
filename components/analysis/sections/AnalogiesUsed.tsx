@@ -14,7 +14,7 @@ type Props = {
 };
 
 export function AnalogiesUsed({ data }: Props) {
-  const analogies = data.expert_audit?.analogies_summary || [];
+  const analogies = (data as any).analogies_summary || data.expert_audit?.analogies_summary || [];
   const isEmpty = analogies.length === 0;
 
   return (

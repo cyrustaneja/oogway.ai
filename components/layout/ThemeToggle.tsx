@@ -4,16 +4,15 @@ import { useState, useEffect } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<"dark" | "light">("light");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     const stored = localStorage.getItem("oogway-theme");
-    if (stored === "light") {
-      setTheme("light");
-      document.documentElement.setAttribute("data-theme", "light");
-    }
+    const initial = (stored === "dark" ? "dark" : "light") as "dark" | "light";
+    setTheme(initial);
+    document.documentElement.setAttribute("data-theme", initial);
   }, []);
 
   const toggleTheme = () => {
@@ -23,20 +22,20 @@ export function ThemeToggle() {
     document.documentElement.setAttribute("data-theme", nextTheme);
   };
 
-  if (!mounted) return null; // Avoid hydration mismatch
+  if (!mounted) return null;
 
   return (
     <button
       onClick={toggleTheme}
-      className="flex items-center gap-3 px-4 py-3 w-full text-slate-400 hover:text-white transition-colors group"
+      className="flex items-center gap-3 px-4 py-2.5 w-full text-white/50 hover:text-white transition-colors group rounded-xl hover:bg-white/5 text-[12px] font-semibold"
       title="Switch Theme"
     >
       {theme === "dark" ? (
-        <Sun className="w-5 h-5 text-brand-warning drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]" />
+        <Sun className="w-4 h-4 text-[#E8A020]" />
       ) : (
-        <Moon className="w-5 h-5 text-indigo-500" />
+        <Moon className="w-4 h-4 text-white/50 group-hover:text-white/70" />
       )}
-      <span className="text-[11px] font-bold tracking-widest uppercase">
+      <span className="tracking-wide">
         {theme === "dark" ? "Light Mode" : "Dark Mode"}
       </span>
     </button>

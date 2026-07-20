@@ -16,8 +16,8 @@ if (fs.existsSync(envPath)) {
 import { handleStage4 } from "../lib/pipeline/handlers/stage4-flag-generator";
 
 async function runStage4() {
-  const sessionId = "cmpcjao01000168bhn9vqsl21";
-  console.log(`Manually running Stage 4 for Dipak Anand (${sessionId}) with loaded env...`);
+  const sessionId = "cmpf8anu90001dm2stm9j7bwa";
+  console.log(`Manually running Stage 4 for session ${sessionId} with loaded env...`);
   try {
     await handleStage4(sessionId);
     console.log("✅ Stage 4 finished successfully.");

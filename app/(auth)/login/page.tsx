@@ -37,40 +37,37 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F172A] flex items-center justify-center p-4">
-      {/* Decorative Blur Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-orange/20 rounded-full blur-[100px] pointer-events-none" />
-
-      <div className="glass-card p-8 w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <h1 className="text-3xl font-bold tracking-tight text-white outfit">
-              OOGWAY <span className="text-brand-orange">AI</span>
-            </h1>
-          </div>
-          <p className="text-sm font-bold text-slate-400 tracking-widest uppercase">
-            Platform Login
+    <div className="min-h-screen bg-[#F5F7FA] flex flex-col items-center justify-center p-4">
+      <div className="ks-card p-10 w-full max-w-md relative z-10 bg-white">
+        
+        <div className="flex flex-col items-center justify-center mb-10">
+          <img src="/logo.png" alt="Oogway Logo" className="w-20 h-20 object-contain mb-2" />
+          <h1 className="text-4xl font-black tracking-tighter text-ks-navy" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Oogway
+          </h1>
+          <p className="text-ks-muted text-[10px] font-bold tracking-[0.15em] uppercase leading-none mt-2">
+            The Intelligence of KraftShala
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-brand-danger/10 border border-brand-danger/20 rounded-lg text-brand-danger text-sm text-center">
+          <div className="mb-6 p-4 bg-ks-red/10 border border-ks-red/20 rounded-lg text-ks-red text-sm text-center">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase mb-2">
+            <label className="block text-[11px] font-bold text-ks-muted tracking-widest uppercase mb-2">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ks-muted/60" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-brand-orange/50 transition-colors"
+                className="w-full bg-white border border-gray-200 rounded-lg py-3.5 pl-10 pr-4 text-ks-navy placeholder-gray-400 focus:outline-none focus:border-ks-yellow focus:ring-1 focus:ring-ks-yellow transition-all"
                 placeholder="admin@kraftshala.com"
                 required
               />
@@ -78,16 +75,16 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-slate-400 tracking-widest uppercase mb-2">
+            <label className="block text-[11px] font-bold text-ks-muted tracking-widest uppercase mb-2">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-ks-muted/60" />
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-900/50 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-brand-orange/50 transition-colors"
+                className="w-full bg-white border border-gray-200 rounded-lg py-3.5 pl-10 pr-4 text-ks-navy placeholder-gray-400 focus:outline-none focus:border-ks-yellow focus:ring-1 focus:ring-ks-yellow transition-all"
                 placeholder="••••••••"
                 required
               />
@@ -97,9 +94,9 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary mt-6 tracking-wider uppercase text-sm"
+            className="w-full btn-primary mt-8"
           >
-            {loading ? "Authenticating..." : "Sign In"}
+            {loading ? "Authenticating..." : "Log In"}
           </button>
         </form>
       </div>

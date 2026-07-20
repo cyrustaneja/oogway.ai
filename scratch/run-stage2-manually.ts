@@ -16,7 +16,7 @@ if (fs.existsSync(envPath)) {
 import { handleStage2 } from "../lib/pipeline/handlers/stage2-chapter-extractor";
 
 async function run() {
-  const sessionId = "cmpcm0dcm000769cjw50onxz7";
+  const sessionId = "cmrcghsjb000bph8wuyvunsxz";
   console.log(`Manually running Stage 2 for session ${sessionId} with loaded env...`);
   try {
     await handleStage2(sessionId);

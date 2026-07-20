@@ -19,10 +19,11 @@ export async function GET(
   }
 
   const { data, chapters } = result;
+  const safeChapters = chapters ?? [];
 
   try {
     const buffer = await renderToBuffer(
-      React.createElement(SessionPDFDocument, { data, chapters }) as any,
+      React.createElement(SessionPDFDocument, { data, chapters: safeChapters }) as any,
     );
 
     const si = (data as any).session_info ?? {};

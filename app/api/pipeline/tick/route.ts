@@ -22,6 +22,7 @@ import { handleStage1 } from '@/lib/pipeline/handlers/stage1-segmenter'
 import { handleStage2 } from '@/lib/pipeline/handlers/stage2-chapter-extractor'
 import { handleStage3 } from '@/lib/pipeline/handlers/stage3-synthesizer'
 import { handleStage4 } from '@/lib/pipeline/handlers/stage4-flag-generator'
+import { handleTier1Review } from '@/lib/pipeline/handlers/stage1-tier1-reviewer'
 
 // Map pipeline_stage → handler + timeout
 const STAGE_MAP: Record<string, {
@@ -30,6 +31,7 @@ const STAGE_MAP: Record<string, {
   stageKey: string
   lockWindowMs: number
 }> = {
+  PULSE_PENDING:      { handler: handleTier1Review,  timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'tier1',  lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
   UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                  stageKey: 'stage0', lockWindowMs: LIMITS.tickClaimWindowStage0Ms },
   PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'stage1', lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
   CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs,   stageKey: 'stage2', lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
@@ -88,7 +90,7 @@ export async function POST(req: Request) {
         stage_attempts = stage_attempts || '{"failure_reason": "session_timeout"}'::jsonb,
         "updatedAt" = NOW()
       WHERE
-        pipeline_stage NOT IN ('COMPLETE', 'FAILED')
+        pipeline_stage NOT IN ('COMPLETE', 'FAILED', 'WAITING_FOR_DEEP_ANALYSIS')
         AND "createdAt" < NOW() - INTERVAL '${LIMITS.sessionMaxAgeMins} minutes'
     `)
     if (deadlineResult > 0) {
@@ -113,14 +115,14 @@ export async function POST(req: Request) {
     // then immediately re-stamp each row with its stage-specific window.
     // The two-step is necessary because a single SQL CTE can't do conditional
     // UPDATE values based on the returned stage in the same statement.
-    const claimed: Array<{ id: string; pipeline_stage: string }> =
+    const claimed: Array<{ id: string; pipeline_stage: string; tier: string }> =
       await prisma.$queryRawUnsafe(`
         WITH due AS (
           SELECT id
           FROM "AnalysisSession"
           WHERE
             next_action_at <= NOW()
-            AND pipeline_stage NOT IN ('COMPLETE', 'FAILED')
+            AND pipeline_stage NOT IN ('COMPLETE', 'FAILED', 'WAITING_FOR_DEEP_ANALYSIS')
             AND "deletedAt" IS NULL
           ORDER BY next_action_at ASC
           LIMIT ${LIMITS.pipelineConcurrency}
@@ -133,7 +135,7 @@ export async function POST(req: Request) {
           "updatedAt" = NOW()
         FROM due
         WHERE s.id = due.id
-        RETURNING s.id, s.pipeline_stage
+        RETURNING s.id, s.pipeline_stage, s.tier
       `)
 
     // Re-stamp each claimed row with its precise per-stage lock window.

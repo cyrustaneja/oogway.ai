@@ -95,8 +95,9 @@ export const stage3ResponseSchema = {
               chapter: { type: SchemaType.INTEGER },
               rationale: { type: SchemaType.STRING },
               flagged: { type: SchemaType.BOOLEAN },
+              timestamp: { type: SchemaType.STRING },
             },
-            required: ['concept', 'quality_label', 'verbatim_quote', 'chapter', 'rationale', 'flagged'],
+            required: ['concept', 'quality_label', 'verbatim_quote', 'chapter', 'rationale', 'flagged', 'timestamp'],
           }
         },
         example_gaps: {

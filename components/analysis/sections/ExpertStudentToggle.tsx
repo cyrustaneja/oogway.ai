@@ -8,9 +8,10 @@ import { Award, Users } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
+  onTimestampClick?: (t: string) => void;
 };
 
-export function ExpertStudentToggle({ data }: Props) {
+export function ExpertStudentToggle({ data, onTimestampClick }: Props) {
   const [activeTab, setActiveTab] = useState<'expert' | 'student'>('expert');
 
   return (
@@ -41,7 +42,7 @@ export function ExpertStudentToggle({ data }: Props) {
       </div>
 
       <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-        {activeTab === 'expert' ? <ExpertView data={data} /> : <StudentView data={data} />}
+        {activeTab === 'expert' ? <ExpertView data={data} onTimestampClick={onTimestampClick} /> : <StudentView data={data} />}
       </div>
     </div>
   );

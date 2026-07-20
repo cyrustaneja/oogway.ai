@@ -12,7 +12,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 
-const OOGWAY_QUOTES: { quote: string; tag: string }[] = [
+const KRAFTSHALA_QUOTES: { quote: string; tag: string }[] = [
   {
     quote:
       'Yesterday is history. Tomorrow is a mystery. But today is a gift — that is why it is called the present.',
@@ -86,6 +86,8 @@ type StatusPayload = {
   isComplete: boolean;
   isFailed: boolean;
   isReady: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 type Props = {
@@ -100,6 +102,8 @@ export function AnalysisInProgress({ sessionId }: Props) {
   const [retrying, setRetrying] = useState(false);
 
   const lastReadyAt = useRef<number>(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const startedAt = useRef<Date | null>(null);
 
   // Poll status every 4s
   useEffect(() => {
@@ -125,6 +129,10 @@ export function AnalysisInProgress({ sessionId }: Props) {
         if (cancelled) return;
         setStatus(data);
         setPollError(null);
+        // Set start time from createdAt if available
+        if (data.createdAt && !startedAt.current) {
+          startedAt.current = new Date(data.createdAt);
+        }
         if (data.isReady && Date.now() - lastReadyAt.current > 1000) {
           lastReadyAt.current = Date.now();
           // Refresh the server-rendered shell so getSessionAnalysis runs again
@@ -148,8 +156,18 @@ export function AnalysisInProgress({ sessionId }: Props) {
   // Cycle quotes every 7s
   useEffect(() => {
     const t = setInterval(() => {
-      setQuoteIdx((i) => (i + 1) % OOGWAY_QUOTES.length);
+      setQuoteIdx((i) => (i + 1) % KRAFTSHALA_QUOTES.length);
     }, 7000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Elapsed time ticker — starts once we know the session createdAt
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (startedAt.current) {
+        setElapsedSeconds(Math.floor((Date.now() - startedAt.current.getTime()) / 1000));
+      }
+    }, 1000);
     return () => clearInterval(t);
   }, []);
 
@@ -171,20 +189,30 @@ export function AnalysisInProgress({ sessionId }: Props) {
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-10 pb-24 animate-in fade-in duration-500">
+    <main className="max-w-4xl mx-auto px-4 py-8 sm:py-10 pb-24 animate-in fade-in duration-500">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-8">
         <div>
           <p className={TOKENS.sectionEyebrow}>Pipeline running</p>
-          <h1 className="text-3xl font-extrabold text-[var(--foreground)] tracking-tight mt-2">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] tracking-tight mt-2">
             Analysing {status?.expertName ? <span className="text-brand-orange">{status.expertName}</span> : 'this session'}…
           </h1>
           <p className="text-[13px] text-[var(--muted)] mt-2 leading-relaxed max-w-xl">
-            Master Oogway is reviewing every word of this transcript. This page
-            updates every few seconds — feel free to leave it open.
+            Master Oogway is reviewing every word of this transcript. Updates every few seconds.
           </p>
+          {/* Elapsed timer */}
+          {elapsedSeconds > 0 && (
+            <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-orange animate-pulse" />
+              <span className="text-[12px] font-bold text-brand-orange font-mono">
+                {Math.floor(elapsedSeconds / 60).toString().padStart(2, '0')}m {(elapsedSeconds % 60).toString().padStart(2, '0')}s elapsed
+              </span>
+            </div>
+          )}
         </div>
-        <RubricReference />
+        <div className="hidden sm:block">
+          <RubricReference />
+        </div>
       </div>
 
       {/* Live card */}
@@ -192,7 +220,7 @@ export function AnalysisInProgress({ sessionId }: Props) {
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-60" />
 
         <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-          {/* Master Oogway portrait */}
+          {/* KraftShala processing icon */}
           <div className="shrink-0">
             <div className="relative">
               <motion.div
@@ -301,10 +329,13 @@ export function AnalysisInProgress({ sessionId }: Props) {
             transition={{ duration: 0.5 }}
             className="text-[18px] md:text-[20px] font-bold text-[var(--foreground)] leading-relaxed tracking-tight italic"
           >
-            “{OOGWAY_QUOTES[quoteIdx].quote}”
-            <footer className="not-italic mt-3 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-orange">
-              {OOGWAY_QUOTES[quoteIdx].tag} · Master Oogway
-            </footer>
+            “{KRAFTSHALA_QUOTES[quoteIdx].quote}”
+            <div className="flex items-center gap-3">
+              <div className="h-[1px] w-8 bg-brand-orange/50" />
+              <p className="text-[10px] font-bold text-[var(--muted)] tracking-widest uppercase">
+                {KRAFTSHALA_QUOTES[quoteIdx].tag} · KraftShala
+              </p>
+            </div>
           </motion.blockquote>
         </AnimatePresence>
       </div>

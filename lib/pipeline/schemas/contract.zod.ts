@@ -78,6 +78,7 @@ export const SessionAnalysisSchema = z.object({
       chapter: z.number(),
       rationale: z.string(),
       flagged: z.boolean(),
+      timestamp: z.string().optional(),
     })),
     example_gaps: z.array(z.object({
       chapter: z.number(),

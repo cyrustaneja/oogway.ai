@@ -13,8 +13,10 @@ import { LIMITS } from '@/lib/config/limits'
 import { callStage } from '@/lib/pipeline/utils/call-stage'
 import { trackCost } from '@/lib/pipeline/utils/cost-tracker'
 import { getSessionNotes } from '@/lib/pipeline/utils/session-notes'
+import { ChapterResult } from '@/lib/types/analysis'
 import { stage3ResponseSchema } from '@/lib/pipeline/schemas/stage3.schema'
 import { SessionAnalysisSchema } from '@/lib/pipeline/schemas/contract.zod'
+import { enrichSynthesisTimestamps } from '@/lib/server/transcript-utils'
 
 function getPrompt() {
   return fs.readFileSync(
@@ -57,7 +59,7 @@ export async function handleStage3(sessionId: string): Promise<void> {
       pacing: res.pacing ? { label: res.pacing.label, score: res.pacing.score, rationale: res.pacing.rationale } : undefined,
       engagement: res.engagement ? { label: res.engagement.label, score: res.engagement.score, rationale: res.engagement.rationale } : undefined,
       example_gap: res.example_gap ? { label: res.example_gap.label, score: res.example_gap.score, rationale: res.example_gap.rationale } : undefined,
-      analogies: (res.analogies ?? []).map((a: any) => ({ concept_explained: a.concept_explained, quality: a.quality, verbatim_quote: a.verbatim_quote })),
+      analogies: (res.analogies ?? []).map((a: any) => ({ concept_explained: a.concept_explained, quality: a.quality, verbatim_quote: a.verbatim_quote, timestamp: a.timestamp })),
       doubts: (res.doubts ?? []).map((d: any) => ({ student_name_raw: d.student_name_raw, doubt_verbatim: d.doubt_verbatim, timestamp: d.timestamp, resolution: d.resolution, resolved_flag: d.resolved_flag, resolution_accuracy: d.resolution_accuracy })),
       confusion_points: res.confusion_points ?? [],
       unresolved_doubt_flag: res.unresolved_doubt_flag,
@@ -128,6 +130,14 @@ export async function handleStage3(sessionId: string): Promise<void> {
   } else {
     synthesis = validation.data
   }
+
+  // Proactively enrich timestamps using the transcript
+  const getTranscript = async () => session.transcript_clean || session.transcriptRaw || '';
+  synthesis = await enrichSynthesisTimestamps(
+    synthesis,
+    getTranscript,
+    chapterResults.map(r => r.result) as unknown as ChapterResult[]
+  );
 
   console.log(
     `[Stage3] ${sessionId}: synthesis complete — ` +

@@ -75,6 +75,7 @@ export async function GET(
         chapters_json: true,
         createdAt: true,
         updatedAt: true,
+        tier1Result: true,
         v2Analysis: { select: { sessionId: true, status: true } },
         AnalysisChapterResult: { select: { chapter_index: true } },
         expert: { select: { name: true } },
@@ -88,10 +89,15 @@ export async function GET(
       : 0
     const chaptersDone = s.AnalysisChapterResult.length
     const stage = s.pipeline_stage ?? 'UPLOADED'
-    const isComplete = stage === 'COMPLETE' && !!s.v2Analysis
+    const isComplete = (stage === 'COMPLETE' && !!s.v2Analysis) || (stage === 'WAITING_FOR_DEEP_ANALYSIS')
     const isFailed = stage === 'FAILED'
 
-    const progress = isFailed ? 0 : isComplete ? 100 : stageProgress(stage, chaptersDone, chaptersPlanned, s.v3Status)
+    // Inject PULSE_PENDING logic dynamically
+    let progress = 0;
+    if (isFailed) progress = 0;
+    else if (isComplete) progress = 100;
+    else if (stage === 'PULSE_PENDING') progress = 45; // Just a static mid-way progress for Pulse
+    else progress = stageProgress(stage, chaptersDone, chaptersPlanned, s.v3Status);
 
     return NextResponse.json({
       id: s.id,
@@ -105,7 +111,7 @@ export async function GET(
       progress,
       isComplete,
       isFailed,
-      isReady: isComplete && !!s.v2Analysis,
+      isReady: (stage === 'COMPLETE' && !!s.v2Analysis) || (stage === 'WAITING_FOR_DEEP_ANALYSIS' && !!(s as any).tier1Result),
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
       stageOrder: STAGE_ORDER,

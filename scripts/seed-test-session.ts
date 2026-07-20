@@ -67,7 +67,7 @@ async function main() {
   });
   console.log(`Batch: ${batch.id}`);
 
-  const module = await prisma.module.create({
+  const courseModule = await prisma.module.create({
     data: {
       name: "Brand Basics",
       courseId: course.id
@@ -77,7 +77,7 @@ async function main() {
   const sessionNote = await prisma.sessionNote.create({
     data: {
       name: "Brand Positioning Fundamentals",
-      moduleId: module.id,
+      moduleId: courseModule.id,
       keyTopics: [
         "Frame of reference",
         "Point of difference",
@@ -96,7 +96,9 @@ async function main() {
       batchId: batch.id,
       sessionNoteId: sessionNote.id,
       transcriptRaw: SAMPLE_TRANSCRIPT,
-      pipeline_stage: "UPLOADED",
+      scheduledDuration: 60,
+      tier: "TIER3",
+      pipeline_stage: "PULSE_PENDING",
       v3Status: "PENDING"
     },
   });

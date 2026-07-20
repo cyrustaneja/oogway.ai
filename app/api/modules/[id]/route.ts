@@ -14,7 +14,7 @@ export async function GET(
 
   const { id } = await params;
   try {
-    const module = await prisma.module.findUnique({
+    const moduleData = await prisma.module.findUnique({
       where: { id },
       include: {
         course: { select: { name: true } },
@@ -38,13 +38,13 @@ export async function GET(
       }
     });
 
-    if (!module) return NextResponse.json({ error: "Module not found" }, { status: 404 });
+    if (!moduleData) return NextResponse.json({ error: "Module not found" }, { status: 404 });
 
     // Flatten analysisSessions from all sessionNotes in this module
-    const allAnalyses = module.sessions.flatMap(sn => sn.analysisSessions);
+    const allAnalyses = moduleData.sessions.flatMap(sn => sn.analysisSessions);
 
     return NextResponse.json({
-      ...module,
+      ...moduleData,
       allAnalyses: allAnalyses.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )

@@ -13,9 +13,10 @@ import { Heart, Lightbulb, Gauge, AlertTriangle } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
+  onTimestampClick?: (t: string) => void;
 };
 
-export function ExpertView({ data }: Props) {
+export function ExpertView({ data, onTimestampClick }: Props) {
   const audit = data.expert_audit ?? ({} as any);
   const analogies = audit.analogies_summary ?? [];
   const exampleGaps = audit.example_gaps ?? [];
@@ -94,6 +95,7 @@ export function ExpertView({ data }: Props) {
                       quote={analogy.verbatim_quote}
                       timestamp={analogy.timestamp || '0:00'}
                       chapterRef={analogy.chapter}
+                      onTimestampClick={onTimestampClick}
                     />
                     <p className="text-[12px] text-[var(--muted)] leading-relaxed">
                       {analogy.rationale}

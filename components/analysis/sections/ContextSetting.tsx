@@ -10,9 +10,10 @@ import { Compass } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
+  onTimestampClick?: (t: string) => void;
 };
 
-export function ContextSetting({ data }: Props) {
+export function ContextSetting({ data, onTimestampClick }: Props) {
   const cs = data.context_setup ?? { score: 0, label: '—', narrative: '', evidence: [] };
   const { label, narrative, evidence } = cs;
   const hasContent = !!narrative || (evidence && evidence.length > 0);
@@ -59,6 +60,7 @@ export function ContextSetting({ data }: Props) {
                     key={i}
                     quote={ev.verbatim_quote}
                     timestamp={ev.timestamp}
+                    onTimestampClick={onTimestampClick}
                   />
                 ))}
               </div>

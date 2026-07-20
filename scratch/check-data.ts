@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const session = await prisma.analysisV2.findUnique({
-    where: { sessionId: 'cmon88snj00033yrm8s8gp5tu' },
+    where: { sessionId: 'cmpf8anu90001dm2stm9j7bwa' },
   });
 
   if (!session) {
@@ -12,7 +12,7 @@ async function main() {
     return;
   }
 
-  console.log('Session Flags:', JSON.stringify(session.session_flags, null, 2));
+  console.log('Session Data:', JSON.stringify(session, null, 2));
 }
 
 main()

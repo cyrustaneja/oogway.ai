@@ -30,7 +30,7 @@ export type StageCallParams = {
   model: string
   system: string
   user: string
-  responseSchema: any   // JSON schema object (not Zod)
+  responseSchema?: any  // Optional. If provided, uses JSON mode. If omitted, uses text/plain (TOON format).
   initialBudget: number
   maxBudget: number
   stageName: string
@@ -159,7 +159,7 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
 
   let budget = params.initialBudget
 
-  // eslint-disable-next-line no-constant-condition
+   
   while (true) {
     // ── Wall-clock ceiling check ─────────────────────────────────────────
     const elapsed = Date.now() - wallClock
@@ -175,8 +175,8 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
       const model = genAI.getGenerativeModel({
         model: params.model,
         generationConfig: {
-          responseMimeType: 'application/json',
-          responseSchema: params.responseSchema,
+          responseMimeType: params.responseSchema ? 'application/json' : 'text/plain',
+          ...(params.responseSchema ? { responseSchema: params.responseSchema } : {}),
           maxOutputTokens: budget,
           temperature: 0.2,
         },
@@ -210,6 +210,11 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
       }
 
       const text = result.response.text()
+
+      // If no schema was provided, return the raw text (e.g. TOON format)
+      if (!params.responseSchema) {
+        return text as unknown as T
+      }
 
       // Primary JSON parse
       try {

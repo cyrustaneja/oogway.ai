@@ -1,0 +1,843 @@
+
+> oogway-app@0.1.0 lint
+> eslint
+
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(auth)/login/page.tsx
+  32:14  warning  'err' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  44:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/admin/page.tsx
+  14:24  error    Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  24:9   warning  'statusCounts' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  24:23  error    Unexpected any. Specify a different type           @typescript-eslint/no-explicit-any
+  40:9   warning  'ROLE_COLOR' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/analysis/new/page.tsx
+    5:10  warning  'Upload' is defined but never used        @typescript-eslint/no-unused-vars
+    5:64  warning  'BookOpen' is defined but never used      @typescript-eslint/no-unused-vars
+    5:74  warning  'X' is defined but never used             @typescript-eslint/no-unused-vars
+  143:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/batches/[id]/page.tsx
+    6:82   warning  'CheckCircle2' is defined but never used                         @typescript-eslint/no-unused-vars
+    6:96   warning  'TrendingDown' is defined but never used                         @typescript-eslint/no-unused-vars
+    6:110  warning  'TrendingUp' is defined but never used                           @typescript-eslint/no-unused-vars
+    6:122  warning  'Minus' is defined but never used                                @typescript-eslint/no-unused-vars
+   11:17   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   22:38   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   35:48   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  102:17   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  102:37   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  142:48   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  164:65   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/batches/page.tsx
+    7:58   warning  'Search' is defined but never used                               @typescript-eslint/no-unused-vars
+   71:14   warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+  220:133  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  220:149  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  224:24   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  236:30   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  236:64   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/courses/[id]/page.tsx
+   6:43   warning  'Target' is defined but never used                               @typescript-eslint/no-unused-vars
+   6:58   warning  'Users' is defined but never used                                @typescript-eslint/no-unused-vars
+  11:17   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  22:40   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  81:15   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  81:201  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  92:60   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/courses/page.tsx
+    5:10   warning  'cn' is defined but never used                                   @typescript-eslint/no-unused-vars
+   43:65   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   63:56   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   64:50   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   65:52   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  331:168  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  331:181  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/dashboard/DashboardClient.tsx
+  15:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:13  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/dashboard/SessionTable.tsx
+   3:17  warning  'startTransition' is defined but never used  @typescript-eslint/no-unused-vars
+   3:34  warning  'memo' is defined but never used             @typescript-eslint/no-unused-vars
+   8:10  warning  'useRouter' is defined but never used        @typescript-eslint/no-unused-vars
+  21:70  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+  37:14  warning  'err' is defined but never used              @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/dashboard/loading.tsx
+  1:10  warning  'Loader2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/dashboard/page.tsx
+  11:33  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  12:35  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  14:7   error  'where' is never reassigned. Use 'const' instead  prefer-const
+  14:14  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/experts/[id]/page.tsx
+    6:10   warning  'User' is defined but never used                                 @typescript-eslint/no-unused-vars
+    6:65   warning  'TrendingUp' is defined but never used                           @typescript-eslint/no-unused-vars
+    6:106  warning  'XCircle' is defined but never used                              @typescript-eslint/no-unused-vars
+   11:17   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   22:40   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   35:38   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  100:17   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  100:30   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  163:46   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/experts/loading.tsx
+  1:10  warning  'Loader2' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/experts/page.tsx
+   20:62   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   50:15   warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+   90:14   warning  'err' is defined but never used                                  @typescript-eslint/no-unused-vars
+  289:119  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  289:128  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  314:56   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/modules/[id]/page.tsx
+   6:10   warning  'BookOpen' is defined but never used                             @typescript-eslint/no-unused-vars
+  11:17   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  22:40   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  81:15   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  81:162  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  88:63   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/recycle-bin/page.tsx
+  12:3   warning  'CheckCircle2' is defined but never used  @typescript-eslint/no-unused-vars
+  24:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/session-notes/[id]/page.tsx
+   6:43   warning  'Target' is defined but never used                               @typescript-eslint/no-unused-vars
+  11:17   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  22:36   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  86:15   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  86:183  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  93:66   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/sessions/[id]/page.tsx
+   4:10  warning  'Tier1Review' is defined but never used    @typescript-eslint/no-unused-vars
+  19:27  warning  'tier' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  25:69  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/(dashboard)/test-connection/page.tsx
+  5:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/admin/pipeline/retry/route.ts
+  41:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  44:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/admin/pipeline/status/route.ts
+   15:10  warning  'getAuthToken' is defined but never used  @typescript-eslint/no-unused-vars
+   28:13  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   30:41  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  137:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/admin/users/[id]/password/route.ts
+  12:36  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:12  warning  'err' is defined but never used           @typescript-eslint/no-unused-vars
+  34:17  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/admin/users/route.ts
+  12:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/[id]/chat/route.ts
+  36:9   error  'transcript' is never reassigned. Use 'const' instead  prefer-const
+  36:34  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  36:71  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  44:34  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  45:44  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  52:59  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+  73:19  error  Unexpected any. Specify a different type               @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/[id]/coaching-tips/route.ts
+   84:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   85:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   86:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   87:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  123:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  168:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/[id]/route.ts
+  38:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  54:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/[id]/run-deep/route.ts
+  32:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/[id]/status/route.ts
+   88:29   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  114:110  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  119:19   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/analysis/route.ts
+   12:26  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   13:28  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   16:7   error  'where' is never reassigned. Use 'const' instead  prefer-const
+   16:14  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+   77:26  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  129:17  error  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/batches/[id]/pulse-summary/route.ts
+  46:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  65:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/batches/[id]/route.ts
+  39:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+  59:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/batches/route.ts
+  28:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  35:27  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/courses/[id]/modules/route.ts
+  14:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/courses/[id]/route.ts
+  52:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  65:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  85:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/courses/route.ts
+  36:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  47:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/experts/[id]/pulse-summary/route.ts
+  69:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/experts/[id]/route.ts
+  38:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  49:28  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:63  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  81:19  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  98:28  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  98:63  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/experts/route.ts
+  10:27  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  10:62  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  26:12  warning  'error' is defined but never used          @typescript-eslint/no-unused-vars
+  35:28  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  35:63  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+  64:13  warning  'user' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  78:19  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/modules/[id]/route.ts
+  17:5   error  Do not assign to the variable `module`. See: https://nextjs.org/docs/messages/no-assign-module-variable  @next/next/no-assign-module-variable
+  63:27  error  Unexpected any. Specify a different type                                                                 @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/modules/[id]/sessions/route.ts
+  14:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/pipeline/tick/route.ts
+   42:7   warning  'TERMINAL_STAGES' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  160:11  warning  'results' is assigned a value but never used          @typescript-eslint/no-unused-vars
+  181:23  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  190:57  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  190:87  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  203:45  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  205:20  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  214:45  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  216:20  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+  230:17  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/session-notes/[id]/route.ts
+  34:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  47:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  67:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/session-notes/route.ts
+  27:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/sessions/[id]/pdf/route.ts
+  26:84  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/trash/route.ts
+  12:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  33:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  70:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  81:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/api/webhooks/zoom/route.ts
+  69:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  70:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  81:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/dev/analysis-preview/page.tsx
+  39:90  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/app/layout.tsx
+  40:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/admin/CreateUserForm.tsx
+  41:14  warning  'err' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/admin/EditUserModal.tsx
+  13:48  warning  'onRefresh' is defined but never used  @typescript-eslint/no-unused-vars
+  49:14  warning  'err' is defined but never used        @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/admin/PipelineMonitor.tsx
+  8:103  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/admin/RecentUsersList.tsx
+  12:14  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  16:17  warning  'setUsers' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/AnalysisInProgress.tsx
+  107:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/AskOogwayChat.tsx
+  59:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/CoachingTipsPanel.tsx
+   17:3   warning  'X' is defined but never used                                    @typescript-eslint/no-unused-vars
+  100:3   warning  'accentColor' is defined but never used                          @typescript-eslint/no-unused-vars
+  189:19  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  189:37  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  202:19  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  202:38  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  232:19  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  232:40  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  379:19  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/RubricReference.tsx
+  23:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/RubricReference.tsx:23:5
+  21 |
+  22 |   useEffect(() => {
+> 23 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |   }, []);
+  25 |
+  26 |   return (  react-hooks/set-state-in-effect
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/SessionTabs.tsx
+  18:22  warning  'MessageSquare' is defined but never used  @typescript-eslint/no-unused-vars
+  20:73  error    Unexpected any. Specify a different type   @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/Tier1Review.tsx
+    4:10   warning  'AnalysisHeader' is defined but never used                       @typescript-eslint/no-unused-vars
+   13:101  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   13:161  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   13:179  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  132:25   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  132:33   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  146:64   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  203:37   warning  'sessionId' is defined but never used                            @typescript-eslint/no-unused-vars
+  203:76   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  259:54   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  278:55   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  308:46   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  336:87   error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/VideoPreviewContext.tsx
+  113:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/VideoPreviewContext.tsx:113:5
+  111 |
+  112 |   useEffect(() => {
+> 113 |     setIsPlaying(false);
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  114 |     setIsLoaded(false);
+  115 |
+  116 |     if (!videoRef.current) return;  react-hooks/set-state-in-effect
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/pdf/SessionPDFDocument.tsx
+    3:43  warning  'Font' is defined but never used                                 @typescript-eslint/no-unused-vars
+  126:33  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  126:86  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  139:15  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  144:43  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  146:39  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  166:23  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  320:48  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  334:58  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/primitives/EvidenceQuote.tsx
+  42:25  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/primitives/RubricChip.tsx
+  25:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/AccuracyIssues.tsx
+  37:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/AnalogiesUsed.tsx
+  17:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  41:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/ChapterCard.tsx
+   7:10  warning  'TOKENS' is defined but never used                 @typescript-eslint/no-unused-vars
+   7:18  warning  'chipKeyForLabel' is defined but never used        @typescript-eslint/no-unused-vars
+  10:3   warning  'MessageCircleQuestion' is defined but never used  @typescript-eslint/no-unused-vars
+  11:3   warning  'Lightbulb' is defined but never used              @typescript-eslint/no-unused-vars
+  12:3   warning  'AlertOctagon' is defined but never used           @typescript-eslint/no-unused-vars
+  14:3   warning  'Users' is defined but never used                  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/ConfusionPoints.tsx
+  40:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/ContextSetting.tsx
+  58:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/ExpertView.tsx
+   12:28  warning  'Gauge' is defined but never used         @typescript-eslint/no-unused-vars
+   20:45  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   70:39  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:38  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/FlagBanner.tsx
+   24:20  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   26:25  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   29:39  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   39:49  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   48:65  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   77:37  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+   93:9   warning  'lowCount' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  165:32  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/MostEngagedStudent.tsx
+  16:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  17:28  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/QuestionsAnswered.tsx
+  18:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/SessionFlow.tsx
+  13:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  21:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/SessionSummary.tsx
+   8:46  warning  'Coins' is defined but never used         @typescript-eslint/no-unused-vars
+  50:44  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:49  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:65  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:41  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx
+  20:33  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  21:36  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  22:33  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  25:41  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+  63:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:63:10
+  61 |     >
+  62 |       <div className="flex items-center gap-2 p-1 rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] mb-4">
+> 63 |         <TabButton type="asked" label="Asked" />
+     |          ^^^^^^^^^ This component is created during render
+  64 |         <TabButton type="answered" label="Answered" />
+  65 |         <TabButton type="other" label="Other" />
+  66 |       </div>
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:27:21
+  25 |   const filtered = questions.filter((q: any) => q.type === activeTab);
+  26 |
+> 27 |   const TabButton = ({ type, label }: { type: TabKey; label: string }) => (
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |     <button
+     | ^^^^^^^^^^^
+> 29 |       onClick={() => setActiveTab(type)}
+     …
+     | ^^^^^^^^^^^
+> 46 |     </button>
+     | ^^^^^^^^^^^
+> 47 |   );
+     | ^^^^ The component is created during render here
+  48 |
+  49 |   return (
+  50 |     <SectionCard  react-hooks/static-components
+  64:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:64:10
+  62 |       <div className="flex items-center gap-2 p-1 rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] mb-4">
+  63 |         <TabButton type="asked" label="Asked" />
+> 64 |         <TabButton type="answered" label="Answered" />
+     |          ^^^^^^^^^ This component is created during render
+  65 |         <TabButton type="other" label="Other" />
+  66 |       </div>
+  67 |
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:27:21
+  25 |   const filtered = questions.filter((q: any) => q.type === activeTab);
+  26 |
+> 27 |   const TabButton = ({ type, label }: { type: TabKey; label: string }) => (
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |     <button
+     | ^^^^^^^^^^^
+> 29 |       onClick={() => setActiveTab(type)}
+     …
+     | ^^^^^^^^^^^
+> 46 |     </button>
+     | ^^^^^^^^^^^
+> 47 |   );
+     | ^^^^ The component is created during render here
+  48 |
+  49 |   return (
+  50 |     <SectionCard        react-hooks/static-components
+  65:10  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:65:10
+  63 |         <TabButton type="asked" label="Asked" />
+  64 |         <TabButton type="answered" label="Answered" />
+> 65 |         <TabButton type="other" label="Other" />
+     |          ^^^^^^^^^ This component is created during render
+  66 |       </div>
+  67 |
+  68 |       {filtered.length === 0 ? (
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentEngagement.tsx:27:21
+  25 |   const filtered = questions.filter((q: any) => q.type === activeTab);
+  26 |
+> 27 |   const TabButton = ({ type, label }: { type: TabKey; label: string }) => (
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 28 |     <button
+     | ^^^^^^^^^^^
+> 29 |       onClick={() => setActiveTab(type)}
+     …
+     | ^^^^^^^^^^^
+> 46 |     </button>
+     | ^^^^^^^^^^^
+> 47 |   );
+     | ^^^^ The component is created during render here
+  48 |
+  49 |   return (
+  50 |     <SectionCard                                                                                                     react-hooks/static-components
+  79:27  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/analysis/sections/StudentView.tsx
+  19:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  92:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/layout/DashboardWrapper.tsx
+  11:46  warning  'title' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/layout/ThemeToggle.tsx
+  11:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/layout/ThemeToggle.tsx:11:5
+   9 |
+  10 |   useEffect(() => {
+> 11 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  12 |     const stored = localStorage.getItem("oogway-theme");
+  13 |     const initial = (stored === "dark" ? "dark" : "light") as "dark" | "light";
+  14 |     setTheme(initial);  react-hooks/set-state-in-effect
+
+/Users/cyrustaneja/Desktop/Product/Oogway/components/layout/TopNav.tsx
+   6:10  warning  'cn' is defined but never used                                                                                                                                                                                                                                                           @typescript-eslint/no-unused-vars
+  33:13  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/cyrustaneja/Desktop/Product/Oogway/debug-claim.cjs
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/auth.ts
+  56:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  63:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  64:26  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/db/soft-delete.ts
+   8:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  37:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  57:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/handlers/stage1-segmenter.ts
+  118:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  267:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/handlers/stage1-tier1-reviewer.ts
+    6:10   warning  'SchemaType' is defined but never used    @typescript-eslint/no-unused-vars
+   16:16   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   17:35   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   18:20   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:23   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:49   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:117  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  235:19   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  236:38   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  237:23   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  273:35   error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/handlers/stage2-chapter-extractor.ts
+   65:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   86:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  113:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  115:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  118:25  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  120:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  140:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  166:46  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  169:71  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  173:82  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  210:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  306:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  313:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  324:76  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/handlers/stage3-synthesizer.ts
+   51:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   62:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   63:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   78:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  105:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  122:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  153:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  179:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/handlers/stage4-flag-generator.ts
+   49:14  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   51:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   63:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   71:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   72:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   73:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   90:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  100:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/schemas/contract.zod.ts
+  13:7  warning  'AnalogySchema' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  25:7  warning  'DoubtSchema' is assigned a value but never used    @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/stage0-preprocessor.ts
+  194:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  213:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  224:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  228:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  248:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  249:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  253:12  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  262:41  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  263:49  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  267:10  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/status-writer.ts
+   90:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  103:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/utils/call-stage.ts
+   33:20  error    Unexpected any. Specify a different type                                                  @typescript-eslint/no-explicit-any
+   61:29  error    Unexpected any. Specify a different type                                                  @typescript-eslint/no-explicit-any
+  162:3   warning  Unused eslint-disable directive (no problems were reported from 'no-constant-condition')
+  196:18  error    Unexpected any. Specify a different type                                                  @typescript-eslint/no-explicit-any
+  233:19  error    Unexpected any. Specify a different type                                                  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/utils/label-validator.ts
+  19:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  40:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  45:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/utils/output-caps.ts
+  20:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  20:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  30:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  50:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  55:43  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  62:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/utils/quote-verifier.ts
+  163:67  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  174:30  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  181:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  187:37  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  192:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/pipeline/utils/safe-access.ts
+  10:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:39  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  14:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  18:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  22:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:6   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  34:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  48:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/lib/server/analysis.ts
+   19:38  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   48:51  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   68:50  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   71:13  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   73:50  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   87:66  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   89:44  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   96:46  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   96:63  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   98:25  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  108:25  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  108:62  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  113:16  warning  'err' is defined but never used                          @typescript-eslint/no-unused-vars
+  123:7   error    'enrichedData' is never reassigned. Use 'const' instead  prefer-const
+  155:32  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  156:41  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  157:65  error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  169:8   error    Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/prisma/seed.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:16  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/proxy.ts
+  7:11  warning  'path' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  8:11  warning  'isAuth' is assigned a value but never used       @typescript-eslint/no-unused-vars
+  9:11  warning  'isLoginPage' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/calculate-average-time.ts
+  45:47  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check-details.ts
+  43:16  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check-duration.ts
+  27:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check-failed-session.ts
+  44:14  warning  'e' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check-session.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check-timestamps.ts
+  18:30   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:85   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:57   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:51   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:71   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:73   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  51:97   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:87   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  52:111  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:73   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:87   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/check_pipeline.js
+  2:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/debug-transcript.ts
+  9:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/dump-session.ts
+  37:45  warning  'i' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/fast-drive.ts
+  43:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/raw-fetch.mjs
+  1:8  warning  'fs' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-2.5.ts
+  12:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-gemini-key.ts
+  23:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-model-2.5.ts
+  14:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-models.ts
+  12:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-pdf-gen.ts
+   3:10  warning  'PrismaClient' is defined but never used  @typescript-eslint/no-unused-vars
+  19:70  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-pro-2.5.ts
+  12:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-stage1-log.ts
+  14:9   warning  'logger' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  29:17  error    Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scratch/test-stage1.mjs
+  1:10  warning  'PrismaClient' is defined but never used  @typescript-eslint/no-unused-vars
+  2:10  warning  'handleStage1' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scripts/check-state.cjs
+  1:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scripts/check-transcript.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scripts/run-pipeline.cjs
+  19:20  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  20:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  21:14  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/scripts/run-pulse.js
+  1:26  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:31  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/cyrustaneja/Desktop/Product/Oogway/utils/supabase/middleware.ts
+  15:9   warning  'supabase' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  24:48  warning  'options' is defined but never used            @typescript-eslint/no-unused-vars
+
+✖ 461 problems (373 errors, 88 warnings)
+  4 errors and 1 warning potentially fixable with the `--fix` option.
+

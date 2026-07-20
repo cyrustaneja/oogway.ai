@@ -191,7 +191,16 @@ export async function handlePreprocessor(sessionId: string): Promise<void> {
   })
   if (!session) throw new Error(`[Stage0] Session ${sessionId} not found`)
 
-  const raw: string = (session as any).transcriptRaw ?? ''
+  let raw: string = (session as any).transcriptRaw ?? ''
+  
+  if (!raw && session.transcriptUrl) {
+    try {
+      const res = await fetch(session.transcriptUrl)
+      if (res.ok) raw = await res.text()
+    } catch (err) {
+      console.error(`[Stage0] Failed to fetch transcript URL for session ${sessionId}:`, err)
+    }
+  }
   
   if (!session.expertId || !session.batchId) {
     await prisma.analysisSession.update({

@@ -17,7 +17,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       include: {
         sessions: {
-          select: { id: true, name: true, v3Status: true, createdAt: true },
+          select: { id: true, name: true, v3Status: true, createdAt: true, tier: true },
           orderBy: { createdAt: 'desc' }
         }
       }

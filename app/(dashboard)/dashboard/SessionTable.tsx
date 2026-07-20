@@ -15,7 +15,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string 
   AGGREGATING:   { label: "Structuring",  color: "text-purple-400",     dot: "bg-purple-400 animate-pulse" },
   SYNTHESISING:  { label: "Synthesising", color: "text-brand-warning",  dot: "bg-brand-warning animate-pulse" },
   COMPLETE:      { label: "Validated",    color: "text-brand-success",  dot: "bg-brand-success" },
-  FAILED:        { label: "Draft Error",  color: "text-brand-danger",   dot: "bg-brand-danger" },
+  FAILED:        { label: "Error",        color: "text-brand-danger",   dot: "bg-brand-danger" },
 };
 
 export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
@@ -55,6 +55,17 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
         const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
         const isDeleting = deletingId === a.id;
 
+        let displayLabel = cfg.label;
+        if (a.tier === 'TIER1') {
+          if (a.v3Status === 'FAILED') displayLabel = 'Pulse Error';
+          else if (a.v3Status === 'COMPLETE') displayLabel = 'Pulse Completed';
+          else displayLabel = `Pulse: ${cfg.label}`;
+        } else if (a.tier === 'TIER2') {
+          if (a.v3Status === 'FAILED') displayLabel = 'Analysis Error';
+          else if (a.v3Status === 'COMPLETE') displayLabel = 'Analysis Completed';
+          else displayLabel = `Analysis: ${cfg.label}`;
+        }
+
         return (
           <div 
             key={a.id} 
@@ -74,7 +85,7 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
                 {/* Mobile-only status indicator */}
                 <div className="lg:hidden flex items-center gap-2 shrink-0">
                   <div className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${cfg.color}`}>{cfg.label}</span>
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${cfg.color}`}>{displayLabel}</span>
                 </div>
               </div>
               {a.sessionNote ? (
@@ -133,7 +144,7 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
               {/* Growth Status - Desktop Only Hidden Column */}
               <div className="hidden lg:flex lg:col-span-2 items-center gap-2">
                 <div className={`w-2 h-2 rounded-full ${cfg.dot} shadow-sm`} />
-                <span className={`text-[11px] font-bold tracking-tight ${cfg.color}`}>{cfg.label}</span>
+                <span className={`text-[11px] font-bold tracking-tight ${cfg.color}`}>{displayLabel}</span>
               </div>
 
               {/* Timeline */}

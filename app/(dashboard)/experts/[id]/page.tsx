@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, Mail, Tag, Calendar, Activity, ChevronLeft } from "lucide-react";
+import { User, Mail, Tag, Calendar, Activity, ChevronLeft, Zap, TrendingUp, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { SessionTable } from "../../dashboard/SessionTable";
 import { Loader2 } from "lucide-react";
@@ -30,6 +30,15 @@ export default function ExpertDetailPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
+  }, [id]);
+
+  const [pulse, setPulse] = useState<any>(null);
+  useEffect(() => {
+    if (!id) return;
+    fetch(`/api/experts/${id}/pulse-summary`)
+      .then(r => r.json())
+      .then(setPulse)
+      .catch(() => {});
   }, [id]);
 
   if (loading) return (
@@ -111,6 +120,67 @@ export default function ExpertDetailPage() {
           </div>
         </div>
       </motion.div>
+
+      {/* Pulse Cross-Session Summary */}
+      {pulse && pulse.sessions > 0 && (
+        <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeInUp} className="glass-card shadow-2xl p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2.5 rounded-xl bg-brand-orange/10 border border-brand-orange/20">
+              <Zap className="w-5 h-5 text-brand-orange" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold">KraftShala Pulse — Cross-Session Pattern</h2>
+              <p className="text-[10px] text-[var(--muted)] font-bold tracking-widest mt-0.5">{pulse.sessions} SESSIONS ANALYSED</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {pulse.biggestGap && (
+              <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest mb-1">Consistent Gap</p>
+                  <p className="font-semibold text-sm">{pulse.biggestGap}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">Flagged in {pulse.biggestGapCount} of {pulse.sessions} sessions</p>
+                </div>
+              </div>
+            )}
+            {pulse.biggestStrength && (
+              <div className="bg-green-500/5 border border-green-500/20 rounded-xl p-4 flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest mb-1">Consistent Strength</p>
+                  <p className="font-semibold text-sm">{pulse.biggestStrength}</p>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">Rated well across sessions</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {pulse.metricSummaries && (
+            <div className="space-y-2">
+              <p className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest mb-3">Metric Breakdown</p>
+              {pulse.metricSummaries.map((m: any) => {
+                const pct = m.totalSessions > 0 ? Math.round((m.goodCount / m.totalSessions) * 100) : 0;
+                return (
+                  <div key={m.metric} className="flex items-center gap-4">
+                    <span className="text-xs text-[var(--foreground)] w-44 shrink-0 font-medium">{m.metric}</span>
+                    <div className="flex-1 h-1.5 rounded-full bg-[var(--layer-2)] overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          pct >= 70 ? 'bg-green-500' : pct >= 40 ? 'bg-amber-500' : 'bg-red-500'
+                        }`}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] text-[var(--muted)] w-20 text-right shrink-0">{m.mostCommonScore} ({pct}% good)</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
+      )}
 
       {/* Analysis Hub */}
       <motion.div 

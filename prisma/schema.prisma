@@ -143,7 +143,11 @@ model AnalysisSession {
   schema_version             String?                 @default("v1")
   zoom_recording_id          String?
   zoom_download_url          String?
+  videoUrl                   String?
+  transcriptUrl              String?
   source                     String?                 @default("manual")
+  tier                       String                  @default("TIER1")
+  tier1Result                Json?
   AnalysisChapterResult      AnalysisChapterResult[]
   batch                      Batch?                  @relation(fields: [batchId], references: [id])
   expert                     Expert                  @relation(fields: [expertId], references: [id])

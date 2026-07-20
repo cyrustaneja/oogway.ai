@@ -58,7 +58,7 @@ export type ChapterResult = {
 export type SessionAnalysis = {
   session_id: string; 
   schema_version: string;
-  context_setup: { score: number; label: string; narrative: string; evidence: any[] };
+  context_setup: { score: number; label: string; narrative: string; evidence: { timestamp: string; verbatim_quote: string }[] };
   topics_covered: string[]; 
   topics_missed_from_notes: string[];
   key_learning_points: string[];
@@ -66,7 +66,7 @@ export type SessionAnalysis = {
     pedagogical_health_summary: string;
     teaching_depth_map: { chapter: number; topic: string; depth_label: string; depth_score: number }[];
     pacing_map: { chapter: number; topic: string; pacing_label: string; duration_mins: number }[];
-    analogies_summary: { concept: string; quality_label: string; verbatim_quote: string; chapter: number; rationale: string; flagged: boolean }[];
+    analogies_summary: { concept: string; quality_label: string; verbatim_quote: string; chapter: number; rationale: string; flagged: boolean; timestamp?: string }[];
     example_gaps: { chapter: number; topic: string; gap_label: string }[];
     doubt_resolution_summary: { chapter: number; doubt: string; student: string; resolution_label: string; resolved: boolean; resolution_accuracy: string; rationale: string }[];
     accuracy_issues: { chapter: number; topic: string; accuracy_label: string; flagged_statement: string; verbatim_quote: string; concern: string; timestamp: string }[];
@@ -80,7 +80,7 @@ export type SessionAnalysis = {
     student_questions: { student: string; question: string; timestamp: string; chapter: number; type: 'asked' | 'answered' | 'other' }[];
     verified_outcomes: string[];
   };
-  session_completeness: { score: number; label: string; evidence: any[] };
+  session_completeness: { score: number; label: string; evidence: { timestamp: string; verbatim_quote: string }[] };
   hygiene: { camera: { score: number; label: string }; punctuality: { score: number; label: string } };
-  session_flags: { flags: any[]; total_flags: number; high_count: number; medium_count: number; low_count: number };
+  session_flags: { flags: { category: string; severity: string; rationale: string }[]; total_flags: number; high_count: number; medium_count: number; low_count: number };
 }

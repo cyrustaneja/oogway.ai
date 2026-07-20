@@ -19,6 +19,7 @@ type Props = {
     costEstimate?: number | null;
   };
   chapters: ChapterResult[];
+  activeTab?: string;
 };
 
 function StatPill({
@@ -38,7 +39,7 @@ function StatPill({
   );
 }
 
-export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props) {
+export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeTab = 'first_analysis' }: Props) {
   const completenessTone = chipKeyForLabel(data.session_completeness?.label);
   
   // Robust flag detection (AI + Auto-detect from Red rubrics + Incompleteness)
@@ -115,12 +116,12 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props
 
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="min-w-0">
-            <p className={TOKENS.sectionEyebrow}>
-              {sessionInfo?.expertName || 'Expert'} · {sessionInfo?.batchName || 'Batch'}
-            </p>
-            <h1 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight truncate">
+            <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight whitespace-normal mb-2">
               {sessionInfo?.name || 'Session Analysis'}
             </h1>
+            <p className={`${TOKENS.sectionEyebrow} opacity-80`}>
+              {sessionInfo?.expertName || 'Expert'} · {sessionInfo?.batchName || 'Batch'}
+            </p>
             <div className="flex flex-wrap items-center gap-y-2 gap-x-4 md:gap-x-5 mt-4 text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-[var(--muted)]">
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-3 h-3 md:w-3.5 md:h-3.5" />
@@ -130,12 +131,6 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props
                 <Clock className="w-3 h-3 md:w-3.5 md:h-3.5" />
                 {sessionInfo?.duration || '—'}
               </span>
-              {sessionInfo?.costEstimate != null && (
-                <span className="flex items-center gap-1.5 opacity-90 text-brand-orange hover:underline cursor-default" title="Estimated AI cost based on input/output tokens">
-                  <Coins className="w-3 h-3 md:w-3.5 md:h-3.5" />
-                  Cost estimation for this analysis: ${sessionInfo.costEstimate < 0.01 ? sessionInfo.costEstimate.toFixed(3) : sessionInfo.costEstimate.toFixed(2)}
-                </span>
-              )}
             </div>
           </div>
 
@@ -151,7 +146,17 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props
               rationale="Expert punctuality at session start"
             />
             <div className="w-full sm:w-auto mt-2 sm:mt-0 flex items-center gap-2">
-              <RubricReference />
+              {activeTab === 'first_analysis' && (
+                <button
+                  onClick={() => alert("Flagged for Manager Review. Message box coming soon.")}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest
+                    bg-red-500/10 border border-red-500/30 text-red-600
+                    hover:bg-red-500/20 hover:border-red-500/60 transition-all duration-150 whitespace-nowrap"
+                >
+                  Flag Session
+                </button>
+              )}
+              {activeTab === 'deep_analysis' && <RubricReference />}
               <button
                 id="export-pdf-btn"
                 onClick={handleExportPDF}
@@ -165,34 +170,36 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters }: Props
                 {downloading
                   ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   : <FileDown className="w-3.5 h-3.5" />}
-                {downloading ? 'Generating…' : 'Export PDF'}
+                {downloading ? 'Generating…' : activeTab === 'deep_analysis' ? 'Export Deep Analysis' : 'Export Oogway Pulse'}
               </button>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
-          <StatPill
-            label="Completeness"
-            value={data.session_completeness?.label || '—'}
-            tone={completenessTone}
-          />
-          <StatPill
-            label="Flags Raised"
-            value={`${totalFlags}`}
-            tone={flagTone}
-          />
-          <StatPill
-            label="Student Doubts"
-            value={`${totalDoubts}`}
-            tone={chipKeyForScore(100 - unresolved * 12)}
-          />
-          <StatPill
-            label="Unresolved"
-            value={`${unresolved}`}
-            tone={unresolved > 0 ? 'amber' : 'green'}
-          />
-        </div>
+        {activeTab === 'deep_analysis' && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+            <StatPill
+              label="Completeness"
+              value={data.session_completeness?.label || '—'}
+              tone={completenessTone}
+            />
+            <StatPill
+              label="Flags Raised"
+              value={`${totalFlags}`}
+              tone={flagTone}
+            />
+            <StatPill
+              label="Student Doubts"
+              value={`${totalDoubts}`}
+              tone={chipKeyForScore(100 - unresolved * 12)}
+            />
+            <StatPill
+              label="Unresolved"
+              value={`${unresolved}`}
+              tone={unresolved > 0 ? 'amber' : 'green'}
+            />
+          </div>
+        )}
       </div>
     </header>
   );

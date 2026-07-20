@@ -24,7 +24,7 @@ export function StudentEngagement({ data }: Props) {
 
   const filtered = questions.filter((q: any) => q.type === activeTab);
 
-  const TabButton = ({ type, label }: { type: TabKey; label: string }) => (
+  const renderTab = (type: TabKey, label: string) => (
     <button
       onClick={() => setActiveTab(type)}
       className={`flex-1 flex items-center justify-center gap-2 px-3 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-xl transition-all ${
@@ -60,9 +60,9 @@ export function StudentEngagement({ data }: Props) {
       }
     >
       <div className="flex items-center gap-2 p-1 rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] mb-4">
-        <TabButton type="asked" label="Asked" />
-        <TabButton type="answered" label="Answered" />
-        <TabButton type="other" label="Other" />
+        {renderTab('asked', 'Asked')}
+        {renderTab('answered', 'Answered')}
+        {renderTab('other', 'Other')}
       </div>
 
       {filtered.length === 0 ? (

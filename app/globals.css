@@ -1,157 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
-  --color-brand-orange: #F37021;
-  --color-brand-success: #10B981;
-  --color-brand-warning: #F59E0B;
-  --color-brand-danger: #EF4444;
-  --color-brand-info: #3B82F6;
-  
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
+  /* KraftShala Brand Tokens */
+  --color-ks-yellow:       #E8A020;  /* Primary CTA / accent — KraftShala golden yellow */
+  --color-ks-yellow-light: #FFF3DC;  /* Light wash for badges/chips */
+  --color-ks-yellow-dark:  #C4841A;  /* Hover state */
+  --color-ks-navy:         #1A2B47;  /* Primary text / nav */
+  --color-ks-charcoal:     #2D3A4A;  /* Secondary text / body */
+  --color-ks-teal:         #00A896;  /* Success / positive state accent */
+  --color-ks-red:          #E03E3E;  /* Error / flag state */
+  --color-ks-sky:          #00B6F0;  /* Info / cyan accent (from floating action buttons) */
+
+  /* Legacy aliases so existing code doesn't break */
+  --color-brand-orange:    #E8A020;
+  --color-brand-success:   #00A896;
+  --color-brand-warning:   #F59E0B;
+  --color-brand-danger:    #E03E3E;
+  --color-brand-info:      #00B6F0;
+
+  --color-background:      var(--background);
+  --color-foreground:      var(--foreground);
+  --color-muted:           var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-card: var(--card-bg);
-  --color-card-border: var(--card-border);
-  
-  --font-inter: "Inter", sans-serif;
-  --font-outfit: "Outfit", sans-serif;
+  --color-card:            var(--card-bg);
+  --color-card-border:     var(--card-border);
+
+  --font-jakarta:      var(--font-jakarta);
+  --font-montserrat:   var(--font-montserrat);
+  --font-nanum:        var(--font-nanum);
 }
 
 @layer base {
   :root {
-    /* Liquid Glass Theme Variables - Dark (iOS Night Style) - DEFAULT */
-    --background: #020617;
-    --foreground: #F1F5F9;
-    --card-bg: rgba(15, 23, 42, 0.7);
-    --card-border: rgba(255, 255, 255, 0.08);
-    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-    --muted: #94A3B8;
-    --muted-foreground: #64748B;
-    --sidebar-bg: rgba(15, 23, 42, 0.6);
-    --inner-bg: rgba(255, 255, 255, 0.05); /* Subtle light tint for dark mode */
-    --inner-border: rgba(255, 255, 255, 0.1);
-    /* Timeline & Accents */
-    --timeline-line: rgba(255, 255, 255, 0.15);
+    color-scheme: light;
+
+    /* ── Premium High-Contrast Light Theme ────────────────────────────────── */
+    --background:   #FAFAFC;        /* Very light, sophisticated off-white */
+    --foreground:   #09090B;        /* Near black for extreme crispness */
+    --card-bg:      rgba(255, 255, 255, 0.7); /* Translucent pure white for glassmorphism */
+    --card-border:  rgba(255, 255, 255, 0.6);
+    --card-shadow:  0 10px 40px -10px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.4);
     
-    /* Semantic Chips - Dark Mode (Default) */
-    --chip-red-bg: rgba(239, 68, 68, 0.15);
-    --chip-red-text: #FCA5A5;
-    --chip-red-border: rgba(239, 68, 68, 0.3);
+    --muted:        #71717A;        /* Crisp secondary text */
+    --muted-foreground: #A1A1AA;    /* Placeholder text */
+    --sidebar-bg:   #FFFFFF;
     
-    --chip-amber-bg: rgba(245, 158, 11, 0.15);
-    --chip-amber-text: #FCD34D;
-    --chip-amber-border: rgba(245, 158, 11, 0.3);
+    /* Structural layers */
+    --layer-1:      #FFFFFF;
+    --layer-2:      #F4F4F5;
+    --border:       #E4E4E7;
+    --inner-border: #F4F4F5;
+    --inner-bg:     #FAFAFC;
+    --bg:           #FAFAFC;
     
-    --chip-green-bg: rgba(16, 185, 129, 0.15);
-    --chip-green-text: #6EE7B7;
-    --chip-green-border: rgba(16, 185, 129, 0.3);
+    /* Premium Glassmorphism */
+    --glass-blur:   12px; 
 
-    --chip-darkgreen-bg: rgba(16, 185, 129, 0.3);
-    --chip-darkgreen-text: #A7F3D0;
-    --chip-darkgreen-border: rgba(16, 185, 129, 0.4);
+    /* Glows — Vibrant accents for timelines and highlights */
+    --glow-1: rgba(232, 160, 32, 0.15); /* Orange glow */
+    --glow-2: rgba(0, 168, 150, 0.15);  /* Teal glow */
+    --glow-3: rgba(224, 62, 62, 0.15);  /* Red glow */
 
-    --chip-blue-bg: rgba(59, 130, 246, 0.15);
-    --chip-blue-text: #93C5FD;
-    --chip-blue-border: rgba(59, 130, 246, 0.3);
+    /* Semantic Chips — High saturation for grabbing attention */
+    --chip-red-bg:         #FEF2F2;
+    --chip-red-text:       #EF4444;
+    --chip-red-border:     #FECACA;
 
-    --chip-orange-bg: rgba(243, 112, 33, 0.15);
-    --chip-orange-text: #FDBA74;
-    --chip-orange-border: rgba(243, 112, 33, 0.3);
+    --chip-amber-bg:       #FFFBEB;
+    --chip-amber-text:     #F59E0B;
+    --chip-amber-border:   #FDE68A;
 
-    /* Dark Mode Specific Glows */
-    --glow-1: rgba(243, 112, 33, 0.15);
-    --glow-2: rgba(59, 130, 246, 0.12);
-    --glow-3: rgba(16, 185, 129, 0.08);
-  }
+    --chip-green-bg:       #F0FDF4;
+    --chip-green-text:     #10B981;
+    --chip-green-border:   #A7F3D0;
 
-  [data-theme="light"] {
-    /* Liquid Glass Theme Variables - Light (Apple Intelligence Style) */
-    --background: #EDF1F7; /* Slightly deeper tint to make white cards pop */
-    --foreground: #020617;
-    --card-bg: rgba(255, 255, 255, 0.7);
-    --card-border: rgba(255, 255, 255, 0.9);
-    --card-shadow: 0 12px 40px -8px rgba(31, 38, 135, 0.12);
-    --muted: #475569;
-    --muted-foreground: #64748B;
-    --accent: #F37021;
-    --glass-blur: 16px;
-    --sidebar-bg: rgba(255, 255, 255, 0.6);
-    --inner-bg: rgba(15, 23, 42, 0.05); /* Subtle dark tint for light mode */
-    --inner-border: rgba(15, 23, 42, 0.08);
-    --timeline-line: rgba(15, 23, 42, 0.1);
-    
-    /* Semantic Chips - Light Mode (High Contrast) */
-    --chip-red-bg: #FEE2E2;
-    --chip-red-text: #B91C1C;
-    --chip-red-border: #FECACA;
-    
-    --chip-amber-bg: #FEF3C7;
-    --chip-amber-text: #B45309;
-    --chip-amber-border: #FDE68A;
-    
-    --chip-green-bg: #D1FAE5;
-    --chip-green-text: #047857;
-    --chip-green-border: #A7F3D0;
+    --chip-darkgreen-bg:   #064E3B;
+    --chip-darkgreen-text: #D1FAE5;
+    --chip-darkgreen-border: #047857;
 
-    --chip-darkgreen-bg: #065F46;
-    --chip-darkgreen-text: #ECFDF5;
-    --chip-darkgreen-border: #064E3B;
+    --chip-blue-bg:        #EFF6FF;
+    --chip-blue-text:      #3B82F6;
+    --chip-blue-border:    #BFDBFE;
 
-    --chip-blue-bg: #DBEAFE;
-    --chip-blue-text: #1D4ED8;
-    --chip-blue-border: #BFDBFE;
-
-    --chip-orange-bg: #FFEDD5;
-    --chip-orange-text: #C2410C;
-    --chip-orange-border: #FED7AA;
-
-    /* Light Mode Specific Glows */
-    --glow-1: rgba(243, 112, 33, 0.15);
-    --glow-2: rgba(59, 130, 246, 0.12);
-    --glow-3: rgba(139, 92, 246, 0.1);
+    --chip-orange-bg:      #FFF7ED;
+    --chip-orange-text:    #F97316;
+    --chip-orange-border:  #FED7AA;
   }
 
   body {
     background-color: var(--background);
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(232, 160, 32, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(0, 168, 150, 0.03) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(0, 182, 240, 0.03) 0px, transparent 50%);
+    background-attachment: fixed;
     color: var(--foreground);
-    font-family: var(--font-inter);
-    transition: background-color 0.4s ease, color 0.4s ease;
+    font-family: var(--font-jakarta), sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
-  }
-
-  /* Liquid Glass Dynamic Glow Background */
-  body::before {
-    content: "";
-    position: fixed;
-    top: -10%;
-    left: -10%;
-    width: 120%;
-    height: 120%;
-    z-index: -1;
-    background: 
-      radial-gradient(circle at 20% 30%, var(--glow-1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, var(--glow-2) 0%, transparent 45%),
-      radial-gradient(circle at 50% 80%, var(--glow-3) 0%, transparent 60%);
-    filter: blur(100px);
-    pointer-events: none;
-    animation: backgroundMove 20s infinite alternate ease-in-out;
-  }
-
-  @keyframes backgroundMove {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-2%, -3%) scale(1.05); }
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-outfit);
+    font-family: var(--font-montserrat), sans-serif;
     font-weight: 700;
+    color: var(--foreground);
+  }
+
+  .font-handwritten {
+    font-family: var(--font-nanum), cursive;
   }
 }
 
 @layer components {
+
+  /* ── Card ─────────────────────────────────────────────────────────── */
   .glass-card {
     background: var(--card-bg);
     backdrop-filter: blur(var(--glass-blur));
@@ -159,37 +124,63 @@
     border: 1px solid var(--card-border);
     box-shadow: var(--card-shadow);
     border-radius: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    transform: translateZ(0);
-    will-change: transform, backdrop-filter;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .glass-card:hover {
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.8);
+    transform: translateY(-2px);
   }
 
+  /* Alias for new card style */
+  .ks-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ks-card:hover {
+    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.8);
+    transform: translateY(-2px);
+  }
+
+  /* ── Inputs ────────────────────────────────────────────────────────── */
   .liquid-input {
-    @apply w-full bg-white/10 dark:bg-black/20 border border-white/10 dark:border-white/5 rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-orange/30 transition-all;
+    @apply w-full bg-white border border-[var(--border)] rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ks-yellow/40 transition-all placeholder:text-[var(--muted-foreground)];
   }
 
+  /* ── Buttons ───────────────────────────────────────────────────────── */
+  /* Exact KraftShala button spec: pill shape, normal case, semi-bold, drop shadow */
   .btn-primary {
-    @apply bg-brand-orange text-white px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-brand-orange/30 active:scale-95;
+    @apply bg-[#E8A020] text-white px-8 py-3 rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[#d6931c] active:scale-[0.98] shadow-[0_4px_14px_0_rgba(232,160,32,0.39)];
   }
 
   .btn-secondary {
-    @apply bg-white/10 dark:bg-white/5 text-[var(--foreground)] px-6 py-2.5 rounded-full font-bold text-xs tracking-wider uppercase border border-white/10 transition-all hover:bg-white/20 active:scale-95;
+    @apply bg-transparent text-[#1A2B47] px-8 py-3 rounded-full font-semibold text-[15px] border-2 border-[#E8A020] transition-all hover:bg-[#E8A020]/5 active:scale-[0.98];
+  }
+
+  .btn-cyan {
+    @apply bg-[#00B6F0] text-white px-8 py-3 rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[#00a3d7] active:scale-[0.98] shadow-[0_4px_14px_0_rgba(0,182,240,0.39)];
+  }
+
+  /* ── KraftShala Branded Badge ──────────────────────────────────────── */
+  .ks-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-ks-yellow-light text-ks-yellow-dark border border-ks-yellow/20;
   }
 }
 
-/* Scrollbar Refinement */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: var(--muted-foreground);
+  background: #EAEFF4;
   border-radius: 20px;
-  border: 2px solid var(--background);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
-}
+::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
 
+select option {
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}

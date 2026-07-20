@@ -265,9 +265,9 @@ export async function handleStage1(sessionId: string): Promise<void> {
     where: { id: sessionId },
     data: {
       chapters_json: result.chapters as any,
-      pipeline_stage: 'CHAPTERS_DETECTED',
-      v3Status: 'EXTRACTING',
-      next_action_at: new Date(),
+      pipeline_stage: 'WAITING_FOR_DEEP_ANALYSIS', // Pause here for Two-Stage Architecture
+      v3Status: 'PREPROCESSING', // Or use a custom status if added, keeping it valid for Prisma enum
+      next_action_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365), // 1 year in the future, wait for manual trigger
     } as any,
   })
 }

@@ -12,6 +12,16 @@ interface Expert {
   createdAt: string;
 }
 
+const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string; bg: string }> = {
+  PENDING:       { label: "Queued",       color: "text-[var(--muted)]",       dot: "bg-slate-500",                  bg: "bg-slate-500/10" },
+  PREPROCESSING: { label: "Processing",   color: "text-brand-warning",        dot: "bg-brand-warning animate-pulse",bg: "bg-brand-warning/10" },
+  EXTRACTING:    { label: "Scanning",     color: "text-brand-info",           dot: "bg-brand-info animate-pulse",   bg: "bg-brand-info/10" },
+  AGGREGATING:   { label: "Structuring",  color: "text-purple-400",           dot: "bg-purple-400 animate-pulse",   bg: "bg-purple-400/10" },
+  SYNTHESISING:  { label: "Synthesising", color: "text-brand-warning",        dot: "bg-brand-warning animate-pulse",bg: "bg-brand-warning/10" },
+  COMPLETE:      { label: "Validated",    color: "text-brand-success",        dot: "bg-brand-success",              bg: "bg-brand-success/10" },
+  FAILED:        { label: "Error",        color: "text-brand-danger",         dot: "bg-brand-danger",               bg: "bg-brand-danger/10" },
+};
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -311,7 +321,20 @@ export default function ExpertsPage() {
                       </Link>
                     </div>
                     <div className="space-y-2">
-                      {ex.sessions.slice(0, 3).map((s: any) => (
+                      {ex.sessions.slice(0, 3).map((s: any) => {
+                        const cfg = STATUS_CONFIG[s.v3Status] ?? STATUS_CONFIG.PENDING;
+                        let displayLabel = cfg.label;
+                        if (s.tier === 'TIER1') {
+                          if (s.v3Status === 'FAILED') displayLabel = 'Pulse Error';
+                          else if (s.v3Status === 'COMPLETE') displayLabel = 'Pulse Completed';
+                          else displayLabel = `Pulse: ${cfg.label}`;
+                        } else if (s.tier === 'TIER2') {
+                          if (s.v3Status === 'FAILED') displayLabel = 'Analysis Error';
+                          else if (s.v3Status === 'COMPLETE') displayLabel = 'Analysis Completed';
+                          else displayLabel = `Analysis: ${cfg.label}`;
+                        }
+                        
+                        return (
                         <Link
                           key={s.id}
                           href={`/sessions/${s.id}`}
@@ -319,13 +342,14 @@ export default function ExpertsPage() {
                         >
                           <span className="text-[10px] font-bold text-[var(--foreground)] truncate max-w-[150px] group-hover/item:text-brand-orange">{s.name}</span>
                           <span className={cn(
-                            "text-[8px] font-extrabold px-2 py-0.5 rounded-full",
-                            s.v3Status === 'COMPLETE' ? "bg-brand-success/10 text-brand-success" : "bg-brand-warning/10 text-brand-warning"
+                            "text-[8px] font-extrabold px-2 py-0.5 rounded-full uppercase whitespace-nowrap ml-2",
+                            cfg.color, cfg.bg
                           )}>
-                            {s.v3Status === 'COMPLETE' ? 'VALIDATED' : 'SYNCING'}
+                            {displayLabel}
                           </span>
                         </Link>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )}

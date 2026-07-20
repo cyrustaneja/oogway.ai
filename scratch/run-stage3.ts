@@ -1,7 +1,7 @@
 import { handleStage3 } from "../lib/pipeline/handlers/stage3-synthesizer";
 
 async function runStage3() {
-  const sessionId = "cmoskn7hu0009j4a085pe4hrh";
+  const sessionId = "cmrcghsjb000bph8wuyvunsxz";
   console.log(`Manually running Stage 3 for ${sessionId}...`);
   try {
     await handleStage3(sessionId);

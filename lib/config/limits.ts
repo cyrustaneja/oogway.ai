@@ -9,7 +9,7 @@ export const LIMITS = {
   // Keep these tight: a crash during Stage 2 (fast) should re-queue quickly.
   // Stage 3 gets the full window because synthesis can genuinely take minutes.
   tickClaimWindowStage0Ms:  45_000,   // 45s (handler timeout 30s)
-  tickClaimWindowStage1Ms: 330_000,   // 5.5 min (handler timeout 5 min)
+  tickClaimWindowStage1Ms:  90_000,   // 90s (handler timeout 60s)
   tickClaimWindowStage2Ms: 330_000,   // 5.5 min (handler timeout 5 min)
   tickClaimWindowStage3Ms: 330_000,   // 5.5 min (handler timeout 5 min)
   tickClaimWindowStage4Ms:  90_000,   // 90s (handler timeout 60s)
@@ -29,7 +29,7 @@ export const LIMITS = {
   longTranscriptThreshold: 30000,     // sessions >30k tokens get extra logging
 
   // ─── Per-Call Hard Timeouts (ms) ──────────────────────────────────────────
-  stage1TimeoutMs: 300_000,           // Stage 1 = 5 min max
+  stage1TimeoutMs: 60_000,            // Stage 1 = 60s max
   stage2TimeoutMs: 300_000,            // per-chapter call = 5 min max
   stage3TimeoutMs: 300_000,
   stage4TimeoutMs: 60_000,
