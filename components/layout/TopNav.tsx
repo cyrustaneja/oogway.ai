@@ -8,6 +8,7 @@ import { useState } from "react";
 
 const navItems = [
   { label: "Dashboard",     href: "/dashboard" },
+  { label: "Expert Prep",   href: "/prep" },
   { label: "Experts",       href: "/experts" },
   { label: "Batches",       href: "/batches" },
   { label: "Course Content",href: "/courses" },
