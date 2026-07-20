@@ -429,13 +429,23 @@ function InsightCard({
           </div>
         </div>
 
-        {!open && displayTwoLines.length > 0 && (
-          <div className="pt-1 space-y-1">
-            {displayTwoLines.map((line, i) => (
-              <div key={i} className="flex items-start gap-2 text-xs font-medium text-[var(--foreground)]/90 leading-relaxed truncate">
-                <span className="truncate">{line}</span>
+        {!open && (
+          <div className="pt-1.5 space-y-2">
+            {insight.summary && (
+              <p className="text-[13px] text-[var(--foreground)]/90 font-medium leading-relaxed">
+                {insight.summary}
+              </p>
+            )}
+
+            {displayTwoLines.length > 0 && displayTwoLines[0] !== insight.summary && (
+              <div className="pt-2 border-t border-dashed border-[var(--border)]/60 space-y-1">
+                {displayTwoLines.map((line, i) => (
+                  <div key={i} className="flex items-start gap-2 text-xs font-semibold text-[var(--foreground)]/85 leading-relaxed truncate">
+                    <span className="truncate">{line}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
         )}
       </div>
