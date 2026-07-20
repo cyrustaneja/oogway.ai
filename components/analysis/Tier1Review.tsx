@@ -2,7 +2,22 @@
 
 import React, { useState } from 'react';
 import { AnalysisHeader } from '@/components/analysis/sections';
-import { MessageSquareQuote, CheckCircle2, XCircle, Info, Target, ChevronDown, ChevronRight, Zap, Clock, Users, GraduationCap, Sparkles, AlertCircle } from 'lucide-react';
+import {
+  MessageSquareQuote,
+  CheckCircle2,
+  XCircle,
+  Info,
+  Target,
+  ChevronDown,
+  ChevronRight,
+  Zap,
+  Clock,
+  Users,
+  GraduationCap,
+  Sparkles,
+  AlertCircle,
+  HelpCircle,
+} from 'lucide-react';
 import { AnalogiesUsed } from '@/components/analysis/sections/AnalogiesUsed';
 import { StudentEngagement } from '@/components/analysis/sections/StudentEngagement';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -72,6 +87,104 @@ function ExecutiveSummaryCard({
             <p className="text-xs font-semibold text-[var(--foreground)] leading-relaxed">{action}</p>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+// ── Student Genuine Questions Component ──────────────────────────────────────
+
+function StudentQuestionsSection({
+  questions,
+  onTimestampClick,
+}: {
+  questions: any[];
+  onTimestampClick?: (t: string) => void;
+}) {
+  const { showPreview, hidePreview } = useVideoPreview();
+  const [showAll, setShowAll] = useState(false);
+
+  if (!questions || questions.length === 0) return null;
+
+  const displayedQuestions = showAll ? questions : questions.slice(0, 5);
+
+  return (
+    <div className="glass-card p-6 mt-8 border border-[var(--border)] shadow-md">
+      <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b border-[var(--border)]">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-purple-50 border border-purple-100">
+            <HelpCircle className="w-5 h-5 text-purple-600" />
+          </div>
+          <div>
+            <h3 className="text-base font-extrabold text-[var(--foreground)] tracking-tight">
+              Student Genuine Functional Questions
+            </h3>
+            <p className="text-[11px] text-[var(--muted)] font-medium">
+              {questions.length} conceptual doubt{questions.length === 1 ? '' : 's'} raised by students
+            </p>
+          </div>
+        </div>
+
+        {questions.length > 5 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-xs font-bold text-brand-orange hover:underline"
+          >
+            {showAll ? 'Show Top 5' : `View All (${questions.length})`}
+          </button>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        {displayedQuestions.map((q: any, i: number) => {
+          const status = q.resolution_status || q.status || 'Resolved';
+          const isUnresolved = String(status).toLowerCase().includes('unresolved');
+          const isPartial = String(status).toLowerCase().includes('partial');
+
+          const statusBadge = isUnresolved
+            ? 'bg-rose-50 text-rose-600 border-rose-100'
+            : isPartial
+            ? 'bg-amber-50 text-amber-600 border-amber-100'
+            : 'bg-emerald-50 text-emerald-600 border-emerald-100';
+
+          return (
+            <div
+              key={i}
+              className="p-4 rounded-xl border border-[var(--border)] bg-white/90 shadow-sm flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:border-purple-200 transition-colors"
+            >
+              <div className="space-y-1.5 min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {q.concept && (
+                    <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-bold uppercase tracking-wider border border-purple-100">
+                      {q.concept}
+                    </span>
+                  )}
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${statusBadge}`}>
+                    {status}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm font-semibold text-[var(--foreground)] leading-relaxed italic">
+                  “{q.question || q.doubt}”
+                </p>
+              </div>
+
+              {q.timestamp && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onTimestampClick) onTimestampClick(q.timestamp);
+                  }}
+                  onMouseEnter={(e) => showPreview(q.timestamp, e as any)}
+                  onMouseLeave={hidePreview}
+                  className="shrink-0 px-2.5 py-1 rounded-md text-[10px] font-mono font-bold tracking-wider bg-brand-orange/10 border border-brand-orange/20 text-brand-orange hover:bg-brand-orange hover:text-white transition-colors cursor-pointer self-start sm:self-center"
+                >
+                  <Clock className="w-3 h-3 inline mr-1" />
+                  {q.timestamp}
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -250,17 +363,14 @@ function InsightCard({
   index: number;
   onTimestampClick?: (t: string) => void;
 }) {
-  // FIRST box (index === 0) is open by default, all rest are closed by default
   const [open, setOpen] = useState(index === 0);
   const { showPreview, hidePreview } = useVideoPreview();
 
-  // Extract top 1-2 timestamps for header preview
   const pointers = insight.pointers || [];
   const topTimes = Array.from(
     new Set(pointers.flatMap((p: any) => p.timestamps || []).filter((t: any) => t && String(t).trim() !== ''))
   ).slice(0, 2) as string[];
 
-  // Extract top 1-2 quotes/proofs for header preview
   const topProofs = pointers.map((p: any) => p.proof).filter((p: any) => p && String(p).trim() !== '').slice(0, 2) as string[];
 
   return (
@@ -279,7 +389,6 @@ function InsightCard({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Display top 1-2 main timestamps in header preview */}
             {topTimes.length > 0 && (
               <div className="hidden sm:flex items-center gap-1">
                 {topTimes.map((t, i) => (
@@ -309,7 +418,6 @@ function InsightCard({
           </div>
         </div>
 
-        {/* Collapsed view proof preview (max 1-2 proofs in main card view) */}
         {!open && topProofs.length > 0 && (
           <div className="pt-1 flex items-start gap-2 text-xs text-[var(--muted)] font-medium">
             <MessageSquareQuote className="w-3.5 h-3.5 text-brand-orange shrink-0 mt-0.5" />
@@ -329,12 +437,10 @@ function InsightCard({
             transition={{ duration: 0.25, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
             <div className="px-5 pb-5 pt-2 bg-[var(--layer-1)] border-t border-[var(--border)]">
-              {/* Overarching Summary */}
               <p className="text-[14px] text-[var(--foreground)] leading-relaxed mb-4 pb-4 border-b border-[var(--border)] font-medium">
                 {insight.summary}
               </p>
 
-              {/* Consolidated Pointers */}
               {pointers.length > 0 ? (
                 <div>
                   <p className="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest mb-3">
@@ -381,6 +487,14 @@ export function OogwayPulse({
   const overallExpert = data.overall_expert_summary ?? data.tier1_result?.overall_expert_summary;
   const overallStudent = data.overall_student_summary ?? data.tier1_result?.overall_student_summary;
 
+  // Student questions list
+  const studentQuestions =
+    data.student_questions ??
+    data.tier1_result?.student_questions ??
+    data.student_log?.student_questions ??
+    data.student_log?.unresolved_doubts ??
+    [];
+
   // Fallback overall summary derivation if model did not output overall object
   const derivedExpertRight = overallExpert?.right || expertInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.right)).filter(Boolean)[0];
   const derivedExpertWrong = overallExpert?.wrong || expertInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.wrong)).filter(Boolean)[0];
@@ -390,7 +504,6 @@ export function OogwayPulse({
   const derivedStudentWrong = overallStudent?.wrong || studentInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.wrong)).filter(Boolean)[0];
   const derivedStudentAction = overallStudent?.action || studentInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.action)).filter(Boolean)[0];
 
-  // Limit timeline to top 6 milestones unless "Show all" is clicked
   const displayedTimeline = showAllTimeline ? sessionFlow : sessionFlow.slice(0, 6);
 
   return (
@@ -520,11 +633,11 @@ export function OogwayPulse({
                 </div>
               )}
 
-              {data.student_log?.student_questions && data.student_log.student_questions.length > 0 && (
-                <div className="mt-8">
-                  <StudentEngagement data={data} />
-                </div>
-              )}
+              {/* Student Genuine Functional Questions & Doubts Section */}
+              <StudentQuestionsSection
+                questions={studentQuestions}
+                onTimestampClick={onTimestampClick}
+              />
             </motion.div>
           )}
         </AnimatePresence>
@@ -555,14 +668,12 @@ export function OogwayPulse({
               const isIssue = Boolean(flow.issue && flow.issue.trim() !== '');
               return (
                 <div key={i} className="relative group">
-                  {/* Node Dot */}
                   <div
                     className={`absolute -left-[31px] top-1.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm z-10 transition-transform group-hover:scale-125 ${
                       isIssue ? 'bg-rose-500 shadow-rose-500/40' : 'bg-brand-orange shadow-brand-orange/40'
                     }`}
                   />
 
-                  {/* Milestone Card */}
                   <div className="p-4 rounded-xl border border-[var(--border)] bg-white/90 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="space-y-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">

@@ -113,7 +113,21 @@ export const pulseResponseSchema = {
         },
         required: ["concept", "verbatim_quote", "quality_label", "rationale", "chapter", "timestamp"]
       }
+    },
+    student_questions: {
+      type: SchemaType.ARRAY,
+      description: "All genuine functional questions and conceptual doubts asked by students during the session.",
+      items: {
+        type: SchemaType.OBJECT,
+        properties: {
+          question: { type: SchemaType.STRING, description: "The genuine functional question or doubt asked by the student" },
+          timestamp: { type: SchemaType.STRING, description: "Timestamp in MM:SS or HH:MM:SS format" },
+          concept: { type: SchemaType.STRING, description: "Concept or topic being asked about" },
+          resolution_status: { type: SchemaType.STRING, description: "Resolved | Partially Resolved | Unresolved" }
+        },
+        required: ["question", "timestamp", "concept", "resolution_status"]
+      }
     }
   },
-  required: ["session_flow", "expert_insights", "student_insights", "analogies_summary"]
+  required: ["session_flow", "expert_insights", "student_insights", "analogies_summary", "student_questions"]
 }

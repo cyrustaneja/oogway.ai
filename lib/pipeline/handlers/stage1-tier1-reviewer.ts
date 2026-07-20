@@ -60,6 +60,7 @@ Review the classroom session transcript. Provide a balanced, objective assessmen
 2. Extract overall_student_summary (top right, top wrong, top action item for students).
 3. Extract session_flow (chronological key milestones, max 8 distinct chapters).
 4. Extract the 6 expert metrics, 3 student metrics, and key analogies.
+5. Extract student_questions: ALL genuine functional questions and conceptual doubts asked by students during the session (skip administrative logistics or repeat requests). Include student question text, timestamp, concept, and resolution_status (Resolved | Partially Resolved | Unresolved).
 Ensure you strictly populate empty strings ("") for fields where no significant highlights or flaws are found.`;
 
   const finalResult = await callStage<any>({
