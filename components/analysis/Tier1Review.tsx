@@ -438,10 +438,10 @@ function InsightCard({
             )}
 
             {displayTwoLines.length > 0 && displayTwoLines[0] !== insight.summary && (
-              <div className="pt-2 border-t border-dashed border-[var(--border)]/60 space-y-1">
+              <div className="pt-2 border-t border-dashed border-[var(--border)]/60 space-y-1.5">
                 {displayTwoLines.map((line, i) => (
-                  <div key={i} className="flex items-start gap-2 text-xs font-semibold text-[var(--foreground)]/85 leading-relaxed truncate">
-                    <span className="truncate">{line}</span>
+                  <div key={i} className="flex items-start gap-2 text-xs font-semibold text-[var(--foreground)]/90 leading-relaxed">
+                    <span>{line}</span>
                   </div>
                 ))}
               </div>
