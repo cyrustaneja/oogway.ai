@@ -12,6 +12,7 @@ export interface PrepSession {
   week: string;
   pointsToNote: string;
   module: string;
+  category: string; // Sub-module / topic categorization
   sessionName: string;
   type: string;
   expertType: string;
@@ -29,6 +30,40 @@ const GOOGLE_SHEET_CSV_URL =
 let cachedPrepData: PrepSession[] | null = null;
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 60_000; // 1 minute auto-sync TTL
+
+/**
+ * Categorize a session into a specific sub-module/category based on title & notes keywords.
+ */
+function deriveCategory(sessionName: string, pointsToNote: string, rawModule: string): string {
+  const text = `${sessionName} ${pointsToNote}`.toLowerCase();
+
+  if (text.includes('pixel') || text.includes('event manager') || text.includes('conversions api')) {
+    return 'Pixels & Event Management';
+  }
+  if (text.includes('audience') || text.includes('lookalike') || text.includes('targeting')) {
+    return 'Audience Targeting & Strategy';
+  }
+  if (text.includes('metric') || text.includes('reporting') || text.includes('attribution') || text.includes('funnel')) {
+    return 'Metrics & Analytics';
+  }
+  if (text.includes('bidding') || text.includes('objective') || text.includes('auction') || text.includes('optimization')) {
+    return 'Bidding & Campaign Strategy';
+  }
+  if (text.includes('ecom') || text.includes('shopify') || text.includes('product detail') || text.includes('conversion rate')) {
+    return 'E-Commerce & CRO';
+  }
+  if (text.includes('case building') || text.includes('brand project') || text.includes('media plan') || text.includes('case study')) {
+    return 'Brand Projects & Case Studies';
+  }
+  if (text.includes('kahoot') || text.includes('mcq') || text.includes('quiz') || text.includes('test')) {
+    return 'Kahoot Quizzes & Assessments';
+  }
+  if (text.includes('design') || text.includes('creative') || text.includes('image') || text.includes('video')) {
+    return 'Creative Strategy & Design';
+  }
+
+  return rawModule || 'General Foundations';
+}
 
 /**
  * Robust CSV parser that handles multi-line fields within quotes.
@@ -104,10 +139,8 @@ export async function getLivePrepSessions(forceRefresh = false): Promise<PrepSes
       return cachedPrepData || [];
     }
 
-    // First row is header
     const headers = rows[0].map(h => h.toLowerCase().replace(/[\r\n]+/g, ' '));
     
-    // Find column indices
     const weekIdx = headers.findIndex(h => h.includes('week'));
     const notesIdx = headers.findIndex(h => h.includes('points to note'));
     const moduleIdx = headers.findIndex(h => h.includes('module'));
@@ -116,7 +149,6 @@ export async function getLivePrepSessions(forceRefresh = false): Promise<PrepSes
     const expertTypeIdx = headers.findIndex(h => h.includes('expert type'));
     const durationIdx = headers.findIndex(h => h.includes('duration'));
     
-    // Links
     const linkContentIdx = headers.findIndex(h => h.includes('link content') || h.includes('link\ncontent'));
     const linkCharterIdx = headers.findIndex(h => h.includes('link charter') || h.includes('link\ncharter'));
     const linkSolutionIdx = headers.findIndex(h => h.includes('link model solution') || h.includes('link\nmodel solution'));
@@ -132,12 +164,16 @@ export async function getLivePrepSessions(forceRefresh = false): Promise<PrepSes
       if (!sessionName || sessionName.toLowerCase() === 'session name') continue;
 
       const id = `prep-${i}-${sessionName.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30)}`;
+      const pointsToNote = r[notesIdx >= 0 ? notesIdx : 1] || '';
+      const rawModule = r[moduleIdx >= 0 ? moduleIdx : 2] || 'Meta';
+      const category = deriveCategory(sessionName, pointsToNote, rawModule);
 
       sessions.push({
         id,
         week: r[weekIdx >= 0 ? weekIdx : 0] || 'Unscheduled',
-        pointsToNote: r[notesIdx >= 0 ? notesIdx : 1] || '',
-        module: r[moduleIdx >= 0 ? moduleIdx : 2] || 'General',
+        pointsToNote,
+        module: rawModule,
+        category,
         sessionName,
         type: r[typeIdx >= 0 ? typeIdx : 13] || 'Live Session',
         expertType: r[expertTypeIdx >= 0 ? expertTypeIdx : 14] || 'Copilot',

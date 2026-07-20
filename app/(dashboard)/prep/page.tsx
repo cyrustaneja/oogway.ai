@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import Link from "next/link";
 import {
   BookOpen,
   Search,
   RefreshCw,
-  ExternalLink,
   Clock,
   UserCheck,
   FileSpreadsheet,
@@ -14,11 +12,11 @@ import {
   CheckCircle2,
   AlertTriangle,
   Sparkles,
-  Layers,
-  Calendar,
-  ChevronRight,
   Key,
   Award,
+  Filter,
+  Tag,
+  FolderOpen,
 } from "lucide-react";
 import { PrepSession } from "@/lib/server/expert-prep-sync";
 
@@ -30,7 +28,8 @@ export default function ExpertPrepPage() {
 
   // Filters
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedModule, setSelectedModule] = useState("all");
+  const [moduleSearch, setModuleSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedWeek, setSelectedWeek] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
 
@@ -43,7 +42,9 @@ export default function ExpertPrepPage() {
       const data = await res.json();
       if (data.sessions) {
         setSessions(data.sessions);
-        setLastSynced(new Date(data.syncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+        setLastSynced(
+          new Date(data.syncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        );
       }
     } catch (err) {
       console.error("Failed to fetch prep sessions:", err);
@@ -57,46 +58,63 @@ export default function ExpertPrepPage() {
     fetchSessions();
   }, []);
 
-  // Filter options
-  const modules = useMemo(() => {
-    const set = new Set(sessions.map((s) => s.module).filter(Boolean));
-    return Array.from(set);
+  // Unique Sub-Module Categories
+  const categories = useMemo(() => {
+    const set = new Set(sessions.map((s) => s.category).filter(Boolean));
+    return Array.from(set).sort();
   }, [sessions]);
 
+  // Unique Weeks
   const weeks = useMemo(() => {
     const set = new Set(sessions.map((s) => s.week).filter(Boolean));
     return Array.from(set).sort();
   }, [sessions]);
 
+  // Unique Types
   const types = useMemo(() => {
     const set = new Set(sessions.map((s) => s.type).filter(Boolean));
     return Array.from(set);
   }, [sessions]);
 
-  // Filtered dataset
+  // Filtered Dataset
   const filteredSessions = useMemo(() => {
     return sessions.filter((s) => {
-      if (selectedModule !== "all" && s.module !== selectedModule) return false;
+      // Sub-module Category filter
+      if (selectedCategory !== "all" && s.category !== selectedCategory) return false;
+      
+      // Week filter
       if (selectedWeek !== "all" && s.week !== selectedWeek) return false;
+      
+      // Session Type filter
       if (selectedType !== "all" && s.type !== selectedType) return false;
 
+      // Module Search filter
+      if (moduleSearch.trim()) {
+        const mQ = moduleSearch.toLowerCase();
+        const matchesMod = s.module.toLowerCase().includes(mQ);
+        const matchesCat = s.category.toLowerCase().includes(mQ);
+        if (!matchesMod && !matchesCat) return false;
+      }
+
+      // General Text Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const inName = s.sessionName.toLowerCase().includes(q);
         const inNotes = s.pointsToNote.toLowerCase().includes(q);
         const inModule = s.module.toLowerCase().includes(q);
+        const inCategory = s.category.toLowerCase().includes(q);
         const inWeek = s.week.toLowerCase().includes(q);
         const inType = s.type.toLowerCase().includes(q);
-        if (!inName && !inNotes && !inModule && !inWeek && !inType) return false;
+        if (!inName && !inNotes && !inModule && !inCategory && !inWeek && !inType) return false;
       }
       return true;
     });
-  }, [sessions, searchQuery, selectedModule, selectedWeek, selectedType]);
+  }, [sessions, searchQuery, moduleSearch, selectedCategory, selectedWeek, selectedType]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-500">
       
-      {/* ── Page Header Banner ── */}
+      {/* ── Header Banner ── */}
       <div className="glass-card p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-ks-navy via-slate-900 to-ks-navy text-white rounded-3xl shadow-2xl border border-white/10">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -104,13 +122,13 @@ export default function ExpertPrepPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Oogway Expert Prep (v2)</span>
+              <span>Oogway Expert Prep Portal (v2)</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight font-outfit leading-tight">
-              Session Knowledge &amp; Prep Hub
+              Curriculum &amp; Session Prep Hub
             </h1>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Equip yourself with session guidelines, Kahoot logins, slide decks, in-session charters, and model solutions before taking class.
+              Search by Module, Sub-topic, or Session. Access Kahoot credentials, prep guidelines, slide decks, and model solutions live from the master schedule.
             </p>
           </div>
 
@@ -121,74 +139,107 @@ export default function ExpertPrepPage() {
               className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center gap-2 shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin text-brand-orange" : ""}`} />
-              <span>{syncing ? "Syncing..." : "Sync Sheet"}</span>
+              <span>{syncing ? "Syncing Sheet..." : "Sync Sheet"}</span>
             </button>
             {lastSynced && (
               <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
-                Updated {lastSynced}
+                Synced {lastSynced}
               </span>
             )}
           </div>
         </div>
       </div>
 
-      {/* ── Search & Filter Controls ── */}
-      <div className="glass-card p-6 space-y-5 rounded-2xl border border-[var(--border)] shadow-sm">
-        {/* Search Input */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--muted)]" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by session title, prep notes, Kahoot email/pass, slides, or module..."
-            className="w-full pl-12 pr-4 py-3 bg.var(--inner-bg) border border-[var(--inner-border)] rounded-xl text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)]"
-            >
-              Clear
-            </button>
-          )}
+      {/* ── Search & Multi-Module Filter Panel ── */}
+      <div className="glass-card p-6 space-y-6 rounded-2xl border border-[var(--border)] shadow-sm">
+        
+        {/* Dual Search Bars: General & Module Search */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* General Session Search */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search session title, Kahoot login, slides..."
+              className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)]"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Module / Topic Search */}
+          <div className="relative">
+            <FolderOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-orange" />
+            <input
+              type="text"
+              value={moduleSearch}
+              onChange={(e) => setModuleSearch(e.target.value)}
+              placeholder="Filter by Module (Meta, Google, SEO, Ecom, Pixels...)"
+              className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
+            />
+            {moduleSearch && (
+              <button
+                onClick={() => setModuleSearch("")}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)]"
+              >
+                Clear
+              </button>
+            )}
+          </div>
         </div>
 
-        {/* Filters Grid */}
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Module Filter */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mr-1">Module:</span>
+        {/* Sub-Module / Topic Category Pills */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--muted)] uppercase tracking-wider">
+            <Tag className="w-3.5 h-3.5 text-brand-orange" />
+            <span>Sub-Module / Topic Focus:</span>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
             <button
-              onClick={() => setSelectedModule("all")}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                selectedModule === "all"
+              onClick={() => setSelectedCategory("all")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                selectedCategory === "all"
                   ? "bg-brand-orange text-white shadow-sm"
                   : "bg-[var(--layer-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
               }`}
             >
-              All
+              All Topics ({sessions.length})
             </button>
-            {modules.map((m) => (
-              <button
-                key={m}
-                onClick={() => setSelectedModule(m)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                  selectedModule === m
-                    ? "bg-brand-orange text-white shadow-sm"
-                    : "bg-[var(--layer-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
-                }`}
-              >
-                {m}
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const count = sessions.filter((s) => s.category === cat).length;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                    selectedCategory === cat
+                      ? "bg-brand-orange text-white shadow-sm"
+                      : "bg-[var(--layer-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  <span>{cat}</span>
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${selectedCategory === cat ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
+        </div>
 
-          <div className="w-px h-5 bg-gray-200 hidden md:block mx-1" />
-
-          {/* Week Filter */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mr-1">Week:</span>
+        {/* Week & Type Filter Row */}
+        <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-[var(--border)]">
+          <div className="flex items-center gap-2">
+            <Filter className="w-3.5 h-3.5 text-[var(--muted)]" />
+            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider">Week:</span>
             <select
               value={selectedWeek}
               onChange={(e) => setSelectedWeek(e.target.value)}
@@ -203,9 +254,8 @@ export default function ExpertPrepPage() {
             </select>
           </div>
 
-          {/* Type Filter */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider mr-1">Type:</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider">Type:</span>
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
@@ -219,20 +269,35 @@ export default function ExpertPrepPage() {
               ))}
             </select>
           </div>
+
+          {(selectedCategory !== "all" || selectedWeek !== "all" || selectedType !== "all" || searchQuery || moduleSearch) && (
+            <button
+              onClick={() => {
+                setSelectedCategory("all");
+                setSelectedWeek("all");
+                setSelectedType("all");
+                setSearchQuery("");
+                setModuleSearch("");
+              }}
+              className="text-xs font-bold text-brand-orange hover:underline ml-auto"
+            >
+              Reset All Filters
+            </button>
+          )}
         </div>
       </div>
 
-      {/* ── Sessions List / Grid ── */}
+      {/* ── Sessions List Grid ── */}
       {loading ? (
         <div className="text-center py-20">
           <RefreshCw className="w-8 h-8 text-brand-orange animate-spin mx-auto mb-3" />
-          <p className="text-sm font-bold text-[var(--muted)]">Syncing prep sessions from live Google Sheet...</p>
+          <p className="text-sm font-bold text-[var(--muted)]">Syncing curriculum sessions from live Google Sheet...</p>
         </div>
       ) : filteredSessions.length === 0 ? (
         <div className="text-center py-16 glass-card p-8 rounded-2xl border border-[var(--border)]">
           <BookOpen className="w-12 h-12 text-[var(--muted)] opacity-30 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-[var(--foreground)]">No prep sessions found</h3>
-          <p className="text-xs text-[var(--muted)] mt-1">Try adjusting your search query or filter tags.</p>
+          <h3 className="text-base font-bold text-[var(--foreground)]">No prep sessions match your query</h3>
+          <p className="text-xs text-[var(--muted)] mt-1">Try searching for a different module or resetting filters.</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -251,7 +316,7 @@ export default function ExpertPrepPage() {
                   key={session.id}
                   className="glass-card p-6 rounded-2xl border border-[var(--border)] hover:border-brand-orange/40 hover:shadow-lg transition-all space-y-4 group"
                 >
-                  {/* Top Line Identity */}
+                  {/* Top Line Badges */}
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1.5 max-w-3xl">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -260,6 +325,9 @@ export default function ExpertPrepPage() {
                         </span>
                         <span className="px-2.5 py-0.5 rounded-full bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase tracking-wider">
                           {session.module}
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-extrabold uppercase tracking-wider">
+                          {session.category}
                         </span>
                         <span className="px-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-200 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
                           {session.type}
@@ -286,7 +354,7 @@ export default function ExpertPrepPage() {
                     </div>
                   </div>
 
-                  {/* ── Points To Note / Expert Prep Guidance Box ── */}
+                  {/* ── Points To Note Box ── */}
                   {hasNotes && (
                     <div
                       className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
@@ -314,7 +382,7 @@ export default function ExpertPrepPage() {
                     </div>
                   )}
 
-                  {/* ── Asset & Resource Buttons ── */}
+                  {/* ── Asset Link Buttons ── */}
                   <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-[var(--border)]">
                     {session.linkContent && (
                       <a
