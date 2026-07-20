@@ -371,7 +371,17 @@ function InsightCard({
     new Set(pointers.flatMap((p: any) => p.timestamps || []).filter((t: any) => t && String(t).trim() !== ''))
   ).slice(0, 2) as string[];
 
-  const topProofs = pointers.map((p: any) => p.proof).filter((p: any) => p && String(p).trim() !== '').slice(0, 2) as string[];
+  const summaryLines: string[] = [];
+  pointers.forEach((p: any) => {
+    if (p.right && p.right.trim()) summaryLines.push(`🟢 Right: ${p.right.trim()}`);
+    if (p.wrong && p.wrong.trim()) summaryLines.push(`🔴 Flaw: ${p.wrong.trim()}`);
+    if (p.action && p.action.trim()) summaryLines.push(`🎯 Action: ${p.action.trim()}`);
+    if (p.reason && p.reason.trim()) summaryLines.push(`💡 Reason: ${p.reason.trim()}`);
+  });
+  if (summaryLines.length === 0 && insight.summary) {
+    summaryLines.push(insight.summary);
+  }
+  const displayTwoLines = summaryLines.slice(0, 2);
 
   return (
     <div className="ks-card overflow-hidden group border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow">
@@ -418,11 +428,13 @@ function InsightCard({
           </div>
         </div>
 
-        {!open && topProofs.length > 0 && (
-          <div className="pt-1 flex items-start gap-2 text-xs text-[var(--muted)] font-medium">
-            <MessageSquareQuote className="w-3.5 h-3.5 text-brand-orange shrink-0 mt-0.5" />
-            <span className="truncate italic">"{topProofs[0]}"</span>
-            {topProofs.length > 1 && <span className="text-[10px] text-brand-orange font-bold shrink-0">+1 more</span>}
+        {!open && displayTwoLines.length > 0 && (
+          <div className="pt-1 space-y-1">
+            {displayTwoLines.map((line, i) => (
+              <div key={i} className="flex items-start gap-2 text-xs font-medium text-[var(--foreground)]/90 leading-relaxed truncate">
+                <span className="truncate">{line}</span>
+              </div>
+            ))}
           </div>
         )}
       </div>
