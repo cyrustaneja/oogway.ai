@@ -472,3 +472,4 @@ Server has closed the connection.
  GET /api/auth/session 200 in 110ms (next.js: 68ms, application-code: 42ms)
  GET /api/auth/session 200 in 136ms (next.js: 50ms, application-code: 86ms)
  GET /api/auth/session 200 in 77ms (next.js: 39ms, application-code: 38ms)
+ GET /api/auth/session 200 in 281ms (next.js: 119ms, application-code: 162ms)

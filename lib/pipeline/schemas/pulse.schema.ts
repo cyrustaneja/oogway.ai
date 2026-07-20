@@ -3,6 +3,26 @@ import { SchemaType } from '@google/generative-ai'
 export const pulseResponseSchema = {
   type: SchemaType.OBJECT,
   properties: {
+    overall_expert_summary: {
+      type: SchemaType.OBJECT,
+      description: "Executive overall evaluation of the expert across the entire session.",
+      properties: {
+        right: { type: SchemaType.STRING, description: "Top 1-2 major things the expert did right overall" },
+        wrong: { type: SchemaType.STRING, description: "Top 1-2 major flaws/missed opportunities overall" },
+        action: { type: SchemaType.STRING, description: "Single most impactful action item to improve next session" }
+      },
+      required: ["right", "wrong", "action"]
+    },
+    overall_student_summary: {
+      type: SchemaType.OBJECT,
+      description: "Executive overall evaluation of student engagement and doubt quality across the entire session.",
+      properties: {
+        right: { type: SchemaType.STRING, description: "Top positive student behavior signal overall" },
+        wrong: { type: SchemaType.STRING, description: "Top student engagement gap or confusion signal overall" },
+        action: { type: SchemaType.STRING, description: "Top recommendation to boost student participation next time" }
+      },
+      required: ["right", "wrong", "action"]
+    },
     session_flow: {
       type: SchemaType.ARRAY,
       description: "Chronological sequence of key chapters/sections covered in this session.",

@@ -277,28 +277,28 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               {/* Modal body */}
               <div className="p-5 sm:p-8 space-y-8">
                 {!deepAnalysisUnlocked ? (
-                  <div className="flex flex-col items-center justify-center py-16 text-center">
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-[var(--border)] mb-6 relative">
-                      <Lock className="w-6 h-6 text-[var(--muted)]" />
+                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-lg mx-auto">
+                    <div className="w-16 h-16 bg-brand-orange/10 rounded-2xl flex items-center justify-center border border-brand-orange/20 mb-5 relative shadow-sm">
+                      <BarChart2 className="w-8 h-8 text-brand-orange" />
                       {deepAnalysisRunning && (
-                        <div className="absolute inset-0 border-2 border-brand-orange rounded-full border-t-transparent animate-spin" />
+                        <div className="absolute inset-0 border-2 border-brand-orange rounded-2xl border-t-transparent animate-spin" />
                       )}
                     </div>
-                    <h3 className="text-2xl font-black text-[var(--foreground)] tracking-tight mb-3">
-                      Deep Analysis Locked
+                    <h3 className="text-2xl font-extrabold text-[var(--foreground)] tracking-tight mb-2">
+                      Deep Analysis Not Started
                     </h3>
-                    <p className="text-[var(--muted)] max-w-md text-center mb-8 font-medium">
-                      The Oogway Pulse is done. Run Deep Analysis to generate chapter-by-chapter breakdowns, detailed pedagogical reviews, and coaching recommendations.
+                    <p className="text-[13px] text-[var(--muted)] text-center mb-8 font-medium leading-relaxed">
+                      Oogway Pulse has evaluated this session. Click below to trigger deep chapter-by-chapter extraction, full pedagogical rubric scoring, and coaching tips.
                     </p>
                     <button
                       onClick={handleRunDeepAnalysis}
                       disabled={deepAnalysisRunning}
-                      className="btn-primary flex items-center gap-2 px-8 py-3.5 shadow-lg shadow-brand-orange/20 disabled:opacity-50"
+                      className="btn-primary flex items-center gap-2.5 px-8 py-3.5 text-sm font-extrabold tracking-wide shadow-xl shadow-brand-orange/20 disabled:opacity-50 hover:scale-105 transition-all"
                     >
                       {deepAnalysisRunning ? (
-                        <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                        <><Loader2 className="w-4 h-4 animate-spin" /> Starting Deep Analysis...</>
                       ) : (
-                        <><Play className="w-4 h-4 fill-current" /> Run Deep Analysis</>
+                        <><Play className="w-4 h-4 fill-current" /> Run Deep Analysis Now</>
                       )}
                     </button>
                   </div>

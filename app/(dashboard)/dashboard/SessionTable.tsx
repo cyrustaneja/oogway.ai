@@ -55,10 +55,18 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
         const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
         const isDeleting = deletingId === a.id;
 
+        const isPulseDone = Boolean(a.tier1Result) || a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' || (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+
         let displayLabel = cfg.label;
-        if (a.tier === 'TIER1') {
+        let statusDot = cfg.dot;
+        let statusColor = cfg.color;
+
+        if (isPulseDone) {
+          displayLabel = 'Pulse Completed';
+          statusDot = 'bg-brand-orange';
+          statusColor = 'text-brand-orange font-bold';
+        } else if (a.tier === 'TIER1') {
           if (a.v3Status === 'FAILED') displayLabel = 'Pulse Error';
-          else if (a.v3Status === 'COMPLETE') displayLabel = 'Pulse Completed';
           else displayLabel = `Pulse: ${cfg.label}`;
         } else if (a.tier === 'TIER2') {
           if (a.v3Status === 'FAILED') displayLabel = 'Analysis Error';
@@ -84,8 +92,8 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
                 </Link>
                 {/* Mobile-only status indicator */}
                 <div className="lg:hidden flex items-center gap-2 shrink-0">
-                  <div className={`w-1.5 h-1.5 rounded-full ${cfg.dot}`} />
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${cfg.color}`}>{displayLabel}</span>
+                  <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`} />
+                  <span className={`text-[10px] font-bold uppercase tracking-widest ${statusColor}`}>{displayLabel}</span>
                 </div>
               </div>
               {a.sessionNote ? (
@@ -143,8 +151,8 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
 
               {/* Growth Status - Desktop Only Hidden Column */}
               <div className="hidden lg:flex lg:col-span-2 items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${cfg.dot} shadow-sm`} />
-                <span className={`text-[11px] font-bold tracking-tight ${cfg.color}`}>{displayLabel}</span>
+                <div className={`w-2 h-2 rounded-full ${statusDot} shadow-sm`} />
+                <span className={`text-[11px] font-bold tracking-tight ${statusColor}`}>{displayLabel}</span>
               </div>
 
               {/* Timeline */}

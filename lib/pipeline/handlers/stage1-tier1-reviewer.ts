@@ -55,8 +55,11 @@ ${OOGWAY_PULSE_SYSTEM_PROMPT}
 SESSION CONTEXT:
 ${sessionContext}
 
-Review the classroom session transcript. Provide a balanced, objective assessment of the expert execution and student behavior.
-Extract the chronological session flow, the 6 expert metrics, the 3 student metrics, and any key analogies.
+Review the classroom session transcript. Provide a balanced, objective assessment of the expert execution and student behavior:
+1. Extract overall_expert_summary (top 1-2 right, top 1-2 wrong, single top action item for the expert).
+2. Extract overall_student_summary (top right, top wrong, top action item for students).
+3. Extract session_flow (chronological key milestones, max 8 distinct chapters).
+4. Extract the 6 expert metrics, 3 student metrics, and key analogies.
 Ensure you strictly populate empty strings ("") for fields where no significant highlights or flaws are found.`;
 
   const finalResult = await callStage<any>({

@@ -78,17 +78,19 @@ export default function DashboardClient({
       }
 
       // Status filter
+      const isPulseDone = Boolean(a.tier1Result) || a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' || (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+
       if (statusFilter === 'processing') {
-        return PROCESSING_STATUSES.includes(a.v3Status);
+        return PROCESSING_STATUSES.includes(a.v3Status) && !isPulseDone;
       }
       if (statusFilter === 'pulse') {
-        return a.tier === 'TIER1' && a.v3Status === 'COMPLETE';
+        return isPulseDone;
       }
       if (statusFilter === 'complete') {
         return a.tier !== 'TIER1' && a.v3Status === 'COMPLETE';
       }
       if (statusFilter === 'failed') {
-        return a.v3Status === 'FAILED';
+        return a.v3Status === 'FAILED' && !isPulseDone;
       }
       return true;
     });
