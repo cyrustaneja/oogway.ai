@@ -106,8 +106,6 @@ function StudentQuestionsSection({
 
   if (!questions || questions.length === 0) return null;
 
-  const displayedQuestions = showAll ? questions : questions.slice(0, 5);
-
   return (
     <div className="glass-card p-6 mt-8 border border-[var(--border)] shadow-md">
       <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b border-[var(--border)]">
@@ -117,26 +115,20 @@ function StudentQuestionsSection({
           </div>
           <div>
             <h3 className="text-base font-extrabold text-[var(--foreground)] tracking-tight">
-              Student Genuine Functional Questions
+              Student Genuine Functional Questions &amp; Doubts
             </h3>
             <p className="text-[11px] text-[var(--muted)] font-medium">
               {questions.length} conceptual doubt{questions.length === 1 ? '' : 's'} raised by students
             </p>
           </div>
         </div>
-
-        {questions.length > 5 && (
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="text-xs font-bold text-brand-orange hover:underline"
-          >
-            {showAll ? 'Show Top 5' : `View All (${questions.length})`}
-          </button>
-        )}
       </div>
 
       <div className="space-y-3">
-        {displayedQuestions.map((q: any, i: number) => {
+        {questions.map((q: any, i: number) => {
+          const studentName = q.student_name || q.student || q.speaker || 'Student';
+          const initials = studentName.slice(0, 2).toUpperCase();
+
           const status = q.resolution_status || q.status || 'Resolved';
           const isUnresolved = String(status).toLowerCase().includes('unresolved');
           const isPartial = String(status).toLowerCase().includes('partial');
@@ -152,20 +144,29 @@ function StudentQuestionsSection({
               key={i}
               className="p-4 rounded-xl border border-[var(--border)] bg-white/90 shadow-sm flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:border-purple-200 transition-colors"
             >
-              <div className="space-y-1.5 min-w-0 flex-1">
-                <div className="flex items-center gap-2 flex-wrap">
-                  {q.concept && (
-                    <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-bold uppercase tracking-wider border border-purple-100">
-                      {q.concept}
-                    </span>
-                  )}
-                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${statusBadge}`}>
-                    {status}
-                  </span>
+              <div className="flex items-start gap-3 min-w-0 flex-1">
+                <div className="w-8 h-8 rounded-full bg-purple-100 border border-purple-200 flex items-center justify-center text-xs font-extrabold text-purple-700 shrink-0 mt-0.5 shadow-sm">
+                  {initials}
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-[var(--foreground)] leading-relaxed italic">
-                  “{q.question || q.doubt}”
-                </p>
+
+                <div className="space-y-1.5 min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs font-extrabold text-[var(--foreground)]">
+                      {studentName}
+                    </span>
+                    {q.concept && (
+                      <span className="px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 text-[10px] font-bold uppercase tracking-wider border border-purple-100">
+                        {q.concept}
+                      </span>
+                    )}
+                    <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${statusBadge}`}>
+                      {status}
+                    </span>
+                  </div>
+                  <p className="text-xs sm:text-sm font-semibold text-[var(--foreground)] leading-relaxed italic">
+                    “{q.question || q.doubt}”
+                  </p>
+                </div>
               </div>
 
               {q.timestamp && (
@@ -489,7 +490,6 @@ export function OogwayPulse({
 }) {
   const { showPreview, hidePreview } = useVideoPreview();
   const [activeView, setActiveView] = useState<'expert' | 'student'>('expert');
-  const [showAllTimeline, setShowAllTimeline] = useState(false);
 
   const sessionFlow = data.session_flow ?? data.tier1_result?.session_flow ?? [];
   const expertInsights = data.expert_insights ?? data.tier1_result?.expert_insights ?? [];
@@ -515,8 +515,6 @@ export function OogwayPulse({
   const derivedStudentRight = overallStudent?.right || studentInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.right)).filter(Boolean)[0];
   const derivedStudentWrong = overallStudent?.wrong || studentInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.wrong)).filter(Boolean)[0];
   const derivedStudentAction = overallStudent?.action || studentInsights.flatMap((i: any) => (i.pointers || []).map((p: any) => p.action)).filter(Boolean)[0];
-
-  const displayedTimeline = showAllTimeline ? sessionFlow : sessionFlow.slice(0, 6);
 
   return (
     <div className="w-full max-w-4xl mx-auto px-0 sm:px-4 py-4 pb-24 animate-in fade-in duration-500">
@@ -655,7 +653,7 @@ export function OogwayPulse({
         </AnimatePresence>
       </div>
 
-      {/* Visually Compact Session Flow Timeline */}
+      {/* Major Session Flow Milestones (max 10-12 chapters) */}
       {sessionFlow && sessionFlow.length > 0 && (
         <div className="mt-12 pt-10 border-t border-[var(--border)] relative max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-6">
@@ -665,18 +663,13 @@ export function OogwayPulse({
                 Session Flow Timeline
               </h3>
             </div>
-            {sessionFlow.length > 6 && (
-              <button
-                onClick={() => setShowAllTimeline(!showAllTimeline)}
-                className="text-xs font-bold text-brand-orange hover:underline flex items-center gap-1"
-              >
-                {showAllTimeline ? 'Show Top Milestones' : `View All (${sessionFlow.length})`}
-              </button>
-            )}
+            <span className="text-xs font-semibold text-[var(--muted)]">
+              {Math.min(sessionFlow.length, 12)} Major Milestones
+            </span>
           </div>
 
           <div className="relative pl-6 space-y-4 border-l-2 border-brand-orange/30">
-            {displayedTimeline.map((flow: any, i: number) => {
+            {sessionFlow.slice(0, 12).map((flow: any, i: number) => {
               const isIssue = Boolean(flow.issue && flow.issue.trim() !== '');
               return (
                 <div key={i} className="relative group">
