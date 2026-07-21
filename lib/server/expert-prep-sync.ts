@@ -3,7 +3,7 @@
  * Live sync engine for Oogway Expert Prep Portal (v2)
  *
  * Fetches and parses the live Google Sheet containing curriculum prep notes,
- * presentation slides, charters, and model solutions.
+ * presentation slides, charters, and model solutions across ALL modules.
  * Implements in-memory caching with 60-second revalidation for real-time sync.
  */
 
@@ -25,11 +25,47 @@ export interface PrepSession {
 }
 
 const GOOGLE_SHEET_CSV_URL =
-  'https://docs.google.com/spreadsheets/d/1eQk9SLQLheEP0bTGEnlK2-Wau-VMHAJl9eve_zpfWL4/gviz/tq?tqx=out:csv';
+  'https://docs.google.com/spreadsheets/d/1eQk9SLQLheEP0bTGEnlK2-Wau-VMHAJl9eve_zpfWL4/export?format=csv&gid=0';
 
 let cachedPrepData: PrepSession[] | null = null;
 let lastFetchTime = 0;
 const CACHE_TTL_MS = 60_000; // 1 minute auto-sync TTL
+
+/**
+ * Normalize and classify raw module strings to clean canonical Module names
+ */
+function normalizeModule(rawModule: string, sessionName: string): string {
+  const text = `${rawModule} ${sessionName}`.toLowerCase();
+
+  if (text.includes('seo')) return 'SEO';
+  if (
+    text.includes('google') ||
+    text.includes('search') ||
+    text.includes('youtube') ||
+    text.includes('performance max') ||
+    text.includes('uac') ||
+    text.includes('shopping ads')
+  ) {
+    return 'Google Ads';
+  }
+  if (text.includes('meta') || text.includes('facebook') || text.includes('fb')) return 'Meta';
+  if (text.includes('ecom') || text.includes('shopify') || text.includes('d2c')) return 'E-Commerce';
+  if (text.includes('aptitude') || text.includes('quant') || text.includes('reasoning')) return 'Aptitude';
+  if (text.includes('programmatic') || text.includes('dv360')) return 'Programmatic';
+  if (text.includes('excel')) return 'Excel & Analytics';
+  if (text.includes('content') || text.includes('copywriting')) return 'Content Strategy';
+  if (text.includes('vibe') || text.includes('vibecoding') || text.includes('ai tool')) return 'AI & Vibecoding';
+  if (text.includes('brand')) return 'Brand Strategy';
+  if (text.includes('human') || text.includes('soft skills')) return 'Human Skills';
+  if (text.includes('placement')) return 'Placements & Prep';
+
+  const clean = rawModule.trim();
+  if (clean && clean.length < 25 && !clean.includes('http') && !clean.includes('For SST')) {
+    return clean;
+  }
+
+  return 'General Foundations';
+}
 
 /**
  * Categorize a session into a specific sub-module/category based on title & notes keywords.
@@ -114,7 +150,7 @@ function parseCSV(text: string): string[][] {
 }
 
 /**
- * Fetch and parse live prep sessions from the Google Sheet.
+ * Fetch and parse live prep sessions from the Google Sheet across ALL modules.
  */
 export async function getLivePrepSessions(forceRefresh = false): Promise<PrepSession[]> {
   const now = Date.now();
@@ -159,20 +195,29 @@ export async function getLivePrepSessions(forceRefresh = false): Promise<PrepSes
 
     for (let i = 1; i < rows.length; i++) {
       const r = rows[i];
-      const sessionName = r[nameIdx >= 0 ? nameIdx : 4] || '';
+      const sessionName = r[nameIdx >= 0 ? nameIdx : 4] || r[3] || r[2] || '';
 
-      if (!sessionName || sessionName.toLowerCase() === 'session name') continue;
+      if (
+        !sessionName ||
+        sessionName.toLowerCase() === 'session name' ||
+        sessionName.startsWith('http') ||
+        sessionName.length < 3
+      ) {
+        continue;
+      }
+
+      const rawModule = r[moduleIdx >= 0 ? moduleIdx : 2] || '';
+      const module = normalizeModule(rawModule, sessionName);
+      const pointsToNote = r[notesIdx >= 0 ? notesIdx : 1] || '';
+      const category = deriveCategory(sessionName, pointsToNote, module);
 
       const id = `prep-${i}-${sessionName.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 30)}`;
-      const pointsToNote = r[notesIdx >= 0 ? notesIdx : 1] || '';
-      const rawModule = r[moduleIdx >= 0 ? moduleIdx : 2] || 'Meta';
-      const category = deriveCategory(sessionName, pointsToNote, rawModule);
 
       sessions.push({
         id,
         week: r[weekIdx >= 0 ? weekIdx : 0] || 'Unscheduled',
         pointsToNote,
-        module: rawModule,
+        module,
         category,
         sessionName,
         type: r[typeIdx >= 0 ? typeIdx : 13] || 'Live Session',
