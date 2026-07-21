@@ -25,7 +25,7 @@ export const pulseResponseSchema = {
     },
     session_flow: {
       type: SchemaType.ARRAY,
-      description: "Chronological sequence of key chapters/sections covered in this session.",
+      description: "Chronological sequence of major session milestones (max 10-12 key chapters).",
       items: {
         type: SchemaType.OBJECT,
         properties: {
@@ -120,12 +120,13 @@ export const pulseResponseSchema = {
       items: {
         type: SchemaType.OBJECT,
         properties: {
+          student_name: { type: SchemaType.STRING, description: "Name or identifier of the student who asked the question (e.g. 'Ananya', 'Rohan', 'Student 1')" },
           question: { type: SchemaType.STRING, description: "The genuine functional question or doubt asked by the student" },
           timestamp: { type: SchemaType.STRING, description: "Timestamp in MM:SS or HH:MM:SS format" },
           concept: { type: SchemaType.STRING, description: "Concept or topic being asked about" },
           resolution_status: { type: SchemaType.STRING, description: "Resolved | Partially Resolved | Unresolved" }
         },
-        required: ["question", "timestamp", "concept", "resolution_status"]
+        required: ["student_name", "question", "timestamp", "concept", "resolution_status"]
       }
     }
   },

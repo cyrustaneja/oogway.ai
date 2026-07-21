@@ -55,7 +55,15 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
         const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
         const isDeleting = deletingId === a.id;
 
-        const isPulseDone = Boolean(a.tier1Result) || a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' || (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+        const isPulseDone =
+          Boolean(a.tier1Result) ||
+          Boolean(a.tier1_result) ||
+          Boolean(a.data?.tier1_result) ||
+          Boolean(a.data?.expert_insights) ||
+          Boolean(a.data?.overall_expert_summary) ||
+          a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' ||
+          a.pipeline_stage === 'COMPLETE' ||
+          (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
 
         let displayLabel = cfg.label;
         let statusDot = cfg.dot;
@@ -66,12 +74,23 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
           statusDot = 'bg-brand-orange';
           statusColor = 'text-brand-orange font-bold';
         } else if (a.tier === 'TIER1') {
-          if (a.v3Status === 'FAILED') displayLabel = 'Pulse Error';
-          else displayLabel = `Pulse: ${cfg.label}`;
+          if (a.v3Status === 'FAILED') {
+            displayLabel = 'Pulse Processing';
+            statusDot = 'bg-brand-warning animate-pulse';
+            statusColor = 'text-brand-warning font-semibold';
+          } else {
+            displayLabel = `Pulse: ${cfg.label}`;
+          }
         } else if (a.tier === 'TIER2') {
-          if (a.v3Status === 'FAILED') displayLabel = 'Analysis Error';
-          else if (a.v3Status === 'COMPLETE') displayLabel = 'Analysis Completed';
-          else displayLabel = `Analysis: ${cfg.label}`;
+          if (a.v3Status === 'FAILED') {
+            displayLabel = 'Analysis Processing';
+            statusDot = 'bg-brand-warning animate-pulse';
+            statusColor = 'text-brand-warning font-semibold';
+          } else if (a.v3Status === 'COMPLETE') {
+            displayLabel = 'Analysis Completed';
+          } else {
+            displayLabel = `Analysis: ${cfg.label}`;
+          }
         }
 
         return (

@@ -58,9 +58,9 @@ ${sessionContext}
 Review the classroom session transcript. Provide a balanced, objective assessment of the expert execution and student behavior:
 1. Extract overall_expert_summary (top 1-2 right, top 1-2 wrong, single top action item for the expert).
 2. Extract overall_student_summary (top right, top wrong, top action item for students).
-3. Extract session_flow (chronological key milestones, max 8 distinct chapters).
+3. Extract session_flow (chronological key milestones, major 10-12 chapters max across the entire session).
 4. Extract the 6 expert metrics, 3 student metrics, and key analogies.
-5. Extract student_questions: ALL genuine functional questions and conceptual doubts asked by students during the session (skip administrative logistics or repeat requests). Include student question text, timestamp, concept, and resolution_status (Resolved | Partially Resolved | Unresolved).
+5. Extract student_questions: ALL genuine functional questions and conceptual doubts asked by students during the session (skip administrative logistics or simple repeat requests). Include student_name (the student's name or identifier who asked the question, e.g. 'Ananya', 'Rohan', 'Student 1'), question text, timestamp, concept, and resolution_status (Resolved | Partially Resolved | Unresolved).
 Ensure you strictly populate empty strings ("") for fields where no significant highlights or flaws are found.`;
 
   const finalResult = await callStage<any>({

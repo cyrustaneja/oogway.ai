@@ -78,7 +78,15 @@ export default function DashboardClient({
       }
 
       // Status filter
-      const isPulseDone = Boolean(a.tier1Result) || a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' || (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+      const isPulseDone =
+        Boolean(a.tier1Result) ||
+        Boolean(a.tier1_result) ||
+        Boolean(a.data?.tier1_result) ||
+        Boolean(a.data?.expert_insights) ||
+        Boolean(a.data?.overall_expert_summary) ||
+        a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' ||
+        a.pipeline_stage === 'COMPLETE' ||
+        (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
 
       if (statusFilter === 'processing') {
         return PROCESSING_STATUSES.includes(a.v3Status) && !isPulseDone;
@@ -232,12 +240,13 @@ export default function DashboardClient({
         </div>
 
         {/* Column headers — desktop only */}
-        <div className="hidden lg:grid grid-cols-12 gap-4 px-8 py-4 bg-gray-50/50 text-[11px] font-semibold text-gray-500 tracking-widest border-b border-[var(--card-border)] uppercase">
+        <div className="hidden lg:grid grid-cols-13 gap-4 px-8 py-4 bg-gray-50/50 text-[11px] font-semibold text-gray-500 tracking-widest border-b border-[var(--card-border)] uppercase">
           <div className="col-span-4">Session Identity</div>
           <div className="col-span-2">Batch / Course</div>
           <div className="col-span-2">Expert Partner</div>
           <div className="col-span-2">Growth Status</div>
           <div className="col-span-2 text-right pr-4">Timeline</div>
+          <div className="col-span-1"></div>
         </div>
 
         <SessionTable initialSessions={displayAnalyses} />

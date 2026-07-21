@@ -121,14 +121,24 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               })}
             </div>
 
-            {/* Right: Deep Analysis button (always visible) */}
+            {/* Right: Deep Analysis Action Button */}
             <button
-              onClick={() => setShowDeepModal(true)}
-              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-bold border border-[var(--border)] bg-white hover:bg-[var(--layer-2)] text-[var(--foreground)] transition-all shadow-sm whitespace-nowrap"
+              onClick={() => {
+                if (!deepAnalysisUnlocked && !deepAnalysisRunning) {
+                  handleRunDeepAnalysis();
+                }
+                setShowDeepModal(true);
+              }}
+              disabled={deepAnalysisRunning}
+              className="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-extrabold border border-brand-orange/40 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-100 hover:from-orange-100 hover:to-amber-100 text-brand-orange transition-all shadow-sm whitespace-nowrap active:scale-95 cursor-pointer"
             >
-              <BarChart2 className="w-3.5 h-3.5 text-brand-orange" />
-              <span className="hidden sm:inline">Deep Analysis</span>
-              <span className="sm:hidden">Deep</span>
+              {deepAnalysisRunning ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-orange" />
+              ) : (
+                <BarChart2 className="w-3.5 h-3.5 text-brand-orange" />
+              )}
+              <span className="hidden sm:inline">{deepAnalysisRunning ? "Running Deep Analysis..." : "Deep Analysis"}</span>
+              <span className="sm:hidden">{deepAnalysisRunning ? "Running..." : "Deep Analysis"}</span>
             </button>
           </div>
         </div>
