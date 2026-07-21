@@ -17,6 +17,12 @@ import {
   Filter,
   Tag,
   FolderOpen,
+  ArrowRight,
+  Layers,
+  Check,
+  Maximize2,
+  Eye,
+  X,
 } from "lucide-react";
 import { PrepSession } from "@/lib/server/expert-prep-sync";
 
@@ -26,9 +32,15 @@ export default function ExpertPrepPage() {
   const [syncing, setSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<string | null>(null);
 
-  // Filters
+  // ── Step-by-Step Selection Wizard State ──
+  const [wizardModule, setWizardModule] = useState<string>("");
+  const [wizardSessionId, setWizardSessionId] = useState<string>("");
+  const [activePrepPackage, setActivePrepPackage] = useState<PrepSession | null>(null);
+  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
+  const [embedTitle, setEmbedTitle] = useState<string>("");
+
+  // ── Search & Filter State ──
   const [searchQuery, setSearchQuery] = useState("");
-  const [moduleSearch, setModuleSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedWeek, setSelectedWeek] = useState("all");
   const [selectedType, setSelectedType] = useState("all");
@@ -40,11 +52,22 @@ export default function ExpertPrepPage() {
     try {
       const res = await fetch(`/api/prep/sync${force ? "?force=true" : ""}`);
       const data = await res.json();
-      if (data.sessions) {
+      if (data.sessions && data.sessions.length > 0) {
         setSessions(data.sessions);
         setLastSynced(
           new Date(data.syncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
         );
+
+        // Auto-select first module & session as initial wizard state
+        if (!wizardModule) {
+          const firstMod = data.sessions[0].module;
+          setWizardModule(firstMod);
+          const firstSess = data.sessions.find((s: PrepSession) => s.module === firstMod);
+          if (firstSess) {
+            setWizardSessionId(firstSess.id);
+            setActivePrepPackage(firstSess);
+          }
+        }
       }
     } catch (err) {
       console.error("Failed to fetch prep sessions:", err);
@@ -58,45 +81,65 @@ export default function ExpertPrepPage() {
     fetchSessions();
   }, []);
 
-  // Unique Sub-Module Categories
+  // Modules List
+  const modules = useMemo(() => {
+    const set = new Set(sessions.map((s) => s.module).filter(Boolean));
+    return Array.from(set).sort();
+  }, [sessions]);
+
+  // Sub-Module Categories
   const categories = useMemo(() => {
     const set = new Set(sessions.map((s) => s.category).filter(Boolean));
     return Array.from(set).sort();
   }, [sessions]);
 
-  // Unique Weeks
+  // Sessions filtered for Wizard Step 2
+  const wizardAvailableSessions = useMemo(() => {
+    if (!wizardModule || wizardModule === "ALL") return sessions;
+    return sessions.filter(
+      (s) => s.module === wizardModule || s.category === wizardModule
+    );
+  }, [sessions, wizardModule]);
+
+  // When wizard module changes, reset selected session to first available
+  const handleWizardModuleChange = (mod: string) => {
+    setWizardModule(mod);
+    const available = mod === "ALL" ? sessions : sessions.filter((s) => s.module === mod || s.category === mod);
+    if (available.length > 0) {
+      setWizardSessionId(available[0].id);
+    } else {
+      setWizardSessionId("");
+    }
+  };
+
+  // Click "Load Session Prep Data" button
+  const handleLoadPrepData = () => {
+    const found = sessions.find((s) => s.id === wizardSessionId);
+    if (found) {
+      setActivePrepPackage(found);
+      setEmbedUrl(null);
+    }
+  };
+
+  // Weeks List
   const weeks = useMemo(() => {
     const set = new Set(sessions.map((s) => s.week).filter(Boolean));
     return Array.from(set).sort();
   }, [sessions]);
 
-  // Unique Types
+  // Types List
   const types = useMemo(() => {
     const set = new Set(sessions.map((s) => s.type).filter(Boolean));
     return Array.from(set);
   }, [sessions]);
 
-  // Filtered Dataset
+  // Filtered List for Browse View
   const filteredSessions = useMemo(() => {
     return sessions.filter((s) => {
-      // Sub-module Category filter
       if (selectedCategory !== "all" && s.category !== selectedCategory) return false;
-      
-      // Week filter
       if (selectedWeek !== "all" && s.week !== selectedWeek) return false;
-      
-      // Session Type filter
       if (selectedType !== "all" && s.type !== selectedType) return false;
 
-      // Module Search filter
-      if (moduleSearch.trim()) {
-        const mQ = moduleSearch.toLowerCase();
-        const matchesMod = s.module.toLowerCase().includes(mQ);
-        const matchesCat = s.category.toLowerCase().includes(mQ);
-        if (!matchesMod && !matchesCat) return false;
-      }
-
-      // General Text Search
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const inName = s.sessionName.toLowerCase().includes(q);
@@ -109,12 +152,12 @@ export default function ExpertPrepPage() {
       }
       return true;
     });
-  }, [sessions, searchQuery, moduleSearch, selectedCategory, selectedWeek, selectedType]);
+  }, [sessions, searchQuery, selectedCategory, selectedWeek, selectedType]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-500">
       
-      {/* ── Header Banner ── */}
+      {/* ── Page Header Banner ── */}
       <div className="glass-card p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-ks-navy via-slate-900 to-ks-navy text-white rounded-3xl shadow-2xl border border-white/10">
         <div className="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -122,13 +165,13 @@ export default function ExpertPrepPage() {
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Oogway Expert Prep Portal (v2)</span>
+              <span>Oogway Expert Prep Portal</span>
             </div>
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight font-outfit leading-tight">
-              Curriculum &amp; Session Prep Hub
+              Session Knowledge &amp; Prep Selector
             </h1>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Search by Module, Sub-topic, or Session. Access Kahoot credentials, prep guidelines, slide decks, and model solutions live from the master schedule.
+              Select your Module and Session to instantly load Kahoot logins, slide decks, in-session charters, and model solutions.
             </p>
           </div>
 
@@ -139,7 +182,7 @@ export default function ExpertPrepPage() {
               className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center gap-2 shadow-sm"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin text-brand-orange" : ""}`} />
-              <span>{syncing ? "Syncing Sheet..." : "Sync Sheet"}</span>
+              <span>{syncing ? "Syncing..." : "Sync Sheet"}</span>
             </button>
             {lastSynced && (
               <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
@@ -150,93 +193,287 @@ export default function ExpertPrepPage() {
         </div>
       </div>
 
-      {/* ── Search & Multi-Module Filter Panel ── */}
-      <div className="glass-card p-6 space-y-6 rounded-2xl border border-[var(--border)] shadow-sm">
-        
-        {/* Dual Search Bars: General & Module Search */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* General Session Search */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search session title, Kahoot login, slides..."
-              className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)]"
-              >
-                Clear
-              </button>
-            )}
+      {/* ── STEP-BY-STEP PREP SELECTION WIZARD ── */}
+      <div className="glass-card p-6 sm:p-8 rounded-3xl border border-brand-orange/30 bg-gradient-to-br from-white via-orange-50/20 to-amber-50/30 shadow-xl space-y-6">
+        <div className="flex items-center gap-3 border-b border-[var(--border)] pb-4">
+          <div className="p-2.5 rounded-2xl bg-brand-orange/15 border border-brand-orange/30 text-brand-orange">
+            <FolderOpen className="w-6 h-6" />
           </div>
-
-          {/* Module / Topic Search */}
-          <div className="relative">
-            <FolderOpen className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-orange" />
-            <input
-              type="text"
-              value={moduleSearch}
-              onChange={(e) => setModuleSearch(e.target.value)}
-              placeholder="Filter by Module (Meta, Google, SEO, Ecom, Pixels...)"
-              className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
-            />
-            {moduleSearch && (
-              <button
-                onClick={() => setModuleSearch("")}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--muted)] hover:text-[var(--foreground)]"
-              >
-                Clear
-              </button>
-            )}
+          <div>
+            <h2 className="text-lg font-extrabold text-[var(--foreground)] tracking-tight">
+              Select Module &amp; Session to Prep
+            </h2>
+            <p className="text-xs text-[var(--muted)] font-medium">
+              Step 1: Choose Module ➔ Step 2: Choose Session ➔ Click button to load data
+            </p>
           </div>
         </div>
 
-        {/* Sub-Module / Topic Category Pills */}
-        <div className="space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-[var(--muted)] uppercase tracking-wider">
-            <Tag className="w-3.5 h-3.5 text-brand-orange" />
-            <span>Sub-Module / Topic Focus:</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setSelectedCategory("all")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                selectedCategory === "all"
-                  ? "bg-brand-orange text-white shadow-sm"
-                  : "bg-[var(--layer-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
-              }`}
+        {/* Selection Controls Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
+          
+          {/* STEP 1: Select Module */}
+          <div className="md:col-span-5 space-y-2">
+            <label className="text-xs font-extrabold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-full bg-brand-orange text-white text-[10px] font-extrabold flex items-center justify-center">1</span>
+              <span>Select Module / Topic:</span>
+            </label>
+            <select
+              value={wizardModule}
+              onChange={(e) => handleWizardModuleChange(e.target.value)}
+              className="w-full px-4 py-3 bg-white border-2 border-brand-orange/20 rounded-xl text-sm font-bold text-[var(--foreground)] focus:outline-none focus:border-brand-orange shadow-sm"
             >
-              All Topics ({sessions.length})
+              <option value="ALL">All Modules &amp; Topics</option>
+              <optgroup label="Main Modules">
+                {modules.map((m) => (
+                  <option key={m} value={m}>
+                    {m} Module
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="Sub-Topic Modules">
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+          </div>
+
+          {/* STEP 2: Select Session */}
+          <div className="md:col-span-5 space-y-2">
+            <label className="text-xs font-extrabold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
+              <span className="w-5 h-5 rounded-full bg-brand-orange text-white text-[10px] font-extrabold flex items-center justify-center">2</span>
+              <span>Select Session ({wizardAvailableSessions.length} available):</span>
+            </label>
+            <select
+              value={wizardSessionId}
+              onChange={(e) => setWizardSessionId(e.target.value)}
+              className="w-full px-4 py-3 bg-white border-2 border-brand-orange/20 rounded-xl text-sm font-bold text-[var(--foreground)] focus:outline-none focus:border-brand-orange shadow-sm truncate"
+            >
+              {wizardAvailableSessions.map((s) => (
+                <option key={s.id} value={s.id}>
+                  [{s.week}] {s.sessionName} ({s.duration}m - {s.expertType || 'Live'})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* STEP 3: Action Button */}
+          <div className="md:col-span-2">
+            <button
+              onClick={handleLoadPrepData}
+              disabled={!wizardSessionId}
+              className="w-full py-3 px-4 rounded-xl bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-95"
+            >
+              <span>Load Prep Data</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
-            {categories.map((cat) => {
-              const count = sessions.filter((s) => s.category === cat).length;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                    selectedCategory === cat
-                      ? "bg-brand-orange text-white shadow-sm"
-                      : "bg-[var(--layer-2)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
-                  }`}
-                >
-                  <span>{cat}</span>
-                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full ${selectedCategory === cat ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'}`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
           </div>
         </div>
 
-        {/* Week & Type Filter Row */}
-        <div className="flex flex-wrap items-center gap-4 pt-3 border-t border-[var(--border)]">
+        {/* ── AUTOMATICALLY LOADED SESSION PREP DATA DISPLAY ── */}
+        {activePrepPackage && (
+          <div className="mt-8 pt-6 border-t-2 border-brand-orange/20 space-y-6 animate-in fade-in duration-300">
+            {/* Header info */}
+            <div className="flex flex-wrap items-start justify-between gap-4 bg-white p-5 rounded-2xl border border-[var(--border)] shadow-sm">
+              <div className="space-y-1.5 max-w-3xl">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2.5 py-0.5 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-extrabold uppercase tracking-wider">
+                    {activePrepPackage.week}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase tracking-wider">
+                    {activePrepPackage.module}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-extrabold uppercase tracking-wider">
+                    {activePrepPackage.category}
+                  </span>
+                  <span className="px-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-200 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
+                    {activePrepPackage.type}
+                  </span>
+                </div>
+
+                <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight">
+                  {activePrepPackage.sessionName}
+                </h3>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--layer-2)] border border-[var(--border)] text-xs font-mono font-bold text-[var(--foreground)]">
+                  <Clock className="w-4 h-4 text-brand-orange" />
+                  <span>{activePrepPackage.duration} mins</span>
+                </div>
+
+                {activePrepPackage.expertType && (
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-100 text-xs font-bold text-blue-700">
+                    <UserCheck className="w-4 h-4" />
+                    <span>Role: {activePrepPackage.expertType}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Expert Prep Notes & Kahoot Box */}
+            {activePrepPackage.pointsToNote && activePrepPackage.pointsToNote.trim() !== "" ? (
+              <div
+                className={`p-5 rounded-2xl border leading-relaxed space-y-2 ${
+                  activePrepPackage.pointsToNote.toLowerCase().includes("kahoot")
+                    ? "bg-purple-500/10 border-purple-500/30 text-purple-950"
+                    : "bg-amber-500/10 border-amber-500/30 text-amber-950"
+                }`}
+              >
+                <div className="flex items-center gap-2 font-black uppercase tracking-wider text-xs">
+                  {activePrepPackage.pointsToNote.toLowerCase().includes("kahoot") ? (
+                    <>
+                      <Key className="w-4 h-4 text-purple-600" />
+                      <span className="text-purple-800">Kahoot Login &amp; Quiz Instructions</span>
+                    </>
+                  ) : (
+                    <>
+                      <AlertTriangle className="w-4 h-4 text-amber-600" />
+                      <span className="text-amber-800">Important Expert Prep Notes &amp; Guidelines</span>
+                    </>
+                  )}
+                </div>
+                <p className="whitespace-pre-line font-medium text-xs sm:text-sm">
+                  {activePrepPackage.pointsToNote}
+                </p>
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs text-[var(--muted)] italic">
+                No special administrative points to note for this session. Review materials below.
+              </div>
+            )}
+
+            {/* Resource Buttons & In-Platform Embedded Preview */}
+            <div className="bg-white p-5 rounded-2xl border border-[var(--border)] space-y-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)]">
+                  Session Resources &amp; Materials
+                </span>
+                {embedUrl && (
+                  <button
+                    onClick={() => setEmbedUrl(null)}
+                    className="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1"
+                  >
+                    <X className="w-3.5 h-3.5" /> Close Embedded View
+                  </button>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                {activePrepPackage.linkContent && (
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={activePrepPackage.linkContent}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-extrabold transition-all hover:bg-orange-600 shadow-sm"
+                    >
+                      <Presentation className="w-4 h-4" />
+                      <span>Open Slide Deck ↗</span>
+                    </a>
+                  </div>
+                )}
+
+                {activePrepPackage.linkCharter && (
+                  <a
+                    href={activePrepPackage.linkCharter}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold transition-all hover:bg-emerald-700 shadow-sm"
+                  >
+                    <FileSpreadsheet className="w-4 h-4" />
+                    <span>In-Session Charter ↗</span>
+                  </a>
+                )}
+
+                {activePrepPackage.linkModelSolution && (
+                  <a
+                    href={activePrepPackage.linkModelSolution}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-extrabold transition-all hover:bg-blue-700 shadow-sm"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>Model Solution ↗</span>
+                  </a>
+                )}
+
+                {activePrepPackage.linkTest && (
+                  <a
+                    href={activePrepPackage.linkTest}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-extrabold transition-all hover:bg-purple-700 shadow-sm"
+                  >
+                    <Award className="w-4 h-4" />
+                    <span>MCQ Test ↗</span>
+                  </a>
+                )}
+
+                {!activePrepPackage.linkContent && !activePrepPackage.linkCharter && !activePrepPackage.linkModelSolution && (
+                  <span className="text-xs text-[var(--muted)] italic">
+                    No direct links attached for this session.
+                  </span>
+                )}
+              </div>
+
+              {/* Embedded Document Frame if activated */}
+              {embedUrl && (
+                <div className="pt-4 border-t border-[var(--border)] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-bold text-[var(--foreground)]">
+                    <span>In-Platform View: {embedTitle}</span>
+                    <a
+                      href={embedUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-brand-orange hover:underline flex items-center gap-1"
+                    >
+                      <Maximize2 className="w-3 h-3" /> Open full page
+                    </a>
+                  </div>
+                  <div className="w-full h-[600px] rounded-xl border border-[var(--border)] overflow-hidden bg-slate-100 shadow-inner">
+                    <iframe
+                      src={embedUrl}
+                      className="w-full h-full border-0"
+                      title={embedTitle}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── BROWSE ALL SESSIONS & FILTERS ── */}
+      <div className="glass-card p-6 space-y-6 rounded-2xl border border-[var(--border)] shadow-sm">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+          <h3 className="text-base font-extrabold text-[var(--foreground)] tracking-tight flex items-center gap-2">
+            <Layers className="w-4 h-4 text-brand-orange" />
+            <span>Browse All {sessions.length} Sessions Schedule</span>
+          </h3>
+          <span className="text-xs text-[var(--muted)] font-medium">
+            Search or filter across all modules
+          </span>
+        </div>
+
+        {/* General Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search all session titles, Kahoot credentials, slides, or modules..."
+            className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
+          />
+        </div>
+
+        {/* Filters Row */}
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
             <Filter className="w-3.5 h-3.5 text-[var(--muted)]" />
             <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider">Week:</span>
@@ -270,180 +507,66 @@ export default function ExpertPrepPage() {
             </select>
           </div>
 
-          {(selectedCategory !== "all" || selectedWeek !== "all" || selectedType !== "all" || searchQuery || moduleSearch) && (
+          {(selectedWeek !== "all" || selectedType !== "all" || searchQuery) && (
             <button
               onClick={() => {
-                setSelectedCategory("all");
                 setSelectedWeek("all");
                 setSelectedType("all");
                 setSearchQuery("");
-                setModuleSearch("");
               }}
               className="text-xs font-bold text-brand-orange hover:underline ml-auto"
             >
-              Reset All Filters
+              Reset Filters
             </button>
           )}
         </div>
-      </div>
 
-      {/* ── Sessions List Grid ── */}
-      {loading ? (
-        <div className="text-center py-20">
-          <RefreshCw className="w-8 h-8 text-brand-orange animate-spin mx-auto mb-3" />
-          <p className="text-sm font-bold text-[var(--muted)]">Syncing curriculum sessions from live Google Sheet...</p>
-        </div>
-      ) : filteredSessions.length === 0 ? (
-        <div className="text-center py-16 glass-card p-8 rounded-2xl border border-[var(--border)]">
-          <BookOpen className="w-12 h-12 text-[var(--muted)] opacity-30 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-[var(--foreground)]">No prep sessions match your query</h3>
-          <p className="text-xs text-[var(--muted)] mt-1">Try searching for a different module or resetting filters.</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between text-xs text-[var(--muted)] font-bold uppercase tracking-wider px-1">
-            <span>Showing {filteredSessions.length} Session Prep Guides</span>
-            <span>Live Sheet Auto-Synced</span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-4">
-            {filteredSessions.map((session) => {
-              const hasNotes = Boolean(session.pointsToNote && session.pointsToNote.trim());
-              const isKahoot = session.pointsToNote.toLowerCase().includes("kahoot");
-
-              return (
-                <div
-                  key={session.id}
-                  className="glass-card p-6 rounded-2xl border border-[var(--border)] hover:border-brand-orange/40 hover:shadow-lg transition-all space-y-4 group"
-                >
-                  {/* Top Line Badges */}
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1.5 max-w-3xl">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="px-2.5 py-0.5 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-extrabold uppercase tracking-wider">
-                          {session.week}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase tracking-wider">
-                          {session.module}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-extrabold uppercase tracking-wider">
-                          {session.category}
-                        </span>
-                        <span className="px-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-200 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
-                          {session.type}
-                        </span>
-                      </div>
-
-                      <h2 className="text-lg font-extrabold text-[var(--foreground)] tracking-tight group-hover:text-brand-orange transition-colors">
-                        {session.sessionName}
-                      </h2>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center gap-1 px-3 py-1 rounded-lg bg-[var(--layer-2)] border border-[var(--border)] text-xs font-mono font-bold text-[var(--muted)]">
-                        <Clock className="w-3.5 h-3.5 text-brand-orange" />
-                        <span>{session.duration}m</span>
-                      </div>
-
-                      {session.expertType && (
-                        <div className="flex items-center gap-1 px-3 py-1 rounded-lg bg-blue-50 border border-blue-100 text-xs font-bold text-blue-700">
-                          <UserCheck className="w-3.5 h-3.5" />
-                          <span>{session.expertType}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* ── Points To Note Box ── */}
-                  {hasNotes && (
-                    <div
-                      className={`p-4 rounded-xl border text-xs leading-relaxed space-y-1.5 ${
-                        isKahoot
-                          ? "bg-purple-500/5 border-purple-500/20 text-purple-900"
-                          : "bg-amber-500/5 border-amber-500/20 text-amber-900"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-[10px]">
-                        {isKahoot ? (
-                          <>
-                            <Key className="w-3.5 h-3.5 text-purple-600" />
-                            <span className="text-purple-700">Kahoot Login &amp; Quiz Instructions</span>
-                          </>
-                        ) : (
-                          <>
-                            <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                            <span className="text-amber-700">Important Expert Prep Notes</span>
-                          </>
-                        )}
-                      </div>
-                      <p className="whitespace-pre-line font-medium text-[12px]">
-                        {session.pointsToNote}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* ── Asset Link Buttons ── */}
-                  <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-[var(--border)]">
-                    {session.linkContent && (
-                      <a
-                        href={session.linkContent}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-800 text-xs font-bold transition-all shadow-sm"
-                      >
-                        <Presentation className="w-3.5 h-3.5 text-orange-600" />
-                        <span>Slides / Content ↗</span>
-                      </a>
-                    )}
-
-                    {session.linkCharter && (
-                      <a
-                        href={session.linkCharter}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold transition-all shadow-sm"
-                      >
-                        <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>In-Session Charter ↗</span>
-                      </a>
-                    )}
-
-                    {session.linkModelSolution && (
-                      <a
-                        href={session.linkModelSolution}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 text-xs font-bold transition-all shadow-sm"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                        <span>Model Solution ↗</span>
-                      </a>
-                    )}
-
-                    {session.linkTest && (
-                      <a
-                        href={session.linkTest}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-800 text-xs font-bold transition-all shadow-sm"
-                      >
-                        <Award className="w-3.5 h-3.5 text-purple-600" />
-                        <span>MCQ / Test ↗</span>
-                      </a>
-                    )}
-
-                    {!session.linkContent && !session.linkCharter && !session.linkModelSolution && (
-                      <span className="text-[11px] text-[var(--muted)] italic">
-                        No direct links attached for this session.
-                      </span>
-                    )}
-                  </div>
+        {/* Schedule List */}
+        <div className="space-y-3 pt-2">
+          {filteredSessions.map((session) => (
+            <div
+              key={session.id}
+              onClick={() => {
+                setWizardModule(session.module);
+                setWizardSessionId(session.id);
+                setActivePrepPackage(session);
+                window.scrollTo({ top: 180, behavior: 'smooth' });
+              }}
+              className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                activePrepPackage?.id === session.id
+                  ? 'bg-orange-50/60 border-brand-orange/40 shadow-sm'
+                  : 'bg-white border-[var(--border)] hover:border-brand-orange/30 hover:bg-slate-50/50'
+              }`}
+            >
+              <div className="space-y-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 rounded-md bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-extrabold uppercase">
+                    {session.week}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase">
+                    {session.module}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-bold uppercase">
+                    {session.category}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+                <h4 className="text-sm font-bold text-[var(--foreground)] truncate">
+                  {session.sessionName}
+                </h4>
+              </div>
+
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-xs font-mono text-[var(--muted)] font-bold">
+                  {session.duration}m
+                </span>
+                <button className="px-3 py-1 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-bold border border-brand-orange/20">
+                  Select
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }
