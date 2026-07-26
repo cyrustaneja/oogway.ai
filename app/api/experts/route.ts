@@ -12,6 +12,11 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const role = (token as any).role;
+  if (role === "EXPERT") {
+    return NextResponse.json({ error: "Access Denied: The user directory is reserved for Admins and Team members." }, { status: 403 });
+  }
+
   try {
     const users = await prisma.user.findMany({
       where: { deletedAt: null },

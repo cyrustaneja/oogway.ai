@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { User, Mail, Tag, Calendar, Activity, ChevronLeft, Zap, TrendingUp, AlertTriangle, CheckCircle2, XCircle } from "lucide-react";
+import { User, Mail, Tag, Calendar, Activity, ChevronLeft, Zap, TrendingUp, AlertTriangle, CheckCircle2, XCircle, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 import { SessionTable } from "../../dashboard/SessionTable";
 import { Loader2 } from "lucide-react";
@@ -19,10 +20,15 @@ const fadeInUp: any = {
 
 export default function ExpertDetailPage() {
   const { id } = useParams();
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role || "ADMIN";
+  const isExpertUser = userRole === "EXPERT";
+
   const [expert, setExpert] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isExpertUser) return;
     fetch(`/api/experts/${id}`)
       .then(r => r.json())
       .then(data => {
@@ -30,16 +36,39 @@ export default function ExpertDetailPage() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [id]);
+  }, [id, isExpertUser]);
 
   const [pulse, setPulse] = useState<any>(null);
   useEffect(() => {
-    if (!id) return;
+    if (!id || isExpertUser) return;
     fetch(`/api/experts/${id}/pulse-summary`)
       .then(r => r.json())
       .then(setPulse)
       .catch(() => {});
-  }, [id]);
+  }, [id, isExpertUser]);
+
+  // PAGE GUARD: EXPERTS CANNOT VIEW USER PROFILES
+  if (isExpertUser) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <div className="w-16 h-16 rounded-3xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-sm">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <div className="max-w-md space-y-2">
+          <h2 className="text-xl font-black text-[var(--foreground)] tracking-tight">Access Restricted</h2>
+          <p className="text-xs text-[var(--muted)] font-medium leading-relaxed">
+            The User &amp; Access Directory is reserved for Admins and Team members.
+          </p>
+        </div>
+        <Link
+          href="/dashboard"
+          className="btn-primary py-2.5 px-6 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center gap-2 mt-2 shadow-md shadow-[#E8A020]/20"
+        >
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   if (loading) return (
     <div className="flex justify-center py-40">

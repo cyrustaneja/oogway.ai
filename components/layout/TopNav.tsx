@@ -18,6 +18,18 @@ export function TopNav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const role = (session?.user as any)?.role || 'ADMIN';
+  const isExpertUser = role === 'EXPERT';
+
+  const rawNavItems = [
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Experts / Roster", href: "/experts", adminOnly: true },
+    { label: "Batches", href: "/batches" },
+    { label: "Course Content", href: "/courses" },
+  ];
+
+  const navItems = rawNavItems.filter((item) => !(item.adminOnly && isExpertUser));
+
   const initials = (session?.user?.name || "A")
     .split(" ")
     .map((n) => n[0])

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import {
   Plus as PlusIcon,
   X as XIcon,
@@ -11,6 +12,7 @@ import {
   Download as DownloadIcon,
   CheckCircle as CheckCircleIcon,
   ShieldCheck as ShieldCheckIcon,
+  ShieldAlert as ShieldAlertIcon,
   UserCheck as UserCheckIcon,
   Users as UsersIcon,
   Sparkles as SparklesIcon,
@@ -35,6 +37,10 @@ interface Expert {
 }
 
 export default function ExpertsPage() {
+  const { data: session } = useSession();
+  const userRole = (session?.user as any)?.role || "ADMIN";
+  const isExpertUser = userRole === "EXPERT";
+
   const [experts, setExperts] = useState<Expert[]>([]);
   const [availableModules, setAvailableModules] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +64,7 @@ export default function ExpertsPage() {
   const [submittingBulk, setSubmittingBulk] = useState(false);
 
   const load = () => {
+    if (isExpertUser) return;
     Promise.all([
       fetch("/api/experts").then((r) => r.json()),
       fetch("/api/modules").then((r) => r.json()),
@@ -72,7 +79,30 @@ export default function ExpertsPage() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [userRole]);
+
+  // PAGE GUARD: EXPERTS CANNOT VIEW USER DIRECTORY
+  if (isExpertUser) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-6 text-center space-y-4">
+        <div className="w-16 h-16 rounded-3xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shadow-sm">
+          <ShieldAlertIcon className="w-8 h-8" />
+        </div>
+        <div className="max-w-md space-y-2">
+          <h2 className="text-xl font-black text-[var(--foreground)] tracking-tight">Access Restricted</h2>
+          <p className="text-xs text-[var(--muted)] font-medium leading-relaxed">
+            The User &amp; Access Directory is reserved for Admins and Team members. Expert accounts cannot view system user profiles.
+          </p>
+        </div>
+        <Link
+          href="/dashboard"
+          className="btn-primary py-2.5 px-6 rounded-xl text-xs font-black uppercase tracking-wider inline-flex items-center gap-2 mt-2 shadow-md shadow-[#E8A020]/20"
+        >
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   const toggleModule = (modName: string) => {
     if (selectedModules.includes(modName)) {
