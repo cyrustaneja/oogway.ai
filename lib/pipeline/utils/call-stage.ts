@@ -87,6 +87,14 @@ function classifyError(err: any): ErrorClass {
     msg.toLowerCase().includes('gateway timeout')
   ) return 'ServerError5xx'
 
+  if (
+    msg.includes('API_KEY_SERVICE_BLOCKED') ||
+    msg.includes('API_KEY_INVALID') ||
+    msg.includes('prepayment credits are depleted') ||
+    msg.includes('403 Forbidden') ||
+    status === 403
+  ) return 'FatalApiKeyError' as any
+
   // ParseError is never thrown from this classifier —
   // it's detected inline and a ParseErrorSignal is thrown below.
   return 'OtherError'
@@ -103,7 +111,8 @@ class ParseErrorSignal extends Error {
 
 // ── Retry Policies ───────────────────────────────────────────────────────────
 
-const RETRY_POLICY: Record<ErrorClass, { maxRetries: number; backoffMs: number[] }> = {
+const RETRY_POLICY: Record<ErrorClass | 'FatalApiKeyError', { maxRetries: number; backoffMs: number[] }> = {
+  FatalApiKeyError: { maxRetries: 0, backoffMs: [] },
   RateLimit429:   { 
     maxRetries: LIMITS.maxAttemptsPerStage, 
     backoffMs: LIMITS.rateLimit429RetryDelayMs 
@@ -115,7 +124,7 @@ const RETRY_POLICY: Record<ErrorClass, { maxRetries: number; backoffMs: number[]
   MaxTokensError: { maxRetries: 2, backoffMs: [] },          // budget-doubling, no sleep
   TimeoutError:   { maxRetries: 3, backoffMs: [2000, 5000] }, // bumped for production stability
   ParseError:     { maxRetries: 3, backoffMs: [1000, 2000] }, 
-  OtherError:     { maxRetries: 2, backoffMs: [1000, 3000] },
+  OtherError:     { maxRetries: 1, backoffMs: [300] },
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -231,6 +240,11 @@ export async function callStage<T>(params: StageCallParams): Promise<T> {
         }
       }
     } catch (err: any) {
+      const errorClass = classifyError(err)
+      if ((errorClass as string) === 'FatalApiKeyError') {
+        console.warn(`[call-stage] ${params.stageName}: Fatal API key or 403 error — aborting immediately.`);
+        throw err;
+      }
       const callMs = Date.now() - attemptStart
       const totalElapsed = Date.now() - wallClock
 

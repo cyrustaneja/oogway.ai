@@ -33,7 +33,7 @@ export function TopNav() {
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="flex items-center gap-2 group">
             <div className="flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="Oogway Logo" className="w-9 h-9 sm:w-12 sm:h-12 object-contain" />
+              <img src="/oogway.jpg" alt="Oogway Logo" className="w-9 h-9 sm:w-12 sm:h-12 object-contain rounded-full border border-[var(--border)]" />
             </div>
             <div className="flex flex-col justify-center -ml-0.5">
               <p className="text-ks-navy font-black text-xl sm:text-2xl tracking-tighter leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>

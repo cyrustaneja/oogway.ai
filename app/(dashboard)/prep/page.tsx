@@ -2,569 +2,557 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  BookOpen,
-  Search,
-  RefreshCw,
   Clock,
-  UserCheck,
   FileSpreadsheet,
   Presentation,
   CheckCircle2,
   AlertTriangle,
   Sparkles,
-  Key,
   Award,
-  Filter,
-  Tag,
-  FolderOpen,
-  ArrowRight,
-  Layers,
-  Check,
-  Maximize2,
-  Eye,
-  X,
+  RefreshCw,
+  Brain,
+  Lightbulb,
+  Users,
+  HelpCircle,
+  TrendingUp,
+  Zap,
+  UserCheck,
+  CheckCircle,
+  BookOpen,
+  FileText,
+  History,
 } from "lucide-react";
-import { PrepSession } from "@/lib/server/expert-prep-sync";
+import {
+  ProactiveSessionIntelligence,
+  ProactiveBatchIntelligence,
+} from "@/lib/server/expert-prep-intelligence";
+
+interface CourseOption { id: string; name: string }
+interface BatchOption { id: string; name: string; courseId: string | null }
+interface ModuleOption { id: string; name: string; courseId: string }
+interface SessionOption {
+  id: string;
+  name: string;
+  moduleId: string;
+  weekOrder: number | null;
+  phase: string | null;
+  sessionType: string | null;
+  expertType: string | null;
+  duration: number | null;
+  linkContent: string | null;
+  linkCharter: string | null;
+  linkModelSolution: string | null;
+  linkTest: string | null;
+  linkEvalParams: string | null;
+  expertBrief: string | null;
+  prerequisites: string | null;
+  module: { id: string; name: string; courseId: string; course: { id: string; name: string } };
+}
 
 export default function ExpertPrepPage() {
-  const [sessions, setSessions] = useState<PrepSession[]>([]);
+  const [courses, setCourses] = useState<CourseOption[]>([]);
+  const [batches, setBatches] = useState<BatchOption[]>([]);
+  const [allSessions, setAllSessions] = useState<SessionOption[]>([]);
+
   const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
-  const [lastSynced, setLastSynced] = useState<string | null>(null);
+  const [intelLoading, setIntelLoading] = useState(false);
 
-  // ── Step-by-Step Selection Wizard State ──
-  const [wizardModule, setWizardModule] = useState<string>("");
-  const [wizardSessionId, setWizardSessionId] = useState<string>("");
-  const [activePrepPackage, setActivePrepPackage] = useState<PrepSession | null>(null);
-  const [embedUrl, setEmbedUrl] = useState<string | null>(null);
-  const [embedTitle, setEmbedTitle] = useState<string>("");
+  // ── Cascading Selection State ──
+  const [selectedCourseId, setSelectedCourseId] = useState<string>("");
+  const [selectedModuleId, setSelectedModuleId] = useState<string>("");
+  const [selectedSessionId, setSelectedSessionId] = useState<string>("");
+  const [selectedBatchId, setSelectedBatchId] = useState<string>("");
 
-  // ── Search & Filter State ──
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedWeek, setSelectedWeek] = useState("all");
-  const [selectedType, setSelectedType] = useState("all");
+  // ── Loaded Intelligence Payload ──
+  const [sessionIntel, setSessionIntel] = useState<ProactiveSessionIntelligence | null>(null);
+  const [batchIntel, setBatchIntel] = useState<ProactiveBatchIntelligence | null>(null);
 
-  const fetchSessions = async (force = false) => {
-    if (force) setSyncing(true);
-    else setLoading(true);
+  // Load initial dropdown options
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/courses").then((r) => r.json()),
+      fetch("/api/batches").then((r) => r.json()),
+      fetch("/api/session-notes").then((r) => r.json()),
+    ])
+      .then(([cData, bData, sData]) => {
+        const validCourses = Array.isArray(cData) ? cData : [];
+        const validBatches = Array.isArray(bData) ? bData : [];
+        const validSessions = Array.isArray(sData) ? sData : [];
 
-    try {
-      const res = await fetch(`/api/prep/sync${force ? "?force=true" : ""}`);
-      const data = await res.json();
-      if (data.sessions && data.sessions.length > 0) {
-        setSessions(data.sessions);
-        setLastSynced(
-          new Date(data.syncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        );
+        setCourses(validCourses);
+        setBatches(validBatches);
+        setAllSessions(validSessions);
 
-        // Auto-select first module & session as initial wizard state
-        if (!wizardModule) {
-          const firstMod = data.sessions[0].module;
-          setWizardModule(firstMod);
-          const firstSess = data.sessions.find((s: PrepSession) => s.module === firstMod);
-          if (firstSess) {
-            setWizardSessionId(firstSess.id);
-            setActivePrepPackage(firstSess);
+        if (validCourses.length > 0) {
+          const firstCourse = validCourses[0];
+          setSelectedCourseId(firstCourse.id);
+          const courseBatches = validBatches.filter((b) => b.courseId === firstCourse.id);
+          if (courseBatches.length > 0) setSelectedBatchId(courseBatches[0].id);
+
+          const courseSessions = validSessions.filter((s) => s.module?.courseId === firstCourse.id);
+          if (courseSessions.length > 0) {
+            setSelectedModuleId(courseSessions[0].moduleId);
+            setSelectedSessionId(courseSessions[0].id);
           }
         }
-      }
-    } catch (err) {
-      console.error("Failed to fetch prep sessions:", err);
-    } finally {
-      setLoading(false);
-      setSyncing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchSessions();
+      })
+      .catch((err) => console.error("Failed to load options:", err))
+      .finally(() => setLoading(false));
   }, []);
 
-  // Modules List
-  const modules = useMemo(() => {
-    const set = new Set(sessions.map((s) => s.module).filter(Boolean));
-    return Array.from(set).sort();
-  }, [sessions]);
-
-  // Sub-Module Categories
-  const categories = useMemo(() => {
-    const set = new Set(sessions.map((s) => s.category).filter(Boolean));
-    return Array.from(set).sort();
-  }, [sessions]);
-
-  // Sessions filtered for Wizard Step 2
-  const wizardAvailableSessions = useMemo(() => {
-    if (!wizardModule || wizardModule === "ALL") return sessions;
-    return sessions.filter(
-      (s) => s.module === wizardModule || s.category === wizardModule
-    );
-  }, [sessions, wizardModule]);
-
-  // When wizard module changes, reset selected session to first available
-  const handleWizardModuleChange = (mod: string) => {
-    setWizardModule(mod);
-    const available = mod === "ALL" ? sessions : sessions.filter((s) => s.module === mod || s.category === mod);
-    if (available.length > 0) {
-      setWizardSessionId(available[0].id);
-    } else {
-      setWizardSessionId("");
-    }
-  };
-
-  // Click "Load Session Prep Data" button
-  const handleLoadPrepData = () => {
-    const found = sessions.find((s) => s.id === wizardSessionId);
-    if (found) {
-      setActivePrepPackage(found);
-      setEmbedUrl(null);
-    }
-  };
-
-  // Weeks List
-  const weeks = useMemo(() => {
-    const set = new Set(sessions.map((s) => s.week).filter(Boolean));
-    return Array.from(set).sort();
-  }, [sessions]);
-
-  // Types List
-  const types = useMemo(() => {
-    const set = new Set(sessions.map((s) => s.type).filter(Boolean));
-    return Array.from(set);
-  }, [sessions]);
-
-  // Filtered List for Browse View
-  const filteredSessions = useMemo(() => {
-    return sessions.filter((s) => {
-      if (selectedCategory !== "all" && s.category !== selectedCategory) return false;
-      if (selectedWeek !== "all" && s.week !== selectedWeek) return false;
-      if (selectedType !== "all" && s.type !== selectedType) return false;
-
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const inName = s.sessionName.toLowerCase().includes(q);
-        const inNotes = s.pointsToNote.toLowerCase().includes(q);
-        const inModule = s.module.toLowerCase().includes(q);
-        const inCategory = s.category.toLowerCase().includes(q);
-        const inWeek = s.week.toLowerCase().includes(q);
-        const inType = s.type.toLowerCase().includes(q);
-        if (!inName && !inNotes && !inModule && !inCategory && !inWeek && !inType) return false;
+  // Cascading Filter: Modules based on Selected Course
+  const availableModules = useMemo(() => {
+    const modulesMap = new Map<string, ModuleOption>();
+    allSessions.forEach((s) => {
+      if (s.module && (!selectedCourseId || s.module.courseId === selectedCourseId)) {
+        modulesMap.set(s.module.id, {
+          id: s.module.id,
+          name: s.module.name,
+          courseId: s.module.courseId,
+        });
       }
+    });
+    return Array.from(modulesMap.values()).sort((a, b) => a.name.localeCompare(b.name));
+  }, [allSessions, selectedCourseId]);
+
+  // Cascading Filter: Sessions based on Selected Module
+  const availableSessions = useMemo(() => {
+    return allSessions.filter((s) => {
+      if (selectedModuleId && s.moduleId !== selectedModuleId) return false;
+      if (selectedCourseId && s.module?.courseId !== selectedCourseId) return false;
       return true;
     });
-  }, [sessions, searchQuery, selectedCategory, selectedWeek, selectedType]);
+  }, [allSessions, selectedCourseId, selectedModuleId]);
+
+  // Cascading Filter: Batches based on Selected Course
+  const availableBatches = useMemo(() => {
+    if (!selectedCourseId) return batches;
+    return batches.filter((b) => !b.courseId || b.courseId === selectedCourseId);
+  }, [batches, selectedCourseId]);
+
+  // AUTO-FETCH FAST AI INSIGHTS (< 2-3 seconds)
+  const handleLoadIntelligence = async (sessId: string, bId: string) => {
+    if (!sessId && !bId) return;
+    setIntelLoading(true);
+
+    try {
+      const params = new URLSearchParams();
+      if (sessId) params.set("sessionNoteId", sessId);
+      if (bId) params.set("batchId", bId);
+
+      const res = await fetch(`/api/prep/proactive?${params.toString()}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setSessionIntel(data.sessionIntel);
+        setBatchIntel(data.batchIntel);
+      }
+    } catch (err) {
+      console.error("Failed to fetch proactive intelligence:", err);
+    } finally {
+      setIntelLoading(false);
+    }
+  };
+
+  // Trigger fast auto-load when selection changes
+  useEffect(() => {
+    if (selectedSessionId || selectedBatchId) {
+      handleLoadIntelligence(selectedSessionId, selectedBatchId);
+    }
+  }, [selectedSessionId, selectedBatchId]);
+
+  const activeSession = allSessions.find((s) => s.id === selectedSessionId);
+  const activeBatch = batches.find((b) => b.id === selectedBatchId);
+
+  const deliveryCount = sessionIntel?.historicalSessionCount ?? 1;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 animate-in fade-in duration-500">
+    <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-6 py-4 space-y-4 animate-in fade-in duration-300">
       
-      {/* ── Page Header Banner ── */}
-      <div className="glass-card p-6 sm:p-8 relative overflow-hidden bg-gradient-to-r from-ks-navy via-slate-900 to-ks-navy text-white rounded-3xl shadow-2xl border border-white/10">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-orange/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-orange/20 border border-brand-orange/30 text-brand-orange text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Oogway Expert Prep Portal</span>
-            </div>
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight font-outfit leading-tight">
-              Session Knowledge &amp; Prep Selector
+      {/* ── COMPACT SINGLE-ROW CONTROL HEADER ── */}
+      <div className="glass-card p-4 sm:p-5 rounded-2xl border border-[#E8A020]/30 bg-white shadow-md flex flex-col lg:flex-row items-center justify-between gap-4">
+        
+        {/* Left: Branding */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="p-2 rounded-xl bg-[#E8A020]/15 border border-[#E8A020]/30 text-[#E8A020]">
+            <Sparkles className="w-5 h-5" />
+          </div>
+          <div>
+            <h1 className="text-base sm:text-lg font-black text-[var(--foreground)] tracking-tight leading-none">
+              Proactive Expert Prep Cockpit
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              Select your Module and Session to instantly load Kahoot logins, slide decks, in-session charters, and model solutions.
+            <p className="text-[10px] text-[var(--muted)] font-medium mt-0.5">
+              Sequence-based Cohort Progress &amp; Fast Proactive AI Intelligence
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => fetchSessions(true)}
-              disabled={syncing}
-              className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-bold uppercase tracking-wider text-white transition-all flex items-center gap-2 shadow-sm"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 ${syncing ? "animate-spin text-brand-orange" : ""}`} />
-              <span>{syncing ? "Syncing..." : "Sync Sheet"}</span>
-            </button>
-            {lastSynced && (
-              <span className="text-[10px] text-slate-400 font-mono hidden sm:inline">
-                Synced {lastSynced}
+        {/* Cascading Dropdowns Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto flex-1 lg:max-w-4xl">
+          {/* 1. Course */}
+          <select
+            value={selectedCourseId}
+            onChange={(e) => {
+              const cId = e.target.value;
+              setSelectedCourseId(cId);
+              setSelectedModuleId("");
+              setSelectedSessionId("");
+            }}
+            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
+          >
+            <option value="">1. Course...</option>
+            {courses.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+
+          {/* 2. Module */}
+          <select
+            value={selectedModuleId}
+            onChange={(e) => {
+              const mId = e.target.value;
+              setSelectedModuleId(mId);
+              const modSessions = allSessions.filter((s) => s.moduleId === mId);
+              if (modSessions.length > 0) setSelectedSessionId(modSessions[0].id);
+            }}
+            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
+          >
+            <option value="">2. Module...</option>
+            {availableModules.map((m) => (
+              <option key={m.id} value={m.id}>{m.name}</option>
+            ))}
+          </select>
+
+          {/* 3. Session */}
+          <select
+            value={selectedSessionId}
+            onChange={(e) => setSelectedSessionId(e.target.value)}
+            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm truncate"
+          >
+            <option value="">3. Session...</option>
+            {availableSessions.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.phase ? `[${s.phase}] ` : ""}{s.name}
+              </option>
+            ))}
+          </select>
+
+          {/* 4. Batch */}
+          <select
+            value={selectedBatchId}
+            onChange={(e) => setSelectedBatchId(e.target.value)}
+            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
+          >
+            <option value="">4. Batch...</option>
+            {availableBatches.map((b) => (
+              <option key={b.id} value={b.id}>{b.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {/* ── 2-COLUMN SIDE-BY-SIDE SINGLE-SCREEN COCKPIT ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
+        
+        {/* ── LEFT COLUMN: SECTION 1 — ABOUT THE SESSION ── */}
+        <div className="space-y-4">
+          
+          {/* Header Badge */}
+          <div className="flex items-center justify-between bg-white border border-[var(--border)] px-4 py-2.5 rounded-xl shadow-sm">
+            <div className="flex items-center gap-2">
+              <Brain className="w-4 h-4 text-[#E8A020]" />
+              <span className="text-xs font-extrabold text-[var(--foreground)] uppercase tracking-wider">
+                Section 1: About the Session
+              </span>
+            </div>
+            {activeSession?.duration && (
+              <span className="text-[10px] font-bold text-[var(--muted)] bg-[var(--layer-2)] px-2 py-0.5 rounded-md flex items-center gap-1">
+                <Clock className="w-3 h-3 text-[#E8A020]" /> {activeSession.duration}m
               </span>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* ── STEP-BY-STEP PREP SELECTION WIZARD ── */}
-      <div className="glass-card p-6 sm:p-8 rounded-3xl border border-brand-orange/30 bg-gradient-to-br from-white via-orange-50/20 to-amber-50/30 shadow-xl space-y-6">
-        <div className="flex items-center gap-3 border-b border-[var(--border)] pb-4">
-          <div className="p-2.5 rounded-2xl bg-brand-orange/15 border border-brand-orange/30 text-brand-orange">
-            <FolderOpen className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-lg font-extrabold text-[var(--foreground)] tracking-tight">
-              Select Module &amp; Session to Prep
-            </h2>
-            <p className="text-xs text-[var(--muted)] font-medium">
-              Step 1: Choose Module ➔ Step 2: Choose Session ➔ Click button to load data
-            </p>
-          </div>
-        </div>
+          {/* Session Overview & Sheet Resource Links */}
+          <div className="glass-card p-4 rounded-2xl border border-[var(--border)] space-y-3 bg-white shadow-sm">
+            <h3 className="text-base font-black text-[var(--foreground)] tracking-tight leading-snug">
+              {activeSession?.name || "Select a session from the top bar"}
+            </h3>
 
-        {/* Selection Controls Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-end">
-          
-          {/* STEP 1: Select Module */}
-          <div className="md:col-span-5 space-y-2">
-            <label className="text-xs font-extrabold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-full bg-brand-orange text-white text-[10px] font-extrabold flex items-center justify-center">1</span>
-              <span>Select Module / Topic:</span>
-            </label>
-            <select
-              value={wizardModule}
-              onChange={(e) => handleWizardModuleChange(e.target.value)}
-              className="w-full px-4 py-3 bg-white border-2 border-brand-orange/20 rounded-xl text-sm font-bold text-[var(--foreground)] focus:outline-none focus:border-brand-orange shadow-sm"
-            >
-              <option value="ALL">All Modules &amp; Topics</option>
-              <optgroup label="Main Modules">
-                {modules.map((m) => (
-                  <option key={m} value={m}>
-                    {m} Module
-                  </option>
-                ))}
-              </optgroup>
-              <optgroup label="Sub-Topic Modules">
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </optgroup>
-            </select>
-          </div>
-
-          {/* STEP 2: Select Session */}
-          <div className="md:col-span-5 space-y-2">
-            <label className="text-xs font-extrabold uppercase tracking-wider text-brand-orange flex items-center gap-1.5">
-              <span className="w-5 h-5 rounded-full bg-brand-orange text-white text-[10px] font-extrabold flex items-center justify-center">2</span>
-              <span>Select Session ({wizardAvailableSessions.length} available):</span>
-            </label>
-            <select
-              value={wizardSessionId}
-              onChange={(e) => setWizardSessionId(e.target.value)}
-              className="w-full px-4 py-3 bg-white border-2 border-brand-orange/20 rounded-xl text-sm font-bold text-[var(--foreground)] focus:outline-none focus:border-brand-orange shadow-sm truncate"
-            >
-              {wizardAvailableSessions.map((s) => (
-                <option key={s.id} value={s.id}>
-                  [{s.week}] {s.sessionName} ({s.duration}m - {s.expertType || 'Live'})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* STEP 3: Action Button */}
-          <div className="md:col-span-2">
-            <button
-              onClick={handleLoadPrepData}
-              disabled={!wizardSessionId}
-              className="w-full py-3 px-4 rounded-xl bg-brand-orange hover:bg-orange-600 text-white font-extrabold text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer active:scale-95"
-            >
-              <span>Load Prep Data</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* ── AUTOMATICALLY LOADED SESSION PREP DATA DISPLAY ── */}
-        {activePrepPackage && (
-          <div className="mt-8 pt-6 border-t-2 border-brand-orange/20 space-y-6 animate-in fade-in duration-300">
-            {/* Header info */}
-            <div className="flex flex-wrap items-start justify-between gap-4 bg-white p-5 rounded-2xl border border-[var(--border)] shadow-sm">
-              <div className="space-y-1.5 max-w-3xl">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2.5 py-0.5 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-extrabold uppercase tracking-wider">
-                    {activePrepPackage.week}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase tracking-wider">
-                    {activePrepPackage.module}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-extrabold uppercase tracking-wider">
-                    {activePrepPackage.category}
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-gray-100 border border-gray-200 text-gray-700 text-[10px] font-bold uppercase tracking-wider">
-                    {activePrepPackage.type}
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight">
-                  {activePrepPackage.sessionName}
-                </h3>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--layer-2)] border border-[var(--border)] text-xs font-mono font-bold text-[var(--foreground)]">
-                  <Clock className="w-4 h-4 text-brand-orange" />
-                  <span>{activePrepPackage.duration} mins</span>
-                </div>
-
-                {activePrepPackage.expertType && (
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 border border-blue-100 text-xs font-bold text-blue-700">
-                    <UserCheck className="w-4 h-4" />
-                    <span>Role: {activePrepPackage.expertType}</span>
-                  </div>
-                )}
-              </div>
+            {/* Quick Resource Link Chips */}
+            <div className="flex flex-wrap gap-2 pt-1 border-t border-[var(--border)]">
+              {activeSession?.linkContent && (
+                <a
+                  href={activeSession.linkContent}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500 text-white text-[11px] font-extrabold hover:bg-amber-600 shadow-sm"
+                >
+                  <Presentation className="w-3.5 h-3.5" /> Slides ↗
+                </a>
+              )}
+              {activeSession?.linkCharter && (
+                <a
+                  href={activeSession.linkCharter}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-600 text-white text-[11px] font-extrabold hover:bg-emerald-700 shadow-sm"
+                >
+                  <FileSpreadsheet className="w-3.5 h-3.5" /> Charter ↗
+                </a>
+              )}
+              {activeSession?.linkModelSolution && (
+                <a
+                  href={activeSession.linkModelSolution}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-blue-600 text-white text-[11px] font-extrabold hover:bg-blue-700 shadow-sm"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Solution ↗
+                </a>
+              )}
+              {activeSession?.linkTest && (
+                <a
+                  href={activeSession.linkTest}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-600 text-white text-[11px] font-extrabold hover:bg-purple-700 shadow-sm"
+                >
+                  <Award className="w-3.5 h-3.5" /> MCQ Test ↗
+                </a>
+              )}
             </div>
 
-            {/* Expert Prep Notes & Kahoot Box */}
-            {activePrepPackage.pointsToNote && activePrepPackage.pointsToNote.trim() !== "" ? (
-              <div
-                className={`p-5 rounded-2xl border leading-relaxed space-y-2 ${
-                  activePrepPackage.pointsToNote.toLowerCase().includes("kahoot")
-                    ? "bg-purple-500/10 border-purple-500/30 text-purple-950"
-                    : "bg-amber-500/10 border-amber-500/30 text-amber-950"
-                }`}
-              >
-                <div className="flex items-center gap-2 font-black uppercase tracking-wider text-xs">
-                  {activePrepPackage.pointsToNote.toLowerCase().includes("kahoot") ? (
-                    <>
-                      <Key className="w-4 h-4 text-purple-600" />
-                      <span className="text-purple-800">Kahoot Login &amp; Quiz Instructions</span>
-                    </>
+            {/* Acad Expert Brief (FULL WIDTH, CLEAN SCROLLABLE) */}
+            <div className="pt-2">
+              <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-xs space-y-1.5 w-full">
+                <span className="font-extrabold text-amber-950 uppercase text-[10px] tracking-wider flex items-center gap-1">
+                  <FileText className="w-3.5 h-3.5 text-amber-700" /> Acad Expert Brief
+                </span>
+                <div className="max-h-40 overflow-y-auto pr-1 space-y-1 text-amber-950 font-medium text-[11px] leading-relaxed">
+                  {activeSession?.expertBrief ? (
+                    activeSession.expertBrief.split('\n').map((line, idx) => (
+                      <p key={idx} className="flex items-start gap-1.5">
+                        <span className="text-amber-500 font-bold">•</span>
+                        <span>{line}</span>
+                      </p>
+                    ))
                   ) : (
-                    <>
-                      <AlertTriangle className="w-4 h-4 text-amber-600" />
-                      <span className="text-amber-800">Important Expert Prep Notes &amp; Guidelines</span>
-                    </>
+                    <p className="text-amber-800 italic">No special expert brief recorded for this session.</p>
                   )}
                 </div>
-                <p className="whitespace-pre-line font-medium text-xs sm:text-sm">
-                  {activePrepPackage.pointsToNote}
-                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* DYNAMIC CARD: How this session went in the past (Analyzed from N past deliveries) */}
+          <div className="glass-card p-4 rounded-2xl border border-[var(--border)] bg-white space-y-3 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
+              <div className="flex items-center gap-2">
+                <History className="w-4 h-4 text-[#E8A020]" />
+                <h3 className="text-xs font-black uppercase tracking-wider text-[var(--foreground)]">
+                  How this session went in the past
+                </h3>
+              </div>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#E8A020]/15 text-[#E8A020] text-[10px] font-extrabold border border-[#E8A020]/30 flex items-center gap-1">
+                <Sparkles className="w-3 h-3" /> Analyzed from {deliveryCount} past {deliveryCount === 1 ? 'delivery' : 'deliveries'}
+              </span>
+            </div>
+
+            {intelLoading ? (
+              <div className="py-8 text-center space-y-2">
+                <RefreshCw className="w-6 h-6 animate-spin text-[#E8A020] mx-auto" />
+                <p className="text-xs font-bold text-[var(--muted)]">Synthesizing past session analysis (&lt;3s)...</p>
               </div>
             ) : (
-              <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs text-[var(--muted)] italic">
-                No special administrative points to note for this session. Review materials below.
+              <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+                {/* 1. Student Difficulty Topics */}
+                <div className="space-y-2">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 flex items-center gap-1">
+                    <HelpCircle className="w-3.5 h-3.5" /> Major Student Difficulty Topics
+                  </span>
+                  {sessionIntel?.majorStudentDifficultyTopics?.map((item, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-rose-50/80 border border-rose-200 text-xs space-y-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-extrabold text-rose-950 text-[11px] flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                          {item.topic}
+                        </span>
+                        <span className="px-2 py-0.5 bg-rose-600 text-white rounded-md text-[8px] font-black uppercase tracking-wider">
+                          {item.severity}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[var(--foreground)] font-medium leading-relaxed pl-3">
+                        👉 {item.historical_context}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* 2. Best Proven Analogies */}
+                <div className="space-y-2 pt-2.5 border-t border-[var(--border)]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+                    <Lightbulb className="w-3.5 h-3.5" /> Best Proven Analogies To Use Live
+                  </span>
+                  {sessionIntel?.bestAnalogiesToUse?.map((item, idx) => (
+                    <div key={idx} className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200 text-xs space-y-1.5">
+                      <span className="font-extrabold text-emerald-950 text-[11px] uppercase block">
+                        🎯 Target Concept: {item.concept}
+                      </span>
+                      <p className="font-bold text-[var(--foreground)] text-[11px] italic bg-white p-2.5 rounded-lg border border-emerald-200 leading-relaxed shadow-2xs">
+                        "{item.analogy}"
+                      </p>
+                      <p className="text-[10px] font-medium text-emerald-800 pl-1">
+                        💡 <strong className="font-bold">Why it works:</strong> {item.why_it_works}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ── RIGHT COLUMN: SECTION 2 — ABOUT THE BATCH / COHORT ── */}
+        <div className="space-y-4">
+          
+          {/* Header Badge */}
+          <div className="flex items-center justify-between bg-white border border-[var(--border)] px-4 py-2.5 rounded-xl shadow-sm">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-[#E8A020]" />
+              <span className="text-xs font-extrabold text-[var(--foreground)] uppercase tracking-wider">
+                Section 2: About the Batch / Cohort
+              </span>
+            </div>
+            <span className="text-[10px] font-bold text-[var(--muted)] bg-[var(--layer-2)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+              {activeBatch?.name || "Selected Batch"}
+            </span>
+          </div>
+
+          {/* DETERMINISTIC COHORT STANDING (CLEAN COMPACT POINTER FORMAT - NO WALL OF TEXT) */}
+          <div className="glass-card p-4 rounded-2xl border border-[var(--border)] bg-white space-y-3.5 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+              <span className="text-xs font-black uppercase tracking-wider text-[var(--foreground)] flex items-center gap-1.5">
+                <TrendingUp className="w-4 h-4 text-[#E8A020]" /> Cohort Curriculum Sequence Standing
+              </span>
+              <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md border border-emerald-200">
+                0ms Instant Sequence
+              </span>
+            </div>
+
+            {/* POINTER 1: Currently Learning Module */}
+            <div className="p-3.5 rounded-xl bg-gradient-to-r from-amber-500/10 to-[#E8A020]/15 border border-[#E8A020]/30 space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#E8A020]" /> Currently Learning Module
+                </span>
+                {batchIntel?.totalSessionsInCurrentModule && batchIntel.totalSessionsInCurrentModule > 0 ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#E8A020] text-white text-[10px] font-black shadow-2xs">
+                    {batchIntel.completedSessionsCount} / {batchIntel.totalSessionsInCurrentModule} Sessions Completed
+                  </span>
+                ) : null}
+              </div>
+              <p className="text-sm font-black text-amber-950">
+                {batchIntel?.currentModuleName || "Active Curriculum Module"}
+              </p>
+            </div>
+
+            {/* POINTER 2: Most Recent Completed Session */}
+            {batchIntel?.mostRecentSession && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div className="space-y-0.5 min-w-0">
+                  <span className="text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider block">
+                    Most Recent Session Completed
+                  </span>
+                  <p className="text-xs font-black text-emerald-950 truncate">
+                    "{batchIntel.mostRecentSession}"
+                  </p>
+                </div>
               </div>
             )}
 
-            {/* Resource Buttons & In-Platform Embedded Preview */}
-            <div className="bg-white p-5 rounded-2xl border border-[var(--border)] space-y-4 shadow-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold uppercase tracking-wider text-[var(--muted)]">
-                  Session Resources &amp; Materials
-                </span>
-                {embedUrl && (
-                  <button
-                    onClick={() => setEmbedUrl(null)}
-                    className="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1"
-                  >
-                    <X className="w-3.5 h-3.5" /> Close Embedded View
-                  </button>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
-                {activePrepPackage.linkContent && (
-                  <div className="flex items-center gap-2">
-                    <a
-                      href={activePrepPackage.linkContent}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-orange-500 text-white text-xs font-extrabold transition-all hover:bg-orange-600 shadow-sm"
+            {/* POINTER 3: Completed Modules Roadmap Badges (DEDUPLICATED & STRICTLY PRIOR) */}
+            <div className="space-y-2 pt-1 border-t border-[var(--border)]">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--muted)] block">
+                Completed Modules Roadmap Prior to Current Topic
+              </span>
+              {batchIntel?.completedModulesList && batchIntel.completedModulesList.length > 0 ? (
+                <div className="flex flex-wrap gap-1.5 max-h-[140px] overflow-y-auto pr-1">
+                  {batchIntel.completedModulesList.map((modName, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-extrabold flex items-center gap-1 shadow-2xs"
                     >
-                      <Presentation className="w-4 h-4" />
-                      <span>Open Slide Deck ↗</span>
-                    </a>
-                  </div>
-                )}
-
-                {activePrepPackage.linkCharter && (
-                  <a
-                    href={activePrepPackage.linkCharter}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-extrabold transition-all hover:bg-emerald-700 shadow-sm"
-                  >
-                    <FileSpreadsheet className="w-4 h-4" />
-                    <span>In-Session Charter ↗</span>
-                  </a>
-                )}
-
-                {activePrepPackage.linkModelSolution && (
-                  <a
-                    href={activePrepPackage.linkModelSolution}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-extrabold transition-all hover:bg-blue-700 shadow-sm"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Model Solution ↗</span>
-                  </a>
-                )}
-
-                {activePrepPackage.linkTest && (
-                  <a
-                    href={activePrepPackage.linkTest}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-extrabold transition-all hover:bg-purple-700 shadow-sm"
-                  >
-                    <Award className="w-4 h-4" />
-                    <span>MCQ Test ↗</span>
-                  </a>
-                )}
-
-                {!activePrepPackage.linkContent && !activePrepPackage.linkCharter && !activePrepPackage.linkModelSolution && (
-                  <span className="text-xs text-[var(--muted)] italic">
-                    No direct links attached for this session.
-                  </span>
-                )}
-              </div>
-
-              {/* Embedded Document Frame if activated */}
-              {embedUrl && (
-                <div className="pt-4 border-t border-[var(--border)] space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold text-[var(--foreground)]">
-                    <span>In-Platform View: {embedTitle}</span>
-                    <a
-                      href={embedUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-brand-orange hover:underline flex items-center gap-1"
-                    >
-                      <Maximize2 className="w-3 h-3" /> Open full page
-                    </a>
-                  </div>
-                  <div className="w-full h-[600px] rounded-xl border border-[var(--border)] overflow-hidden bg-slate-100 shadow-inner">
-                    <iframe
-                      src={embedUrl}
-                      className="w-full h-full border-0"
-                      title={embedTitle}
-                    />
-                  </div>
+                      <CheckCircle className="w-3 h-3 text-emerald-600" /> {modName}
+                    </span>
+                  ))}
                 </div>
+              ) : (
+                <p className="text-[11px] text-[var(--muted)] italic">First module in curriculum schedule.</p>
               )}
             </div>
           </div>
-        )}
-      </div>
 
-      {/* ── BROWSE ALL SESSIONS & FILTERS ── */}
-      <div className="glass-card p-6 space-y-6 rounded-2xl border border-[var(--border)] shadow-sm">
-        <div className="flex items-center justify-between pb-3 border-b border-[var(--border)]">
-          <h3 className="text-base font-extrabold text-[var(--foreground)] tracking-tight flex items-center gap-2">
-            <Layers className="w-4 h-4 text-brand-orange" />
-            <span>Browse All {sessions.length} Sessions Schedule</span>
-          </h3>
-          <span className="text-xs text-[var(--muted)] font-medium">
-            Search or filter across all modules
-          </span>
-        </div>
-
-        {/* General Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search all session titles, Kahoot credentials, slides, or modules..."
-            className="w-full pl-11 pr-4 py-3 bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl text-xs sm:text-sm font-medium text-[var(--foreground)] placeholder-[var(--muted)] focus:outline-none focus:border-brand-orange/50 transition-colors shadow-inner"
-          />
-        </div>
-
-        {/* Filters Row */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Filter className="w-3.5 h-3.5 text-[var(--muted)]" />
-            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider">Week:</span>
-            <select
-              value={selectedWeek}
-              onChange={(e) => setSelectedWeek(e.target.value)}
-              className="px-3 py-1.5 rounded-lg bg-[var(--layer-2)] border border-[var(--border)] text-xs font-bold text-[var(--foreground)] focus:outline-none"
-            >
-              <option value="all">All Weeks</option>
-              {weeks.map((w) => (
-                <option key={w} value={w}>
-                  {w}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-[var(--muted)] uppercase tracking-wider">Type:</span>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="px-3 py-1.5 rounded-lg bg-[var(--layer-2)] border border-[var(--border)] text-xs font-bold text-[var(--foreground)] focus:outline-none"
-            >
-              <option value="all">All Types</option>
-              {types.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {(selectedWeek !== "all" || selectedType !== "all" || searchQuery) && (
-            <button
-              onClick={() => {
-                setSelectedWeek("all");
-                setSelectedType("all");
-                setSearchQuery("");
-              }}
-              className="text-xs font-bold text-brand-orange hover:underline ml-auto"
-            >
-              Reset Filters
-            </button>
-          )}
-        </div>
-
-        {/* Schedule List */}
-        <div className="space-y-3 pt-2">
-          {filteredSessions.map((session) => (
-            <div
-              key={session.id}
-              onClick={() => {
-                setWizardModule(session.module);
-                setWizardSessionId(session.id);
-                setActivePrepPackage(session);
-                window.scrollTo({ top: 180, behavior: 'smooth' });
-              }}
-              className={`p-4 rounded-xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                activePrepPackage?.id === session.id
-                  ? 'bg-orange-50/60 border-brand-orange/40 shadow-sm'
-                  : 'bg-white border-[var(--border)] hover:border-brand-orange/30 hover:bg-slate-50/50'
-              }`}
-            >
-              <div className="space-y-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="px-2 py-0.5 rounded-md bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-extrabold uppercase">
-                    {session.week}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-md bg-ks-navy/10 border border-ks-navy/20 text-ks-navy text-[10px] font-extrabold uppercase">
-                    {session.module}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-md bg-purple-50 border border-purple-100 text-purple-700 text-[10px] font-bold uppercase">
-                    {session.category}
-                  </span>
-                </div>
-                <h4 className="text-sm font-bold text-[var(--foreground)] truncate">
-                  {session.sessionName}
-                </h4>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-mono text-[var(--muted)] font-bold">
-                  {session.duration}m
-                </span>
-                <button className="px-3 py-1 rounded-lg bg-brand-orange/10 text-brand-orange text-xs font-bold border border-brand-orange/20">
-                  Select
-                </button>
-              </div>
+          {/* AI Cohort Engagement Dynamics */}
+          <div className="glass-card p-4 rounded-2xl border border-[var(--border)] bg-white space-y-3 shadow-sm">
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-2">
+              <span className="text-xs font-black uppercase tracking-wider text-[var(--foreground)] flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-[#E8A020]" /> Cohort Engagement Dynamics
+              </span>
+              <span className="text-[10px] font-bold text-[var(--muted)] font-mono">
+                {intelLoading ? "Analyzing..." : `${batchIntel?.historicalSessionCount ?? 1} Cohort Logs`}
+              </span>
             </div>
-          ))}
+
+            {intelLoading ? (
+              <div className="py-8 text-center space-y-2">
+                <RefreshCw className="w-6 h-6 animate-spin text-[#E8A020] mx-auto" />
+                <p className="text-xs font-bold text-[var(--muted)]">Analyzing Cohort Dynamics (&lt;2s)...</p>
+              </div>
+            ) : (
+              <div className="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+                {/* Engagement Bottlenecks */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-rose-600 flex items-center gap-1">
+                    <AlertTriangle className="w-3.5 h-3.5" /> Engagement Bottlenecks
+                  </span>
+                  {batchIntel?.engagementBottlenecks?.map((b, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-xs">
+                      <p className="font-bold text-rose-950 text-[11px]">⚠️ {b.issue}</p>
+                      <p className="text-[10px] text-[var(--foreground)] font-medium mt-0.5 pl-3">{b.impact}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Engagement Drivers */}
+                <div className="space-y-1.5 pt-2 border-t border-[var(--border)]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+                    <Zap className="w-3.5 h-3.5" /> Proven Engagement Drivers
+                  </span>
+                  {batchIntel?.engagementDrivers?.map((d, idx) => (
+                    <div key={idx} className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-xs">
+                      <p className="font-bold text-emerald-950 text-[11px]">⚡ {d.driver}</p>
+                      <p className="text-[10px] text-emerald-900 font-medium mt-0.5 pl-3">👉 {d.recommendation}</p>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Top Engaged Students */}
+                <div className="space-y-1.5 pt-2 border-t border-[var(--border)]">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-purple-600 flex items-center gap-1">
+                    <UserCheck className="w-3.5 h-3.5" /> Top Engaged Student Catalysts
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {batchIntel?.topEngagedStudents?.map((name, idx) => (
+                      <span key={idx} className="px-2.5 py-1 rounded-lg bg-purple-50 border border-purple-200 text-purple-950 text-[10px] font-bold shadow-2xs">
+                        ⭐ {name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

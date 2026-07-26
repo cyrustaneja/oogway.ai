@@ -112,47 +112,43 @@ export default function DashboardClient({
         initial="hidden"
         animate="visible"
         variants={fadeInUp}
-        className="flex flex-col items-center justify-center text-center relative"
+        className="flex flex-col items-center justify-center text-center relative w-full"
       >
-        <h1 className="text-[32px] sm:text-[48px] md:text-[56px] font-black text-[#1D1D1F] mb-4 sm:mb-6 tracking-tighter leading-[1.1] uppercase max-w-4xl">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange text-[10px] font-bold tracking-widest uppercase mb-6 sm:mb-8 shadow-sm">
+          <Zap className="w-3.5 h-3.5" />
+          Pulse Dashboard
+        </div>
+        
+        <h1 className="text-[32px] sm:text-[48px] md:text-[56px] font-black text-[var(--foreground)] mb-4 sm:mb-6 tracking-tighter leading-[1.1] uppercase max-w-4xl">
           THE EXPERT INTELLIGENCE ENGINE
         </h1>
-        <p className="text-[16px] sm:text-[19px] text-[#86868B] mb-12 sm:mb-20 font-medium font-serif italic max-w-2xl leading-relaxed">
-          Track session quality, expert performance, and student engagement.
+        <p className="text-[16px] sm:text-[19px] text-[var(--muted)] mb-12 sm:mb-16 font-medium max-w-2xl leading-relaxed">
+          Track session quality, expert performance, and student engagement across the entire curriculum.
         </p>
 
-        {/* Stats Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-0 w-full max-w-4xl mb-12 sm:mb-20">
+        {/* Modern Bento Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full max-w-5xl mb-12 sm:mb-16">
           {[
-            { label: "Total Sessions", value: analyses.length },
+            { label: "Total Sessions", value: analyses.length + "+" },
             { label: "Validated",      value: complete },
             { label: "Processing",     value: inProgress },
             { label: "Expert Nodes",   value: totalExperts },
-          ].map((s, idx) => (
-            <div
-              key={s.label}
-              className={`flex flex-col items-center justify-center ${idx !== 3 ? 'sm:border-r border-gray-200/60' : ''}`}
-            >
-              <div className="relative inline-block">
-                <span className="font-handwritten text-[#E8A020] text-[64px] sm:text-[80px] md:text-[96px] leading-[0.8] tracking-wide">
-                  {s.value}{s.label === "Total Sessions" ? "+" : ""}
-                </span>
-                <svg
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 sm:w-20 h-2.5 text-[#E8A020]/20"
-                  viewBox="0 0 100 10"
-                  preserveAspectRatio="none"
-                >
-                  <path d="M0,5 Q50,10 100,2" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="round" />
-                </svg>
-              </div>
-              <p className="text-[12px] sm:text-[14px] font-bold text-[#1D1D1F] mt-4 sm:mt-5">{s.label}</p>
+          ].map((s) => (
+            <div key={s.label} className="glass-card p-6 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden group border border-[var(--border)]">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-orange/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="text-[40px] sm:text-[48px] font-black text-[var(--foreground)] tracking-tight leading-none mb-2 z-10 group-hover:text-brand-orange transition-colors duration-300">
+                {s.value}
+              </span>
+              <p className="text-[11px] sm:text-[12px] font-bold text-[var(--muted)] uppercase tracking-widest z-10">
+                {s.label}
+              </p>
             </div>
           ))}
         </div>
 
         {role !== "EXPERT" && (
-          <Link href="/analysis/new" className="btn-primary px-8 sm:px-10 py-3 sm:py-3.5 shadow-lg">
-            Run New Analysis
+          <Link href="/analysis/new" className="btn-primary px-8 sm:px-10 py-3.5 sm:py-4 shadow-xl shadow-brand-orange/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 max-w-[280px] mx-auto w-full">
+            <CheckCircle2 className="w-5 h-5" /> Run New Analysis
           </Link>
         )}
       </motion.div>

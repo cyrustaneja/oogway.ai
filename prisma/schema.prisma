@@ -73,48 +73,68 @@ model Expert {
 }
 
 model Course {
-  id          String    @id @default(cuid())
-  name        String
-  description String?
-  deletedAt   DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  batches     Batch[]
-  modules     Module[]
+  id           String    @id @default(cuid())
+  name         String
+  description  String?
+  sheetUrl     String?   // Google Sheet URL for curriculum sync
+  sheetTabName String?   // Sheet tab name (defaults to Sheet1)
+  lastSyncedAt DateTime? // When the sheet was last synced
+  deletedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  batches      Batch[]
+  modules      Module[]
 }
 
 model Module {
-  id        String        @id @default(cuid())
-  name      String
-  order     Int           @default(0)
-  courseId  String
-  deletedAt DateTime?
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
-  course    Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sessions  SessionNote[]
+  id             String        @id @default(cuid())
+  name           String
+  order          Int           @default(0)
+  courseId       String
+  sheetModuleId  String?       // Module ID from the Google Sheet (e.g. MM109)
+  deletedAt      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  course         Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions       SessionNote[]
 
   @@index([deletedAt])
   @@index([courseId])
+  @@index([sheetModuleId])
 }
 
 model SessionNote {
-  id               String            @id @default(cuid())
-  name             String
-  content          String?
-  phase            String?
-  prerequisites    String?
-  keyTopics        String[]
-  expertGaps       String?
-  moduleId         String
-  deletedAt        DateTime?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  analysisSessions AnalysisSession[]
-  module           Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  id                 String            @id @default(cuid())
+  name               String
+  content            String?           // "Notes <> What should be taught" — used by AI analysis
+  phase              String?           // Week label (e.g. "Week 3")
+  prerequisites      String?           // "Points To Note" — admin notes
+  keyTopics          String[]
+  expertGaps         String?           // Legacy field
+  moduleId           String
+  // --- Sheet Sync Fields ---
+  sessionId          String?   @unique // Sheet's Session ID (e.g. S101) — upsert key
+  weekOrder          Int?              // Numeric week order for sorting
+  sessionType        String?           // e.g. "Live Session", "Workshop"
+  expertType         String?           // e.g. "SST", "Copilot"
+  duration           Int?              // Duration in minutes
+  evaluationRequired Boolean           @default(false)
+  linkContent        String?           // Slide deck / content link
+  linkCharter        String?           // In-session charter link
+  linkModelSolution  String?           // Model solution link
+  linkTest           String?           // MCQ test link
+  linkEvalParams     String?           // Evaluation parameters link
+  expertBrief        String?           // "Brief to Experts from Acad Team"
+  syncedAt           DateTime?         // When this record was last synced from sheet
+  deletedAt          DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  analysisSessions   AnalysisSession[]
+  module             Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
   @@index([deletedAt])
   @@index([moduleId])
+  @@index([sessionId])
 }
 
 model AnalysisSession {
@@ -122,6 +142,7 @@ model AnalysisSession {
   name                       String
   expertId                   String
   sessionNoteId              String?
+  conductedAt                DateTime?               // Date and Time when session was conducted live
   transcriptPath             String?
   transcriptRaw              String?
   transcript_clean           String?

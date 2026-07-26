@@ -35,6 +35,7 @@ export async function GET() {
       v3Error: true,
       heartbeat: true,
       deletedAt: true,
+      conductedAt: true,
       createdAt: true,
       updatedAt: true,
       pipeline_stage: true,
@@ -67,6 +68,7 @@ const createSessionSchema = z.object({
   transcriptUrl: z.string().url("Invalid transcript URL").optional().or(z.literal("")),
   transcriptText: z.string().optional(),
   tier: z.enum(["TIER1", "TIER3"]).default("TIER1"),
+  sessionDate: z.string().optional(),
 });
 
 // POST /api/analysis — create a new AnalysisSession
@@ -90,13 +92,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, expertId, sessionNoteId, schedDuration, batchId, videoUrl, transcriptUrl, transcriptText, tier } = parsed.data;
+    const { name, expertId, sessionNoteId, schedDuration, batchId, videoUrl, transcriptUrl, transcriptText, tier, sessionDate } = parsed.data;
 
     // Generate name if missing
     let finalName = name;
     if (!finalName) {
       const expert = await prisma.expert.findUnique({ where: { id: expertId }, select: { name: true } });
-      const date = new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short' });
+      const date = sessionDate
+        ? new Date(sessionDate).toLocaleDateString("en-GB", { day: '2-digit', month: 'short' })
+        : new Date().toLocaleDateString("en-GB", { day: '2-digit', month: 'short' });
       finalName = `Analysis - ${expert?.name || 'Expert'} - ${date}`;
     }
 
@@ -107,6 +111,7 @@ export async function POST(req: Request) {
         batchId: batchId || null,
         sessionNoteId: sessionNoteId || null,
         scheduledDuration: schedDuration ? Number(schedDuration) : null,
+        conductedAt: sessionDate ? new Date(sessionDate) : new Date(),
         videoUrl: videoUrl,
         transcriptUrl: transcriptUrl || null,
         transcriptRaw: transcriptText || null,

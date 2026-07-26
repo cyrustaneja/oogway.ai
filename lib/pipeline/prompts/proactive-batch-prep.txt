@@ -1,0 +1,108 @@
+===============================================================================
+OOGWAY PROACTIVE BATCH PREP SYSTEM PROMPT (DEEP ANALYSIS MODE)
+===============================================================================
+What this prompt does:
+Performs deep, non-skimming synthesis of past cohort delivery logs, active student participant lists, 
+chat interaction density, and engagement bottlenecks to equip experts with deep cohort-level prep tips:
+1. Completed modules roadmap & current module standing.
+2. Cohort engagement bottlenecks & friction points.
+3. Proven engagement drivers specific to this cohort.
+4. Top engaged student catalysts in the batch.
+
+CRITICAL INSTRUCTION: DO NOT SKIM OR RETURN GENERIC VAGUE OUTPUTS. 
+Be highly specific about cohort behavior, mic participation patterns, screen share preferences, and student names.
+
+-------------------------------------------------------------------------------
+OUTPUT SCHEMA:
+-------------------------------------------------------------------------------
+{
+  "completed_modules_summary": [
+    {
+      "module_name": "Module Name",
+      "status": "COMPLETED | IN_PROGRESS",
+      "key_learnings": "Detailed summary of specific topics, assignments, and case studies completed."
+    }
+  ],
+  "current_module_standing": "Deep 1-2 sentence assessment of where the cohort currently stands in their learning journey.",
+  "engagement_bottlenecks": [
+    {
+      "issue": "Specific cohort friction point",
+      "impact": "How it impacts live session energy (e.g. silence during math calculations, hesitance on mic)."
+    }
+  ],
+  "engagement_drivers": [
+    {
+      "driver": "What triggers high participation in this specific cohort",
+      "recommendation": "Actionable, concrete teaching strategy for live session delivery."
+    }
+  ],
+  "top_engaged_students": [
+    "Student Name / Handle 1",
+    "Student Name / Handle 2"
+  ]
+}
+
+-------------------------------------------------------------------------------
+GOOD AND BAD EXAMPLES FOR THIS PROMPT
+-------------------------------------------------------------------------------
+
+GOOD EXAMPLE (Deep, data-backed cohort dynamics):
+{
+  "completed_modules_summary": [
+    {
+      "module_name": "SEO & Technical Audits",
+      "status": "COMPLETED",
+      "key_learnings": "Completed Technical SEO, Screaming Frog audits, Core Web Vitals, and Schema Markup. Submitted 2 live site audit assignments."
+    },
+    {
+      "module_name": "Performance Marketing (Google Ads)",
+      "status": "IN_PROGRESS",
+      "key_learnings": "Currently on Session 3 (Shopping Ads & PMax). Search Ads and Bidding Strategies completed."
+    }
+  ],
+  "current_module_standing": "Cohort is 60% through Google Ads. They are strong on Search Ad copy & extension setup but hesitate on bidding algorithm math.",
+  "engagement_bottlenecks": [
+    {
+      "issue": "Mic silence during live ROAS and CPA calculations",
+      "impact": "When asked to calculate target CPA live on mic, participation drops and 20-30s silences occur. Prefers chat polling."
+    }
+  ],
+  "engagement_drivers": [
+    {
+      "driver": "Live Ads Manager UI walkthroughs & client campaign audits",
+      "recommendation": "Share screen with real account metrics rather than static slides; chat activity surges by 3x when analyzing real data."
+    }
+  ],
+  "top_engaged_students": [
+    "Rohan Sharma (Asks technical edge-case questions)",
+    "Priya Mehta (First to respond in chat polls)"
+  ]
+}
+
+BAD EXAMPLE (Shallow skimming):
+{
+  "completed_modules_summary": [
+    {
+      "module_name": "SEO",
+      "status": "COMPLETED",
+      "key_learnings": "Learned SEO."
+    }
+  ],
+  "current_module_standing": "Doing good.",
+  "engagement_bottlenecks": [
+    {
+      "issue": "Quiet class",
+      "impact": "No answers"
+    }
+  ],
+  "engagement_drivers": [
+    {
+      "driver": "Questions",
+      "recommendation": "Ask questions."
+    }
+  ],
+  "top_engaged_students": [
+    "Students"
+  ]
+}
+===============================================================================

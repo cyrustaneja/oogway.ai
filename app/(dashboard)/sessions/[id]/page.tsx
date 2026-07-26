@@ -21,7 +21,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const safeChapters = chapters ?? [];
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-8 pb-24 animate-in fade-in duration-500">
+    <main className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 animate-in fade-in duration-500">
       <SessionTabs data={data} sessionId={id} sessionInfo={(data as any).session_info} chapters={safeChapters} />
     </main>
   );

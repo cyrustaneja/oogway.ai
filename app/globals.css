@@ -16,7 +16,7 @@
   /* Legacy aliases so existing code doesn't break */
   --color-brand-orange:    #E8A020;
   --color-brand-success:   #00A896;
-  --color-brand-warning:   #F59E0B;
+  --color-brand-warning:   #E8A020;
   --color-brand-danger:    #E03E3E;
   --color-brand-info:      #00B6F0;
 
@@ -38,75 +38,71 @@
 
     /* ── Premium High-Contrast Light Theme ────────────────────────────────── */
     --background:   #FAFAFC;        /* Very light, sophisticated off-white */
-    --foreground:   #09090B;        /* Near black for extreme crispness */
-    --card-bg:      rgba(255, 255, 255, 0.7); /* Translucent pure white for glassmorphism */
-    --card-border:  rgba(255, 255, 255, 0.6);
-    --card-shadow:  0 10px 40px -10px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(255,255,255,0.4);
+    --foreground:   #1A2B47;        /* KS Navy for deep contrast */
+    --card-bg:      rgba(255, 255, 255, 0.9);
+    --card-border:  rgba(26, 43, 71, 0.08); /* Navy-tinted subtle border */
+    --card-shadow:  0 8px 30px rgba(26, 43, 71, 0.04), 0 1px 3px rgba(26, 43, 71, 0.02);
     
-    --muted:        #71717A;        /* Crisp secondary text */
-    --muted-foreground: #A1A1AA;    /* Placeholder text */
-    --sidebar-bg:   #FFFFFF;
+    --muted:        #64748B;
+    --muted-foreground: #94A3B8;    
+    --sidebar-bg:   rgba(255, 255, 255, 0.8);
     
     /* Structural layers */
     --layer-1:      #FFFFFF;
-    --layer-2:      #F4F4F5;
-    --border:       #E4E4E7;
-    --inner-border: #F4F4F5;
-    --inner-bg:     #FAFAFC;
+    --layer-2:      #F1F5F9;
+    --border:       rgba(26, 43, 71, 0.08);
+    --inner-border: rgba(26, 43, 71, 0.04);
+    --inner-bg:     #FFFFFF;
     --bg:           #FAFAFC;
     
     /* Premium Glassmorphism */
-    --glass-blur:   12px; 
+    --glass-blur:   24px; 
 
-    /* Glows — Vibrant accents for timelines and highlights */
-    --glow-1: rgba(232, 160, 32, 0.15); /* Orange glow */
-    --glow-2: rgba(0, 168, 150, 0.15);  /* Teal glow */
-    --glow-3: rgba(224, 62, 62, 0.15);  /* Red glow */
+    /* Semantic Chips — Using KraftShala specific colors */
+    --chip-red-bg:         rgba(224, 62, 62, 0.08);
+    --chip-red-text:       #E03E3E;
+    --chip-red-border:     rgba(224, 62, 62, 0.2);
 
-    /* Semantic Chips — High saturation for grabbing attention */
-    --chip-red-bg:         #FEF2F2;
-    --chip-red-text:       #EF4444;
-    --chip-red-border:     #FECACA;
+    --chip-amber-bg:       rgba(232, 160, 32, 0.08);
+    --chip-amber-text:     #E8A020;
+    --chip-amber-border:   rgba(232, 160, 32, 0.2);
 
-    --chip-amber-bg:       #FFFBEB;
-    --chip-amber-text:     #F59E0B;
-    --chip-amber-border:   #FDE68A;
+    --chip-green-bg:       rgba(0, 168, 150, 0.08);
+    --chip-green-text:     #00A896;
+    --chip-green-border:   rgba(0, 168, 150, 0.2);
 
-    --chip-green-bg:       #F0FDF4;
-    --chip-green-text:     #10B981;
-    --chip-green-border:   #A7F3D0;
+    --chip-darkgreen-bg:   #1A2B47;
+    --chip-darkgreen-text: #FFFFFF;
+    --chip-darkgreen-border: #2D3A4A;
 
-    --chip-darkgreen-bg:   #064E3B;
-    --chip-darkgreen-text: #D1FAE5;
-    --chip-darkgreen-border: #047857;
+    --chip-blue-bg:        rgba(0, 182, 240, 0.08);
+    --chip-blue-text:      #00B6F0;
+    --chip-blue-border:    rgba(0, 182, 240, 0.2);
 
-    --chip-blue-bg:        #EFF6FF;
-    --chip-blue-text:      #3B82F6;
-    --chip-blue-border:    #BFDBFE;
-
-    --chip-orange-bg:      #FFF7ED;
-    --chip-orange-text:    #F97316;
-    --chip-orange-border:  #FED7AA;
+    --chip-orange-bg:      rgba(232, 160, 32, 0.08);
+    --chip-orange-text:    #E8A020;
+    --chip-orange-border:  rgba(232, 160, 32, 0.2);
   }
 
   body {
     background-color: var(--background);
-    background-image: 
-      radial-gradient(at 0% 0%, rgba(232, 160, 32, 0.03) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, rgba(0, 168, 150, 0.03) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(0, 182, 240, 0.03) 0px, transparent 50%);
-    background-attachment: fixed;
     color: var(--foreground);
-    font-family: var(--font-jakarta), sans-serif;
+    font-family: var(--font-jakarta);
     min-height: 100vh;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Adding subtle Kraftshala glow back in */
+    background-image: 
+      radial-gradient(circle at 15% 15%, rgba(232, 160, 32, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(0, 168, 150, 0.03) 0%, transparent 40%);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-montserrat), sans-serif;
+    font-family: var(--font-jakarta);
     font-weight: 700;
-    color: var(--foreground);
+    letter-spacing: -0.01em; 
+    color: var(--color-ks-navy);
   }
 
   .font-handwritten {
@@ -117,57 +113,41 @@
 @layer components {
 
   /* ── Card ─────────────────────────────────────────────────────────── */
-  .glass-card {
+  .glass-card, .ks-card {
     background: var(--card-bg);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--card-border);
     box-shadow: var(--card-shadow);
-    border-radius: 20px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 20px; 
+    transition: all 0.3s ease; 
   }
-  .glass-card:hover {
-    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.8);
-    transform: translateY(-2px);
-  }
-
-  /* Alias for new card style */
-  .ks-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--card-border);
-    box-shadow: var(--card-shadow);
-    border-radius: 20px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .ks-card:hover {
-    box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.8);
+  .glass-card:hover, .ks-card:hover {
+    box-shadow: 0 12px 40px rgba(26, 43, 71, 0.08), 0 2px 6px rgba(26, 43, 71, 0.04);
     transform: translateY(-2px);
   }
 
   /* ── Inputs ────────────────────────────────────────────────────────── */
   .liquid-input {
-    @apply w-full bg-white border border-[var(--border)] rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ks-yellow/40 transition-all placeholder:text-[var(--muted-foreground)];
+    @apply w-full bg-white border border-[var(--border)] rounded-xl py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#E8A020]/20 focus:border-[#E8A020] transition-all placeholder:text-[var(--muted-foreground)] shadow-inner text-[#1A2B47];
   }
 
   /* ── Buttons ───────────────────────────────────────────────────────── */
-  /* Exact KraftShala button spec: pill shape, normal case, semi-bold, drop shadow */
   .btn-primary {
-    @apply bg-[#E8A020] text-white px-8 py-3 rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[#d6931c] active:scale-[0.98] shadow-[0_4px_14px_0_rgba(232,160,32,0.39)];
+    @apply bg-[#E8A020] text-white px-8 py-3 rounded-full font-bold text-[14px] tracking-wide transition-all duration-300 hover:bg-[#C4841A] hover:shadow-lg hover:shadow-[#E8A020]/20 active:scale-[0.97];
   }
 
   .btn-secondary {
-    @apply bg-transparent text-[#1A2B47] px-8 py-3 rounded-full font-semibold text-[15px] border-2 border-[#E8A020] transition-all hover:bg-[#E8A020]/5 active:scale-[0.98];
+    @apply bg-white text-[#1A2B47] px-8 py-3 rounded-full font-bold text-[14px] border border-[var(--border)] transition-all duration-300 hover:bg-[#F1F5F9] hover:border-[#1A2B47]/30 active:scale-[0.97] shadow-sm;
   }
 
   .btn-cyan {
-    @apply bg-[#00B6F0] text-white px-8 py-3 rounded-full font-semibold text-[15px] transition-all duration-200 hover:bg-[#00a3d7] active:scale-[0.98] shadow-[0_4px_14px_0_rgba(0,182,240,0.39)];
+    @apply bg-[#00A896] text-white px-8 py-3 rounded-full font-bold text-[14px] tracking-wide transition-all duration-300 hover:bg-[#008A7B] hover:shadow-lg active:scale-[0.97];
   }
 
-  /* ── KraftShala Branded Badge ──────────────────────────────────────── */
+  /* ── Badge ──────────────────────────────────────── */
   .ks-badge {
-    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-ks-yellow-light text-ks-yellow-dark border border-ks-yellow/20;
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold bg-[#F1F5F9] text-[#1A2B47] border border-[var(--border)];
   }
 }
 
@@ -175,12 +155,12 @@
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #EAEFF4;
+  background: rgba(26, 43, 71, 0.15);
   border-radius: 20px;
 }
-::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 71, 0.3); }
 
 select option {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
+  background-color: #FFFFFF !important;
+  color: #1A2B47 !important;
 }

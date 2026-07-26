@@ -16,9 +16,28 @@ export async function GET() {
         where: { deletedAt: null },
         orderBy: { order: "asc" },
         include: {
-          sessions: { 
+          sessions: {
             where: { deletedAt: null },
-            orderBy: { createdAt: "desc" } 
+            orderBy: [{ weekOrder: "asc" }, { createdAt: "asc" }],
+            select: {
+              id: true,
+              name: true,
+              sessionId: true,
+              phase: true,
+              content: true,
+              expertBrief: true,
+              sessionType: true,
+              expertType: true,
+              duration: true,
+              weekOrder: true,
+              evaluationRequired: true,
+              linkContent: true,
+              linkCharter: true,
+              linkModelSolution: true,
+              linkTest: true,
+              linkEvalParams: true,
+              syncedAt: true,
+            },
           },
         },
       },

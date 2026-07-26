@@ -176,8 +176,8 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
 
               {/* Timeline */}
               <div className="lg:col-span-1 text-[11px] font-bold text-[var(--muted)] flex items-center gap-2">
-                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Scanned</span>
-                {new Date(a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Conducted</span>
+                {new Date(a.conductedAt || a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
               </div>
             </div>
 

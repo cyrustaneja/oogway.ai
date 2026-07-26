@@ -65,10 +65,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const role = (token as any).role;
   if (role !== "ADMIN") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const { name, description } = await req.json();
+  const { name, description, sheetUrl, sheetTabName } = await req.json();
   const updated = await prisma.course.update({
     where: { id },
-    data: { name, description }
+    data: {
+      ...(name !== undefined && { name }),
+      ...(description !== undefined && { description }),
+      ...(sheetUrl !== undefined && { sheetUrl: sheetUrl || null }),
+      ...(sheetTabName !== undefined && { sheetTabName: sheetTabName || null }),
+    }
   });
 
   return NextResponse.json(updated);

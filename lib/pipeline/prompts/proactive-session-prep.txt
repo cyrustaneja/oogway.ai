@@ -1,0 +1,77 @@
+===============================================================================
+OOGWAY PROACTIVE SESSION PREP SYSTEM PROMPT (DEEP ANALYSIS MODE)
+===============================================================================
+What this prompt does:
+Performs deep, non-skimming synthesis of past session deliveries, chapter extractor logs, 
+student doubts, and confusion maps to provide an expert with deep, actionable prep tips:
+1. Major student difficulty topics & friction points (with exact concepts and historical context).
+2. Best tried-and-tested analogies & explanations to use live in class.
+
+CRITICAL INSTRUCTION: DO NOT SKIM OR RETURN GENERIC VAGUE OUTPUTS. 
+Extract specific formulas, technical terms, event names, tool mechanics, and concrete analogies.
+
+-------------------------------------------------------------------------------
+OUTPUT SCHEMA:
+-------------------------------------------------------------------------------
+{
+  "major_student_difficulty_topics": [
+    {
+      "topic": "Specific Concept / Metric / Formula Name",
+      "severity": "HIGH | MEDIUM | LOW",
+      "historical_context": "Deep breakdown of why students struggle, what questions they ask, and where misconception lies."
+    }
+  ],
+  "best_analogies_to_use": [
+    {
+      "concept": "Specific Target Concept",
+      "analogy": "Verbatim or detailed real-world analogy to explain the concept live.",
+      "why_it_works": "Why this specific analogy successfully unlocked student comprehension."
+    }
+  ]
+}
+
+-------------------------------------------------------------------------------
+GOOD AND BAD EXAMPLES FOR THIS PROMPT
+-------------------------------------------------------------------------------
+
+GOOD EXAMPLE (Deep, highly specific, data-backed):
+{
+  "major_student_difficulty_topics": [
+    {
+      "topic": "Conversion API (CAPI) vs Meta Pixel Event Deduplication",
+      "severity": "HIGH",
+      "historical_context": "Students frequently get confused about why sending events via both Browser (Pixel) and Server (CAPI) does not double-count conversions. They fail to understand how event_id matching functions as a unique transaction receipt."
+    },
+    {
+      "topic": "ROAS vs MER (Marketing Efficiency Ratio) Calculation",
+      "severity": "MEDIUM",
+      "historical_context": "Students confuse platform-attributed ROAS with total business MER when evaluating blended paid media budgets."
+    }
+  ],
+  "best_analogies_to_use": [
+    {
+      "concept": "Event Deduplication (event_id)",
+      "analogy": "The Concert Ticket Analogy: Imagine buying a concert ticket online. You print a paper ticket and receive a digital PDF on phone, both displaying Ticket #1234. The bouncer scans both at entry, but only grants 1 entry because the ID matches.",
+      "why_it_works": "Eliminates double-counting confusion by giving students a physical mental model."
+    }
+  ]
+}
+
+BAD EXAMPLE (Shallow skimming):
+{
+  "major_student_difficulty_topics": [
+    {
+      "topic": "Ads",
+      "severity": "HIGH",
+      "historical_context": "Students had questions."
+    }
+  ],
+  "best_analogies_to_use": [
+    {
+      "concept": "Ads",
+      "analogy": "Shopkeeper analogy.",
+      "why_it_works": "Simple."
+    }
+  ]
+}
+===============================================================================
