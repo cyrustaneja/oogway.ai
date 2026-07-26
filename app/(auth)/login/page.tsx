@@ -3,53 +3,25 @@
 import { useState, useEffect, Suspense } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Lock, Mail, AlertTriangle, KeyRound, ArrowRight, ShieldCheck } from "lucide-react";
+import { AlertTriangle, ShieldCheck, ArrowRight } from "lucide-react";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [showBackdoor, setShowBackdoor] = useState(false);
 
   useEffect(() => {
     const err = searchParams.get("error");
     if (err === "AccessDenied") {
-      setError("Access Denied: Your Google email address is not registered in the system directory. Please ask an Admin to add your email to the User Roster.");
+      setError("Access Denied: Your Google email address is not registered in the system directory. Please ask an Admin to add your email to the User Directory.");
     } else if (err === "OAuthCallback" || err === "OAuthSignin" || err === "OAuthCreateAccount") {
       setError("Failed to authenticate with Google. Please ensure your email is pre-registered in the system directory.");
     } else if (err) {
       setError("Authentication failed. Please try again.");
     }
   }, [searchParams]);
-
-  const handleCredentialsSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    try {
-      const res = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
-      });
-
-      if (res?.error) {
-        setError("Invalid email or password.");
-      } else {
-        router.push("/dashboard");
-      }
-    } catch (err) {
-      setError("An unexpected error occurred.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleGoogleSignIn = () => {
     setGoogleLoading(true);
@@ -90,19 +62,19 @@ function LoginForm() {
           </div>
         )}
 
-        {/* PRIMARY AUTHENTICATION: GOOGLE OAUTH */}
-        <div className="space-y-3">
+        {/* GOOGLE OAUTH EXCLUSIVE SIGN-IN */}
+        <div className="space-y-4 pt-2">
           <button
             type="button"
             onClick={handleGoogleSignIn}
             disabled={googleLoading}
-            className="w-full py-3.5 px-4 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-800 font-extrabold text-xs flex items-center justify-center gap-3 transition-all shadow-xs group cursor-pointer"
+            className="w-full py-4 px-5 rounded-2xl border border-slate-300 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-900 font-extrabold text-sm flex items-center justify-center gap-3 transition-all shadow-xs group cursor-pointer"
           >
             {googleLoading ? (
               <span className="text-slate-600 font-bold">Connecting to Google...</span>
             ) : (
               <>
-                <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
                     d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -120,86 +92,15 @@ function LoginForm() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                   />
                 </svg>
-                <span className="text-slate-900 font-black">Continue with Google</span>
+                <span>Continue with Google</span>
                 <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform ml-auto" />
               </>
             )}
           </button>
 
-          <p className="text-[10px] text-center text-slate-600 font-semibold px-2">
+          <p className="text-[11px] text-center text-slate-500 font-medium px-2 leading-relaxed">
             🔒 Authorized Kraftshala accounts only. Email must be pre-added in the Admin User Directory.
           </p>
-        </div>
-
-        {/* ADMIN BACKDOOR CREDENTIALS TOGGLE */}
-        <div className="pt-4 border-t border-slate-200/80 text-center">
-          {!showBackdoor ? (
-            <button
-              type="button"
-              onClick={() => setShowBackdoor(true)}
-              className="text-[10px] font-extrabold text-slate-500 hover:text-slate-900 flex items-center justify-center gap-1.5 mx-auto transition-colors"
-            >
-              <KeyRound className="w-3 h-3 text-[#E8A020]" />
-              <span>Admin Backdoor Password Login</span>
-            </button>
-          ) : (
-            <form onSubmit={handleCredentialsSubmit} className="space-y-3 pt-2 text-left animate-in fade-in duration-300">
-              <div className="flex items-center justify-between pb-1">
-                <span className="text-[10px] font-black uppercase text-amber-950 tracking-wider">
-                  Admin Emergency Backdoor
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setShowBackdoor(false)}
-                  className="text-[10px] font-bold text-slate-600 hover:underline"
-                >
-                  Hide Backdoor
-                </button>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold text-slate-700 tracking-wider uppercase mb-1">
-                  Email
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full liquid-input pl-8 text-xs font-medium"
-                    placeholder="admin@kraftshala.com"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[10px] font-bold text-slate-700 tracking-wider uppercase mb-1">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" />
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full liquid-input pl-8 text-xs font-medium"
-                    placeholder="••••••••"
-                    required
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full btn-primary py-2.5 text-xs font-black uppercase tracking-wider mt-2"
-              >
-                {loading ? "Verifying Backdoor..." : "Log In via Backdoor"}
-              </button>
-            </form>
-          )}
         </div>
 
       </div>

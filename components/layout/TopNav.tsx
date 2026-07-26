@@ -23,7 +23,7 @@ export function TopNav() {
 
   const rawNavItems = [
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Experts / Roster", href: "/experts", adminOnly: true },
+    { label: "Users", href: "/experts", adminOnly: true },
     { label: "Batches", href: "/batches" },
     { label: "Course Content", href: "/courses" },
   ];
