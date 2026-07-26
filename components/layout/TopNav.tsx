@@ -6,13 +6,6 @@ import { LogOut, Menu, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-const navItems = [
-  { label: "Dashboard",     href: "/dashboard" },
-  { label: "Experts",       href: "/experts" },
-  { label: "Batches",       href: "/batches" },
-  { label: "Course Content",href: "/courses" },
-];
-
 export function TopNav() {
   const { data: session } = useSession();
   const pathname = usePathname();

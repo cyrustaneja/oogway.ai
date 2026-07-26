@@ -279,16 +279,16 @@ export default function ExpertsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border)]">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-[var(--foreground)] tracking-tight leading-none">
-            User &amp; Access Control Directory
+            User Directory
           </h1>
-          <p className="text-xs sm:text-sm text-[var(--muted)] font-medium mt-1">
-            3-Tier Access Filters:{" "}
+          <p className="text-xs sm:text-sm text-[var(--muted)] font-medium mt-1.5">
+            Filter by role:{" "}
             <button
               type="button"
               onClick={() => setRoleFilter("ADMIN")}
               className={cn(
-                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
-                roleFilter === "ADMIN" ? "bg-purple-600 text-white no-underline" : "text-purple-600 hover:bg-purple-50"
+                "font-extrabold cursor-pointer transition-all px-1.5 py-0.5 rounded",
+                roleFilter === "ADMIN" ? "bg-purple-600 text-white" : "text-purple-600 hover:bg-purple-50"
               )}
             >
               Admin ({adminCount})
@@ -298,8 +298,8 @@ export default function ExpertsPage() {
               type="button"
               onClick={() => setRoleFilter("TEAM")}
               className={cn(
-                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
-                roleFilter === "TEAM" ? "bg-blue-600 text-white no-underline" : "text-blue-600 hover:bg-blue-50"
+                "font-extrabold cursor-pointer transition-all px-1.5 py-0.5 rounded",
+                roleFilter === "TEAM" ? "bg-blue-600 text-white" : "text-blue-600 hover:bg-blue-50"
               )}
             >
               Team ({teamCount})
@@ -309,8 +309,8 @@ export default function ExpertsPage() {
               type="button"
               onClick={() => setRoleFilter("EXPERT")}
               className={cn(
-                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
-                roleFilter === "EXPERT" ? "bg-emerald-600 text-white no-underline" : "text-emerald-600 hover:bg-emerald-50"
+                "font-extrabold cursor-pointer transition-all px-1.5 py-0.5 rounded",
+                roleFilter === "EXPERT" ? "bg-emerald-600 text-white" : "text-emerald-600 hover:bg-emerald-50"
               )}
             >
               Expert ({expertCount})

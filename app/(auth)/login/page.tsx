@@ -46,8 +46,8 @@ function LoginForm() {
             </div>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
-            Oogway Pulse
+          <h1 className="text-3xl font-black tracking-tighter text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>
+            Oogway
           </h1>
           <p className="text-slate-500 text-[10px] font-extrabold tracking-widest uppercase mt-1">
             Kraftshala Executive Intelligence

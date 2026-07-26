@@ -59,7 +59,7 @@ export function OogwayPulse({
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[var(--layer-1)] border border-[var(--border)] rounded-2xl px-4 py-3 mb-5 mx-1 sm:mx-0 shadow-sm">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 text-[var(--foreground)]" />
-          <span className="text-sm font-semibold text-[var(--foreground)] tracking-tight">Oogway Pulse</span>
+          <span className="text-sm font-semibold text-[var(--foreground)] tracking-tight">Oogway</span>
           <span className="text-xs text-[var(--muted)] ml-1 hidden sm:inline font-medium">
             — Balanced session execution review.
           </span>
