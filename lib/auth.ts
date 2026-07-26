@@ -1,12 +1,10 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
   },
@@ -30,8 +28,9 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
 
+        const emailClean = credentials.email.toLowerCase().trim();
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email.toLowerCase() },
+          where: { email: emailClean },
         });
 
         if (!user || !user.passwordHash) {
@@ -61,13 +60,15 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === "google") {
         if (!user.email) return false;
 
+        const emailClean = user.email.toLowerCase().trim();
+
         // Verify if the email is pre-registered in the database roster
         const dbUser = await prisma.user.findUnique({
-          where: { email: user.email.toLowerCase() },
+          where: { email: emailClean },
         });
 
         if (!dbUser) {
-          // Reject login if email is not registered in system
+          // Reject login if email is not pre-added by Admin
           return "/login?error=AccessDenied";
         }
 
@@ -81,22 +82,26 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.role = (user as any).role;
         token.id = user.id;
-      } else if (token.email) {
-        // Fallback: re-verify role from DB if missing
+      }
+
+      if (token?.email) {
+        const emailClean = token.email.toLowerCase().trim();
         const dbUser = await prisma.user.findUnique({
-          where: { email: token.email.toLowerCase() },
-          select: { id: true, role: true },
+          where: { email: emailClean },
+          select: { id: true, role: true, name: true },
         });
+
         if (dbUser) {
           token.role = dbUser.role;
           token.id = dbUser.id;
+          if (dbUser.name) token.name = dbUser.name;
         }
       }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
-        (session.user as any).role = token.role;
+        (session.user as any).role = token.role || "EXPERT";
         (session.user as any).id = token.id;
       }
       return session;
