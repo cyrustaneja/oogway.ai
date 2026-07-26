@@ -254,6 +254,24 @@ export default function ExpertsPage() {
     }
   };
 
+  // Role & Search Filter State
+  const [roleFilter, setRoleFilter] = useState<"ALL" | "ADMIN" | "TEAM" | "EXPERT">("ALL");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredExperts = experts.filter((ex) => {
+    const role = ex.user?.role || "EXPERT";
+    const matchesRole = roleFilter === "ALL" || role === roleFilter;
+    const matchesSearch =
+      searchQuery.trim() === "" ||
+      ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ex.email.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesRole && matchesSearch;
+  });
+
+  const adminCount = experts.filter((ex) => (ex.user?.role || "EXPERT") === "ADMIN").length;
+  const teamCount = experts.filter((ex) => (ex.user?.role || "EXPERT") === "TEAM").length;
+  const expertCount = experts.filter((ex) => (ex.user?.role || "EXPERT") === "EXPERT").length;
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 px-4 sm:px-6 md:px-8 py-6 animate-in fade-in duration-300">
       
@@ -264,7 +282,39 @@ export default function ExpertsPage() {
             User &amp; Access Control Directory
           </h1>
           <p className="text-xs sm:text-sm text-[var(--muted)] font-medium mt-1">
-            3-Tier Granular Access: <span className="font-bold text-purple-600">Admin</span> (Full System), <span className="font-bold text-blue-600">Team</span> (Analyses &amp; Prep), <span className="font-bold text-emerald-600">Expert</span> (Own Assigned Audits).
+            3-Tier Access Filters:{" "}
+            <button
+              type="button"
+              onClick={() => setRoleFilter("ADMIN")}
+              className={cn(
+                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
+                roleFilter === "ADMIN" ? "bg-purple-600 text-white no-underline" : "text-purple-600 hover:bg-purple-50"
+              )}
+            >
+              Admin ({adminCount})
+            </button>{" "}
+            •{" "}
+            <button
+              type="button"
+              onClick={() => setRoleFilter("TEAM")}
+              className={cn(
+                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
+                roleFilter === "TEAM" ? "bg-blue-600 text-white no-underline" : "text-blue-600 hover:bg-blue-50"
+              )}
+            >
+              Team ({teamCount})
+            </button>{" "}
+            •{" "}
+            <button
+              type="button"
+              onClick={() => setRoleFilter("EXPERT")}
+              className={cn(
+                "font-bold underline cursor-pointer transition-colors px-1 py-0.5 rounded",
+                roleFilter === "EXPERT" ? "bg-emerald-600 text-white no-underline" : "text-emerald-600 hover:bg-emerald-50"
+              )}
+            >
+              Expert ({expertCount})
+            </button>
           </p>
         </div>
 
@@ -293,15 +343,115 @@ export default function ExpertsPage() {
         </div>
       )}
 
+      {/* ── ROLE FILTER TABS & SEARCH BAR ── */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 p-2.5 rounded-2xl border border-[var(--border)]">
+        {/* Role Tabs */}
+        <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-[var(--border)] shadow-2xs overflow-x-auto">
+          <button
+            onClick={() => setRoleFilter("ALL")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shrink-0",
+              roleFilter === "ALL"
+                ? "bg-slate-900 text-white shadow-2xs"
+                : "text-[var(--muted)] hover:text-[var(--foreground)]"
+            )}
+          >
+            <span>All Users</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-slate-200/50 text-[10px] text-slate-700">
+              {experts.length}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setRoleFilter("ADMIN")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shrink-0",
+              roleFilter === "ADMIN"
+                ? "bg-purple-600 text-white shadow-2xs"
+                : "text-[var(--muted)] hover:text-purple-700"
+            )}
+          >
+            <ShieldCheckIcon className="w-3.5 h-3.5" />
+            <span>Admins</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-purple-100 text-[10px] text-purple-900">
+              {adminCount}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setRoleFilter("TEAM")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shrink-0",
+              roleFilter === "TEAM"
+                ? "bg-blue-600 text-white shadow-2xs"
+                : "text-[var(--muted)] hover:text-blue-700"
+            )}
+          >
+            <UsersIcon className="w-3.5 h-3.5" />
+            <span>Team</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-blue-100 text-[10px] text-blue-900">
+              {teamCount}
+            </span>
+          </button>
+
+          <button
+            onClick={() => setRoleFilter("EXPERT")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-black transition-all flex items-center gap-1.5 cursor-pointer shrink-0",
+              roleFilter === "EXPERT"
+                ? "bg-emerald-600 text-white shadow-2xs"
+                : "text-[var(--muted)] hover:text-emerald-700"
+            )}
+          >
+            <UserCheckIcon className="w-3.5 h-3.5" />
+            <span>Experts</span>
+            <span className="px-1.5 py-0.2 rounded-md bg-emerald-100 text-[10px] text-emerald-900">
+              {expertCount}
+            </span>
+          </button>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative flex-1 sm:max-w-xs">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search name or email..."
+            className="w-full liquid-input py-1.5 pl-3 pr-8 text-xs font-medium bg-white"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              <XIcon className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
       {/* ── USER ROSTER GRID ── */}
       {loading ? (
         <div className="py-20 text-center space-y-2">
           <Loader2Icon className="w-8 h-8 animate-spin text-[#E8A020] mx-auto" />
           <p className="text-xs font-bold text-[var(--muted)]">Loading user directory...</p>
         </div>
+      ) : filteredExperts.length === 0 ? (
+        <div className="py-16 text-center space-y-2 bg-slate-50 rounded-2xl border border-dashed border-slate-300">
+          <UsersIcon className="w-10 h-10 mx-auto text-slate-300" />
+          <p className="text-sm font-extrabold text-slate-700">No users found for this filter</p>
+          <p className="text-xs text-slate-500 font-medium">Try selecting "All Users" or clearing your search.</p>
+          <button
+            onClick={() => { setRoleFilter("ALL"); setSearchQuery(""); }}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-900 text-white font-black text-xs uppercase tracking-wider inline-block mt-2"
+          >
+            Clear Filters
+          </button>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {experts.map((ex) => {
+          {filteredExperts.map((ex) => {
             const role = ex.user?.role || "EXPERT";
             const isAdmin = role === "ADMIN";
             const isTeam = role === "TEAM";
