@@ -25,6 +25,35 @@ export interface ResolvedBulkRow extends RawBulkRow {
 }
 
 /**
+ * Normalizes any URL string (e.g. prepends https:// if missing, strips quotes/brackets).
+ */
+
+export function normalizeUrl(raw: string | undefined): string | null {
+  if (!raw) return null;
+  let cleaned = raw.trim().replace(/^["'<(\[]+|["'>)\]]+$/g, '');
+  if (!cleaned) return null;
+
+  const lower = cleaned.toLowerCase();
+  if (lower.startsWith('http://') || lower.startsWith('https://')) {
+    return cleaned;
+  }
+
+  // If user pasted link without protocol e.g. "us06web.zoom.us/..." or "drive.google.com/..."
+  if (
+    lower.includes('zoom.us') ||
+    lower.includes('google.com') ||
+    lower.includes('youtube.com') ||
+    lower.includes('vimeo.com') ||
+    lower.includes('dropbox.com') ||
+    /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}\//.test(cleaned)
+  ) {
+    return `https://${cleaned}`;
+  }
+
+  return null;
+}
+
+/**
  * Parses and resolves raw bulk CSV/Excel rows against database entities.
  * Automatically maps Session Name or ID to SessionNote, Module, and Course!
  */
@@ -79,18 +108,23 @@ export async function resolveBulkSessionRows(rows: RawBulkRow[]): Promise<Resolv
       errors.push(`Session "${row.session || 'Missing'}" not found in curriculum.`);
     }
 
-    // 4. Validate Video URL
-    let videoUrl = (row.videoUrl ?? '').trim();
-    if (!videoUrl.startsWith('http')) {
-      // Check if transcriptUrl or another field contains a http link
-      const transUrl = (row.transcriptUrl ?? '').trim();
-      if (transUrl.startsWith('http')) {
-        videoUrl = transUrl;
+    // 4. Robust Video URL Normalization & Auto-Detection across all fields
+    let resolvedVideoUrl: string | null = normalizeUrl(row.videoUrl);
+
+    if (!resolvedVideoUrl) {
+      // Scan all fields in the row for a valid URL
+      const candidateFields = [row.transcriptUrl, row.conductedDate, row.session, row.batch, row.expert];
+      for (const candidate of candidateFields) {
+        const url = normalizeUrl(candidate);
+        if (url) {
+          resolvedVideoUrl = url;
+          break;
+        }
       }
     }
 
-    if (!videoUrl || !videoUrl.startsWith('http')) {
-      errors.push('Valid Video URL (http/https link) is required.');
+    if (!resolvedVideoUrl) {
+      errors.push('Valid Video URL (http/https or recording link) is required.');
     }
 
     // 5. Parse Conducted Date
@@ -106,6 +140,7 @@ export async function resolveBulkSessionRows(rows: RawBulkRow[]): Promise<Resolv
 
     return {
       ...row,
+      videoUrl: resolvedVideoUrl || row.videoUrl || '',
       expertId: matchedExpert?.id ?? null,
       expertName: matchedExpert?.name ?? row.expert,
       batchId: matchedBatch?.id ?? null,

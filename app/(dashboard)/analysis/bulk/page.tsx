@@ -57,29 +57,46 @@ export default function BulkAnalysisPage() {
 
     const dataLines = hasHeader ? lines.slice(1) : lines;
 
+    const isUrl = (colStr: string) => {
+      const lower = colStr.toLowerCase().trim();
+      return (
+        lower.startsWith("http://") ||
+        lower.startsWith("https://") ||
+        lower.includes("zoom.us") ||
+        lower.includes("google.com") ||
+        lower.includes("youtube.com") ||
+        lower.includes("vimeo.com") ||
+        /^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}\//.test(lower)
+      );
+    };
+
     return dataLines.map((line) => {
       // Split strictly by Tab or Comma (preserving spaces within column values like "Ishan Agrawal")
       const delimiter = line.includes('\t') ? '\t' : ',';
       const cleanCols = line.split(delimiter).map((c) => c.replace(/^"|"$/g, "").trim());
 
-      // Auto-detect Video URL column if cleanCols[4] is not a URL
+      // Find any column that looks like a URL
+      const urlCols = cleanCols.filter(isUrl);
       let videoUrl = cleanCols[4] || "";
       let transcriptUrl = cleanCols[5] || "";
 
-      // If cleanCols[4] isn't a http link, search all columns for http/https URL
-      const httpCols = cleanCols.filter((c) => c.startsWith("http://") || c.startsWith("https://"));
-      if (!videoUrl.startsWith("http") && httpCols.length > 0) {
-        videoUrl = httpCols[0];
-        if (httpCols.length > 1) transcriptUrl = httpCols[1];
+      if (!videoUrl || !isUrl(videoUrl)) {
+        if (urlCols.length > 0) {
+          videoUrl = urlCols[0];
+          if (urlCols.length > 1) transcriptUrl = urlCols[1];
+        }
       }
 
+      // Filter non-URL columns for Expert, Batch, Session, ConductedDate
+      const nonUrlCols = cleanCols.filter((c) => !isUrl(c));
+
       return {
-        expert: cleanCols[0] || "",
-        batch: cleanCols[1] || "",
-        session: cleanCols[2] || "",
-        conductedDate: cleanCols[3] && !cleanCols[3].startsWith("http") ? cleanCols[3] : "",
-        videoUrl,
-        transcriptUrl,
+        expert: nonUrlCols[0] || cleanCols[0] || "",
+        batch: nonUrlCols[1] || cleanCols[1] || "",
+        session: nonUrlCols[2] || cleanCols[2] || "",
+        conductedDate: nonUrlCols[3] || (cleanCols[3] && !isUrl(cleanCols[3]) ? cleanCols[3] : ""),
+        videoUrl: videoUrl.trim(),
+        transcriptUrl: transcriptUrl.trim(),
       };
     });
   };
