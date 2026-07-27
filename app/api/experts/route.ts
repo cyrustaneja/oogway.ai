@@ -62,7 +62,7 @@ export async function GET() {
   }
 }
 
-// POST /api/experts — Create new user (ADMIN ONLY)
+// POST /api/experts — Create or Re-activate User Account (ADMIN ONLY)
 export async function POST(req: Request) {
   const token = await getAuthToken();
 
@@ -85,48 +85,61 @@ export async function POST(req: Request) {
     const defaultPassword = "expertpassword123";
     const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
-    // If an active (non-deleted) user already exists with this email, return conflict
-    const existingActiveUser = await prisma.user.findFirst({
-      where: { email: cleanEmail, deletedAt: null },
-    });
-    if (existingActiveUser) {
-      return NextResponse.json({ error: `An active user with email "${cleanEmail}" already exists.` }, { status: 409 });
-    }
-
-    // Clean up any soft-deleted records occupying this email so re-creation succeeds seamlessly
-    await prisma.user.deleteMany({
-      where: { email: cleanEmail, deletedAt: { not: null } },
-    });
-    await prisma.expert.deleteMany({
-      where: { email: cleanEmail, deletedAt: { not: null } },
-    });
-
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Create Expert profile
-      const expert = await tx.expert.create({
-        data: {
-          name,
-          email: cleanEmail,
-          tags: tags || [],
-          bio: bio || "",
-        },
-      });
+      // 1. Upsert Expert Profile (Restores deletedAt if archived)
+      let expert = await tx.expert.findUnique({ where: { email: cleanEmail } });
+      if (expert) {
+        expert = await tx.expert.update({
+          where: { id: expert.id },
+          data: {
+            name,
+            tags: tags && tags.length > 0 ? tags : expert.tags,
+            bio: bio || expert.bio,
+            deletedAt: null, // Reactivate account if it was previously archived
+          },
+        });
+      } else {
+        expert = await tx.expert.create({
+          data: {
+            name,
+            email: cleanEmail,
+            tags: tags || [],
+            bio: bio || "",
+          },
+        });
+      }
 
-      // 2. Create User account with designated role
-      const user = await tx.user.create({
-        data: {
-          name,
-          email: cleanEmail,
-          passwordHash,
-          role: assignedRole,
-          expertId: expert.id,
-        },
-      });
+      // 2. Upsert User Account (Restores deletedAt if archived)
+      let user = await tx.user.findUnique({ where: { email: cleanEmail } });
+      if (user) {
+        user = await tx.user.update({
+          where: { id: user.id },
+          data: {
+            name,
+            role: assignedRole,
+            expertId: expert.id,
+            deletedAt: null, // Reactivate account if it was previously archived
+          },
+        });
+      } else {
+        user = await tx.user.create({
+          data: {
+            name,
+            email: cleanEmail,
+            passwordHash,
+            role: assignedRole,
+            expertId: expert.id,
+          },
+        });
+      }
 
       return { expert, user };
     });
 
-    return NextResponse.json({ ...result.expert, user: { role: result.user.role }, defaultPassword }, { status: 201 });
+    return NextResponse.json(
+      { ...result.expert, user: { role: result.user.role }, defaultPassword },
+      { status: 200 }
+    );
   } catch (error: any) {
     console.error("Failed to create user:", error);
     return NextResponse.json({ error: error.message || "Database error occurred" }, { status: 500 });

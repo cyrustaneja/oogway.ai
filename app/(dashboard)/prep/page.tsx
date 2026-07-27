@@ -21,6 +21,7 @@ import {
   BookOpen,
   FileText,
   History,
+  Loader2,
 } from "lucide-react";
 import {
   ProactiveSessionIntelligence,
@@ -154,12 +155,12 @@ export default function ExpertPrepPage() {
     }
   };
 
-  // Trigger fast auto-load when selection changes
+  // Trigger intelligence on initial load or explicit button press
   useEffect(() => {
-    if (selectedSessionId || selectedBatchId) {
+    if ((selectedSessionId || selectedBatchId) && !sessionIntel && !batchIntel) {
       handleLoadIntelligence(selectedSessionId, selectedBatchId);
     }
-  }, [selectedSessionId, selectedBatchId]);
+  }, []);
 
   const activeSession = allSessions.find((s) => s.id === selectedSessionId);
   const activeBatch = batches.find((b) => b.id === selectedBatchId);
@@ -169,85 +170,142 @@ export default function ExpertPrepPage() {
   return (
     <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-6 py-4 space-y-4 animate-in fade-in duration-300">
       
-      {/* ── COMPACT SINGLE-ROW CONTROL HEADER ── */}
-      <div className="glass-card p-4 sm:p-5 rounded-2xl border border-[#E8A020]/30 bg-white shadow-md flex flex-col lg:flex-row items-center justify-between gap-4">
-        
-        {/* Left: Branding */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="p-2 rounded-xl bg-[#E8A020]/15 border border-[#E8A020]/30 text-[#E8A020]">
-            <Sparkles className="w-5 h-5" />
+      {/* ── HEADER TITLE BAR ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[var(--border)]">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-[#E8A020] shadow-2xs">
+            <Sparkles className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-base sm:text-lg font-black text-[var(--foreground)] tracking-tight leading-none">
+            <h1 className="text-xl sm:text-2xl font-black text-[var(--foreground)] tracking-tight leading-none">
               Proactive Expert Prep Cockpit
             </h1>
-            <p className="text-[10px] text-[var(--muted)] font-medium mt-0.5">
+            <p className="text-xs text-[var(--muted)] font-medium mt-1">
               Sequence-based Cohort Progress &amp; Fast Proactive AI Intelligence
             </p>
           </div>
         </div>
 
-        {/* Cascading Dropdowns Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 w-full lg:w-auto flex-1 lg:max-w-4xl">
+        {activeSession && (
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">
+            <BookOpen className="w-3.5 h-3.5 text-[#E8A020]" />
+            <span className="truncate max-w-xs">{activeSession.module?.course?.name || "Curriculum"}</span>
+          </div>
+        )}
+      </div>
+
+      {/* ── SELECTION CONTROL CARD WITH START ANALYSIS BUTTON ── */}
+      <div className="glass-card p-5 rounded-2xl border border-[var(--border)] bg-white shadow-xs space-y-4">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-black uppercase tracking-wider text-[var(--muted)] flex items-center gap-1.5">
+            <Zap className="w-3.5 h-3.5 text-[#E8A020]" /> Select Session &amp; Cohort Parameters
+          </span>
+          {intelLoading && (
+            <span className="text-xs font-bold text-[#E8A020] flex items-center gap-1.5 animate-pulse">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Generating AI Prep Intelligence...
+            </span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end">
           {/* 1. Course */}
-          <select
-            value={selectedCourseId}
-            onChange={(e) => {
-              const cId = e.target.value;
-              setSelectedCourseId(cId);
-              setSelectedModuleId("");
-              setSelectedSessionId("");
-            }}
-            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
-          >
-            <option value="">1. Course...</option>
-            {courses.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
+          <div>
+            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+              1. Course
+            </label>
+            <select
+              value={selectedCourseId}
+              onChange={(e) => {
+                const cId = e.target.value;
+                setSelectedCourseId(cId);
+                setSelectedModuleId("");
+                setSelectedSessionId("");
+              }}
+              className="w-full liquid-input py-2.5 px-3 text-xs font-bold shadow-2xs"
+            >
+              <option value="">Select Course...</option>
+              {courses.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
 
           {/* 2. Module */}
-          <select
-            value={selectedModuleId}
-            onChange={(e) => {
-              const mId = e.target.value;
-              setSelectedModuleId(mId);
-              const modSessions = allSessions.filter((s) => s.moduleId === mId);
-              if (modSessions.length > 0) setSelectedSessionId(modSessions[0].id);
-            }}
-            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
-          >
-            <option value="">2. Module...</option>
-            {availableModules.map((m) => (
-              <option key={m.id} value={m.id}>{m.name}</option>
-            ))}
-          </select>
+          <div>
+            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+              2. Module
+            </label>
+            <select
+              value={selectedModuleId}
+              onChange={(e) => {
+                const mId = e.target.value;
+                setSelectedModuleId(mId);
+                const modSessions = allSessions.filter((s) => s.moduleId === mId);
+                if (modSessions.length > 0) setSelectedSessionId(modSessions[0].id);
+              }}
+              className="w-full liquid-input py-2.5 px-3 text-xs font-bold shadow-2xs"
+            >
+              <option value="">Select Module...</option>
+              {availableModules.map((m) => (
+                <option key={m.id} value={m.id}>{m.name}</option>
+              ))}
+            </select>
+          </div>
 
           {/* 3. Session */}
-          <select
-            value={selectedSessionId}
-            onChange={(e) => setSelectedSessionId(e.target.value)}
-            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm truncate"
-          >
-            <option value="">3. Session...</option>
-            {availableSessions.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.phase ? `[${s.phase}] ` : ""}{s.name}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+              3. Session Template
+            </label>
+            <select
+              value={selectedSessionId}
+              onChange={(e) => setSelectedSessionId(e.target.value)}
+              className="w-full liquid-input py-2.5 px-3 text-xs font-bold shadow-2xs truncate"
+            >
+              <option value="">Select Session...</option>
+              {availableSessions.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.phase ? `[${s.phase}] ` : ""}{s.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
           {/* 4. Batch */}
-          <select
-            value={selectedBatchId}
-            onChange={(e) => setSelectedBatchId(e.target.value)}
-            className="liquid-input py-2 px-3 text-xs font-bold shadow-sm"
-          >
-            <option value="">4. Batch...</option>
-            {availableBatches.map((b) => (
-              <option key={b.id} value={b.id}>{b.name}</option>
-            ))}
-          </select>
+          <div>
+            <label className="block text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-1">
+              4. Batch / Cohort
+            </label>
+            <select
+              value={selectedBatchId}
+              onChange={(e) => setSelectedBatchId(e.target.value)}
+              className="w-full liquid-input py-2.5 px-3 text-xs font-bold shadow-2xs"
+            >
+              <option value="">Select Batch...</option>
+              {availableBatches.map((b) => (
+                <option key={b.id} value={b.id}>{b.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* 5. START ANALYSIS ACTION BUTTON */}
+          <div>
+            <button
+              onClick={() => handleLoadIntelligence(selectedSessionId, selectedBatchId)}
+              disabled={intelLoading || (!selectedSessionId && !selectedBatchId)}
+              className="w-full btn-primary py-2.5 px-4 rounded-xl text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 shadow-md shadow-[#E8A020]/20 disabled:opacity-50 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              {intelLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" /> Analyzing...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 fill-current text-slate-900" /> Start AI Analysis
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
