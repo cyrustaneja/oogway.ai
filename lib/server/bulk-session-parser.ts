@@ -80,7 +80,16 @@ export async function resolveBulkSessionRows(rows: RawBulkRow[]): Promise<Resolv
     }
 
     // 4. Validate Video URL
-    if (!row.videoUrl || !row.videoUrl.trim().startsWith('http')) {
+    let videoUrl = (row.videoUrl ?? '').trim();
+    if (!videoUrl.startsWith('http')) {
+      // Check if transcriptUrl or another field contains a http link
+      const transUrl = (row.transcriptUrl ?? '').trim();
+      if (transUrl.startsWith('http')) {
+        videoUrl = transUrl;
+      }
+    }
+
+    if (!videoUrl || !videoUrl.startsWith('http')) {
       errors.push('Valid Video URL (http/https link) is required.');
     }
 

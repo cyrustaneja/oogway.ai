@@ -52,21 +52,34 @@ export default function BulkAnalysisPage() {
     const hasHeader =
       firstLineLower.includes("expert") ||
       firstLineLower.includes("session") ||
-      firstLineLower.includes("url");
+      firstLineLower.includes("url") ||
+      firstLineLower.includes("batch");
 
     const dataLines = hasHeader ? lines.slice(1) : lines;
 
     return dataLines.map((line) => {
-      const cols = line.match(/(?:[^\s,",]+|"(?:\\.|[^"])*")+/g) || line.split(",");
-      const cleanCols = cols.map((c) => c.replace(/^"|"$/g, "").trim());
+      // Split strictly by Tab or Comma (preserving spaces within column values like "Ishan Agrawal")
+      const delimiter = line.includes('\t') ? '\t' : ',';
+      const cleanCols = line.split(delimiter).map((c) => c.replace(/^"|"$/g, "").trim());
+
+      // Auto-detect Video URL column if cleanCols[4] is not a URL
+      let videoUrl = cleanCols[4] || "";
+      let transcriptUrl = cleanCols[5] || "";
+
+      // If cleanCols[4] isn't a http link, search all columns for http/https URL
+      const httpCols = cleanCols.filter((c) => c.startsWith("http://") || c.startsWith("https://"));
+      if (!videoUrl.startsWith("http") && httpCols.length > 0) {
+        videoUrl = httpCols[0];
+        if (httpCols.length > 1) transcriptUrl = httpCols[1];
+      }
 
       return {
         expert: cleanCols[0] || "",
         batch: cleanCols[1] || "",
         session: cleanCols[2] || "",
-        conductedDate: cleanCols[3] || "",
-        videoUrl: cleanCols[4] || "",
-        transcriptUrl: cleanCols[5] || "",
+        conductedDate: cleanCols[3] && !cleanCols[3].startsWith("http") ? cleanCols[3] : "",
+        videoUrl,
+        transcriptUrl,
       };
     });
   };
