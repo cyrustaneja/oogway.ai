@@ -341,61 +341,67 @@ export default function BatchesPage() {
           <p className="text-xs text-slate-500 font-medium">Create a new batch or upload a CSV to get started.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="space-y-2.5">
           {batches.map((b) => {
             const isChecked = selectedIds.includes(b.id);
             return (
               <div
                 key={b.id}
                 className={cn(
-                  "glass-card p-5 rounded-2xl border border-[var(--border)] bg-white space-y-3 shadow-xs hover:border-[#E8A020]/40 transition-all flex flex-col justify-between relative",
+                  "glass-card px-5 py-3.5 rounded-2xl border border-[var(--border)] bg-white shadow-2xs hover:border-[#E8A020]/50 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 relative",
                   isChecked ? "border-[#E8A020] bg-amber-50/40" : ""
                 )}
               >
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2.5">
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleSelectOne(b.id)}
-                        className="w-4 h-4 rounded border-slate-300 text-[#E8A020] focus:ring-[#E8A020] cursor-pointer shrink-0"
-                      />
-                      <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center font-black text-xs text-[#E8A020]">
-                        <Layers className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-black text-[var(--foreground)] leading-tight">{b.name}</h3>
-                        {b.course && (
-                          <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold inline-block mt-0.5">
-                            {b.course.name}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleDelete(b.id, b.name)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
-                      title="Delete Batch"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                {/* Left Section: Checkbox, Icon, Name & Description */}
+                <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => toggleSelectOne(b.id)}
+                    className="w-4 h-4 rounded border-slate-300 text-[#E8A020] focus:ring-[#E8A020] cursor-pointer shrink-0"
+                  />
+                  <div className="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center font-black text-xs text-[#E8A020] shrink-0 shadow-2xs">
+                    <Layers className="w-5 h-5" />
                   </div>
-
-                  {b.description && (
-                    <p className="text-xs text-[var(--muted)] font-medium leading-relaxed line-clamp-2 pl-6">
-                      {b.description}
-                    </p>
-                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="text-sm font-black text-[var(--foreground)] leading-tight truncate">{b.name}</h3>
+                      {b.course && (
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] font-extrabold border border-slate-200 shrink-0">
+                          {b.course.name}
+                        </span>
+                      )}
+                    </div>
+                    {b.description && (
+                      <p className="text-xs text-[var(--muted)] font-medium truncate mt-0.5 max-w-xl">
+                        {b.description}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
-                <div className="pt-2 border-t border-[var(--border)] flex items-center justify-between text-xs">
-                  <span className="text-[11px] font-bold text-[var(--muted)] pl-6">
-                    {b._count?.sessions ?? 0} Sessions Evaluated
+                {/* Right Section: Session Count & Action Buttons */}
+                <div className="flex items-center justify-between md:justify-end gap-5 border-t md:border-t-0 border-slate-100 pt-2.5 md:pt-0 shrink-0">
+                  <span className="text-xs font-bold text-[var(--muted)] bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
+                    <strong className="text-slate-900 font-black">{b._count?.sessions ?? 0}</strong> Sessions
                   </span>
-                  <Link href={`/batches/${b.id}`} className="text-xs font-black text-[#E8A020] hover:underline flex items-center gap-1">
-                    View Cohort <ChevronRight className="w-3 h-3" />
-                  </Link>
+
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/batches/${b.id}`}
+                      className="px-3.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-[#E8A020] text-xs font-black flex items-center gap-1 transition-colors border border-amber-500/20"
+                    >
+                      View Cohort <ChevronRight className="w-3.5 h-3.5" />
+                    </Link>
+
+                    <button
+                      onClick={() => handleDelete(b.id, b.name)}
+                      className="p-2 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors border border-transparent hover:border-rose-200"
+                      title="Delete Batch"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             );

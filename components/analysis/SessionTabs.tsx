@@ -15,10 +15,7 @@ import { CoachingTipsPanel } from '@/components/analysis/CoachingTipsPanel';
 import { Tier1Review } from '@/components/analysis/Tier1Review';
 import { AskOogwayChat } from '@/components/analysis/AskOogwayChat';
 import { VideoPreviewProvider } from '@/components/analysis/VideoPreviewContext';
-import {
-  Zap, MessageCircle, Video, FileText, Play, Loader2,
-  Lock, X, BarChart2,
-} from 'lucide-react';
+import { Play, BarChart2, CheckCircle2, ChevronRight, Lock, Loader2, Sparkles, X, Flag, Layers, FileText, Zap, MessageCircle, Video } from "lucide-react";
 
 const TABS = [
   { id: 'first_analysis', label: 'Pulse', icon: Zap },
@@ -244,112 +241,39 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
         </div>
       </div>
 
-      {/* ── Deep Analysis Modal / Slide-over ── */}
+      {/* ── Deep Analysis Modal — COMING SOON ── */}
       <AnimatePresence>
         {showDeepModal && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-            {/* Backdrop */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowDeepModal(false)}
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            />
-
-            {/* Panel — bottom sheet on mobile, centered modal on desktop */}
-            <motion.div
-              initial={{ opacity: 0, y: 60 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 60 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="relative w-full sm:max-w-5xl max-h-[92dvh] overflow-y-auto bg-[var(--background)] sm:rounded-2xl rounded-t-2xl border border-[var(--border)] shadow-2xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center space-y-5"
             >
-              {/* Modal header */}
-              <div className="sticky top-0 z-10 bg-[var(--background)]/95 backdrop-blur-xl border-b border-[var(--border)] px-5 py-4 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-xl bg-brand-orange/10 border border-brand-orange/20">
-                    <BarChart2 className="w-4 h-4 text-brand-orange" />
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold text-[var(--foreground)]">Deep Analysis</h2>
-                    <p className="text-[11px] text-[var(--muted)]">Chapter-by-chapter pedagogical breakdown</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => setShowDeepModal(false)}
-                  className="p-2 rounded-full hover:bg-[var(--layer-2)] text-[var(--muted)] transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+              <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mx-auto shadow-inner">
+                <Sparkles className="w-8 h-8" />
               </div>
 
-              {/* Modal body */}
-              <div className="p-5 sm:p-8 space-y-8">
-                {!deepAnalysisUnlocked ? (
-                  <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-lg mx-auto">
-                    <div className="w-16 h-16 bg-brand-orange/10 rounded-2xl flex items-center justify-center border border-brand-orange/20 mb-5 relative shadow-sm">
-                      <BarChart2 className="w-8 h-8 text-brand-orange" />
-                      {deepAnalysisRunning && (
-                        <div className="absolute inset-0 border-2 border-brand-orange rounded-2xl border-t-transparent animate-spin" />
-                      )}
-                    </div>
-                    <h3 className="text-2xl font-extrabold text-[var(--foreground)] tracking-tight mb-2">
-                      Deep Analysis Not Started
-                    </h3>
-                    <p className="text-[13px] text-[var(--muted)] text-center mb-8 font-medium leading-relaxed">
-                      Oogway Pulse has evaluated this session. Click below to trigger deep chapter-by-chapter extraction, full pedagogical rubric scoring, and coaching tips.
-                    </p>
-                    <button
-                      onClick={handleRunDeepAnalysis}
-                      disabled={deepAnalysisRunning}
-                      className="btn-primary flex items-center gap-2.5 px-8 py-3.5 text-sm font-extrabold tracking-wide shadow-xl shadow-brand-orange/20 disabled:opacity-50 hover:scale-105 transition-all"
-                    >
-                      {deepAnalysisRunning ? (
-                        <><Loader2 className="w-4 h-4 animate-spin" /> Starting Deep Analysis...</>
-                      ) : (
-                        <><Play className="w-4 h-4 fill-current" /> Run Deep Analysis Now</>
-                      )}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <FlagBanner data={data} chapters={chapters} />
-                    <SessionFlow chapters={chapters} data={data} sessionInfo={sessionInfo} onTimestampClick={handleTimestampClick} />
-
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--muted)] mb-4 px-1">
-                        Detailed Breakdown
-                      </p>
-                      <div className="space-y-6">
-                        <KeyLearningPoints data={data} />
-                        <ContextSettingCard data={data} onTimestampClick={handleTimestampClick} />
-                        <TopicCoverageCard data={data} />
-                      </div>
-                    </div>
-
-                    <div className="pt-8 mt-8 border-t border-[var(--border)] flex items-center justify-between">
-                      <h3 className="text-xl font-bold text-[var(--foreground)]">Expert &amp; Student Deep Dive</h3>
-                      <button
-                        onClick={handleRunDeepAnalysis}
-                        disabled={deepAnalysisRunning}
-                        className="px-4 py-2 bg-[var(--layer-2)] border border-[var(--border)] rounded-lg text-sm font-semibold text-[var(--foreground)] hover:bg-[var(--border)] transition-colors flex items-center gap-2"
-                      >
-                        {deepAnalysisRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                        Re-run
-                      </button>
-                    </div>
-                    <div>
-                      <ExpertStudentToggle data={data} onTimestampClick={handleTimestampClick} />
-                    </div>
-
-                    <div className="pt-8 mt-8 border-t border-[var(--border)]">
-                      <h3 className="text-xl font-bold text-[var(--foreground)] mb-6">AI Recommendations</h3>
-                      <CoachingTipsPanel sessionId={sessionId} />
-                    </div>
-                  </div>
-                )}
+              <div className="space-y-2">
+                <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                  Deep Analysis — Coming Soon
+                </h3>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                  Granular chapter-by-chapter extraction and automated pedagogical rubric scoring are currently under active development and will be available in the next release.
+                </p>
               </div>
+
+              <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] font-bold text-amber-900 leading-snug">
+                💡 Oogway's initial evaluation and coaching copy are fully active above.
+              </div>
+
+              <button
+                onClick={() => setShowDeepModal(false)}
+                className="w-full py-3 rounded-xl bg-slate-900 text-white font-black text-xs uppercase tracking-wider hover:bg-slate-800 transition-colors shadow-md cursor-pointer"
+              >
+                Got It
+              </button>
             </motion.div>
           </div>
         )}

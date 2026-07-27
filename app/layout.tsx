@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Montserrat, Nanum_Pen_Script } from "next/font/google";
+import { Plus_Jakarta_Sans, Montserrat } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 
@@ -16,13 +16,6 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
-const nanum = Nanum_Pen_Script({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-nanum",
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Oogway | The Intelligence of KraftShala",
   description: "Oogway — Intelligent session analysis and expert coaching for KraftShala.",
@@ -33,7 +26,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${jakarta.variable} ${montserrat.variable} ${nanum.variable}`}>
+    <html lang="en" className={`${jakarta.variable} ${montserrat.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
