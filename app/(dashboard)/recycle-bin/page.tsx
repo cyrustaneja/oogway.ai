@@ -93,6 +93,28 @@ export default function RecycleBinPage() {
     }
   };
 
+  const handleEmptyAll = async () => {
+    if (!confirm("Are you sure you want to PERMANENTLY ERASE ALL items in the Recycle Bin? This action CANNOT be undone.")) return;
+
+    setLoading(true);
+    try {
+      const res = await fetch("/api/trash", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ emptyAll: true }),
+      });
+      if (res.ok) {
+        setSuccessMsg("Recycle Bin permanently emptied.");
+        setTimeout(() => setSuccessMsg(""), 4000);
+        await loadTrash();
+      }
+    } catch (err) {
+      console.error("Empty Recycle Bin failed", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredItems = items.filter(it => 
     it.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
     it.type.toLowerCase().includes(searchTerm.toLowerCase())
@@ -112,15 +134,27 @@ export default function RecycleBinPage() {
           <p className="text-[var(--muted)] text-sm mt-1 font-medium">Deleted items are kept here for 7 days before permanent removal.</p>
         </div>
         
-        <div className="relative w-full md:w-80">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
-          <input 
-            type="text"
-            placeholder="Search archive..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="liquid-input pl-11 shadow-inner"
-          />
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full sm:w-72">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)]" />
+            <input 
+              type="text"
+              placeholder="Search archive..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="liquid-input pl-11 shadow-inner"
+            />
+          </div>
+
+          {items.length > 0 && (
+            <button
+              onClick={handleEmptyAll}
+              disabled={loading}
+              className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+            >
+              <Trash2 className="w-4 h-4" /> Empty Recycle Bin
+            </button>
+          )}
         </div>
       </motion.div>
 

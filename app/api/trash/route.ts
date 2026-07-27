@@ -60,11 +60,26 @@ export async function POST(req: Request) {
 }
 
 /**
- * DELETE: Permanently removes a record from the database.
+ * DELETE: Permanently removes a record from the database or empties the entire Recycle Bin.
  */
 export async function DELETE(req: Request) {
   try {
-    const { id, type } = await req.json();
+    const body = await req.json();
+
+    // EMPTY ENTIRE RECYCLE BIN
+    if (body.emptyAll) {
+      await prisma.user.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.expert.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.analysisSession.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.sessionNote.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.module.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.batch.deleteMany({ where: { deletedAt: { not: null } } });
+      await prisma.course.deleteMany({ where: { deletedAt: { not: null } } });
+
+      return NextResponse.json({ success: true, message: "Recycle bin emptied." });
+    }
+
+    const { id, type } = body;
     if (!id || !type) return NextResponse.json({ error: "id and type are required" }, { status: 400 });
 
     let dbTable: any = null;
@@ -75,6 +90,11 @@ export async function DELETE(req: Request) {
     else if (type === "Analysis Session") dbTable = prisma.analysisSession;
     else if (type === "Batch") dbTable = prisma.batch;
     else throw new Error(`Invalid type: ${type}`);
+
+    if (type === "Expert") {
+      // Also delete associated User account
+      await prisma.user.deleteMany({ where: { OR: [{ expertId: id }, { id }] } });
+    }
 
     await dbTable.delete({ where: { id } });
     return NextResponse.json({ success: true });

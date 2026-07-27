@@ -4,7 +4,7 @@ import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import bcrypt from "bcryptjs";
 
-// GET /api/experts — List ALL users (Admins, Team Members, Experts)
+// GET /api/experts — List ALL active users (Admins, Team Members, Experts)
 export async function GET() {
   const token = await getAuthToken();
 
@@ -78,18 +78,35 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
     }
 
+    const cleanEmail = email.trim().toLowerCase();
     const assignedRole: "ADMIN" | "TEAM" | "EXPERT" = 
       requestedRole === "ADMIN" ? "ADMIN" : requestedRole === "TEAM" ? "TEAM" : "EXPERT";
 
     const defaultPassword = "expertpassword123";
     const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
+    // If an active (non-deleted) user already exists with this email, return conflict
+    const existingActiveUser = await prisma.user.findFirst({
+      where: { email: cleanEmail, deletedAt: null },
+    });
+    if (existingActiveUser) {
+      return NextResponse.json({ error: `An active user with email "${cleanEmail}" already exists.` }, { status: 409 });
+    }
+
+    // Clean up any soft-deleted records occupying this email so re-creation succeeds seamlessly
+    await prisma.user.deleteMany({
+      where: { email: cleanEmail, deletedAt: { not: null } },
+    });
+    await prisma.expert.deleteMany({
+      where: { email: cleanEmail, deletedAt: { not: null } },
+    });
+
     const result = await prisma.$transaction(async (tx) => {
       // 1. Create Expert profile
       const expert = await tx.expert.create({
         data: {
           name,
-          email,
+          email: cleanEmail,
           tags: tags || [],
           bio: bio || "",
         },
@@ -99,7 +116,7 @@ export async function POST(req: Request) {
       const user = await tx.user.create({
         data: {
           name,
-          email,
+          email: cleanEmail,
           passwordHash,
           role: assignedRole,
           expertId: expert.id,
@@ -112,9 +129,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ ...result.expert, user: { role: result.user.role }, defaultPassword }, { status: 201 });
   } catch (error: any) {
     console.error("Failed to create user:", error);
-    if (error.code === 'P2002') {
-      return NextResponse.json({ error: "A user or expert with this email already exists" }, { status: 409 });
-    }
-    return NextResponse.json({ error: "Database error occurred" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Database error occurred" }, { status: 500 });
   }
 }

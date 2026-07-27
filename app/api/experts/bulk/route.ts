@@ -104,7 +104,7 @@ export async function POST(req: Request) {
       try {
         const result = await prisma.$transaction(async (tx) => {
           // Check if expert already exists by email
-          let expert = await tx.expert.findUnique({ where: { email: row.email } });
+          let expert = await tx.expert.findFirst({ where: { email: row.email } });
           if (!expert) {
             expert = await tx.expert.create({
               data: {
@@ -121,12 +121,13 @@ export async function POST(req: Request) {
                 name: row.name,
                 tags: row.parsedModules.length > 0 ? row.parsedModules : expert.tags,
                 bio: row.bio || expert.bio,
+                deletedAt: null, // Clear deletedAt if account was previously archived
               },
             });
           }
 
-          // Create/update User account with designated role (ADMIN or EXPERT)
-          let user = await tx.user.findUnique({ where: { email: row.email } });
+          // Create/update User account with designated role (ADMIN, TEAM, or EXPERT)
+          let user = await tx.user.findFirst({ where: { email: row.email } });
           if (!user) {
             await tx.user.create({
               data: {
@@ -143,6 +144,7 @@ export async function POST(req: Request) {
               data: {
                 role: row.parsedRole,
                 expertId: expert.id,
+                deletedAt: null, // Clear deletedAt if account was previously archived
               },
             });
           }
