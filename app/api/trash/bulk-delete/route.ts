@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
 import { getAuthToken } from "@/lib/auth-token";
-import { softDelete } from "@/lib/db/soft-delete";
+import { bulkSoftDelete } from "@/lib/db/soft-delete";
 
 export async function POST(req: Request) {
   const token = await getAuthToken();
@@ -25,18 +25,10 @@ export async function POST(req: Request) {
     else if (type === "course") modelName = "course";
     else return NextResponse.json({ error: `Invalid type: ${type}` }, { status: 400 });
 
-    let deletedCount = 0;
-    for (const id of ids) {
-      try {
-        await softDelete(modelName, id);
-        deletedCount++;
-      } catch (err) {
-        console.error(`Failed to soft delete ${modelName} ${id}:`, err);
-      }
-    }
-
-    return NextResponse.json({ success: true, count: deletedCount });
+    const result = await bulkSoftDelete(modelName, ids);
+    return NextResponse.json({ success: true, count: result.count });
   } catch (err: any) {
+    console.error("[POST /api/trash/bulk-delete] Error:", err);
     return NextResponse.json({ error: err.message || "Bulk deletion failed." }, { status: 500 });
   }
 }

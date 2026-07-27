@@ -132,24 +132,6 @@ export default function ExpertsPage() {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Move ${name} to the Recycle Bin? (Access archived for 7 days)`)) return;
-
-    try {
-      const res = await fetch(`/api/experts/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setFlash(`${name} moved to Recycle Bin.`);
-        load();
-        setTimeout(() => setFlash(""), 5000);
-      } else {
-        const data = await res.json();
-        alert(data.error || "Failed to delete user.");
-      }
-    } catch (err) {
-      alert("An error occurred while deleting.");
-    }
-  };
-
   const handleSubmitSingle = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -283,7 +265,6 @@ export default function ExpertsPage() {
       setSelectedUserIds(filteredExperts.map((ex) => ex.id));
     }
   };
-
   const toggleSelectOneUser = (id: string) => {
     if (selectedUserIds.includes(id)) {
       setSelectedUserIds(selectedUserIds.filter((item) => item !== id));
@@ -292,27 +273,55 @@ export default function ExpertsPage() {
     }
   };
 
+  const handleDelete = async (id: string, userName: string) => {
+    if (!confirm(`Are you sure you want to archive user account "${userName}"?`)) return;
+
+    // OPTIMISTIC UI: Instantly remove item from state
+    const previousExperts = [...experts];
+    setExperts((prev) => prev.filter((e) => e.id !== id));
+    setSelectedUserIds((prev) => prev.filter((item) => item !== id));
+    setFlash(`Archived user account ${userName}.`);
+    setTimeout(() => setFlash(""), 4000);
+
+    try {
+      const res = await fetch(`/api/experts/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        setExperts(previousExperts);
+      }
+    } catch (err) {
+      setExperts(previousExperts);
+      console.error("Failed to delete expert", err);
+    }
+  };
+
   const handleBulkUserDelete = async () => {
     if (selectedUserIds.length === 0) return;
-    if (!confirm(`Move ${selectedUserIds.length} selected user account(s) to the Recycle Bin?`)) return;
+    const toDeleteIds = [...selectedUserIds];
+    if (!confirm(`Move ${toDeleteIds.length} selected user account(s) to the Recycle Bin?`)) return;
+
+    // OPTIMISTIC UI: Instantly remove all selected items from state
+    const previousExperts = [...experts];
+    setExperts((prev) => prev.filter((e) => !toDeleteIds.includes(e.id)));
+    setSelectedUserIds([]);
+    setFlash(`Successfully archived ${toDeleteIds.length} user account(s).`);
+    setTimeout(() => setFlash(""), 4000);
 
     setBulkUserDeleting(true);
     try {
       const res = await fetch("/api/trash/bulk-delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "expert", ids: selectedUserIds }),
+        body: JSON.stringify({ type: "expert", ids: toDeleteIds }),
       });
-      if (res.ok) {
-        setFlash(`Successfully archived ${selectedUserIds.length} user account(s).`);
-        setTimeout(() => setFlash(""), 4000);
-        setSelectedUserIds([]);
-        load();
-      } else {
+      if (!res.ok) {
+        setExperts(previousExperts);
+        setSelectedUserIds(toDeleteIds);
         const d = await res.json();
         alert(d.error || "Failed to delete selected users.");
       }
     } catch (err) {
+      setExperts(previousExperts);
+      setSelectedUserIds(toDeleteIds);
       alert("An unexpected error occurred during bulk deletion.");
     } finally {
       setBulkUserDeleting(false);

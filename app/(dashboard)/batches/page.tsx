@@ -236,25 +236,32 @@ export default function BatchesPage() {
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Delete ${selectedIds.length} selected cohort(s)?`)) return;
+    const toDeleteIds = [...selectedIds];
+    if (!confirm(`Delete ${toDeleteIds.length} selected cohort(s)?`)) return;
+
+    // OPTIMISTIC UI: Instantly remove all selected items from state
+    const previousBatches = [...batches];
+    setBatches((prev) => prev.filter((b) => !toDeleteIds.includes(b.id)));
+    setSelectedIds([]);
+    setFlash(`Successfully deleted ${toDeleteIds.length} cohort(s).`);
+    setTimeout(() => setFlash(""), 4000);
 
     setBulkDeleting(true);
     try {
       const res = await fetch("/api/trash/bulk-delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "batch", ids: selectedIds }),
+        body: JSON.stringify({ type: "batch", ids: toDeleteIds }),
       });
-      if (res.ok) {
-        setFlash(`Successfully deleted ${selectedIds.length} cohort(s).`);
-        setTimeout(() => setFlash(""), 4000);
-        setSelectedIds([]);
-        load();
-      } else {
+      if (!res.ok) {
+        setBatches(previousBatches);
+        setSelectedIds(toDeleteIds);
         const d = await res.json();
         alert(d.error || "Failed to delete selected cohorts.");
       }
     } catch (err) {
+      setBatches(previousBatches);
+      setSelectedIds(toDeleteIds);
       alert("An unexpected error occurred during bulk delete.");
     } finally {
       setBulkDeleting(false);

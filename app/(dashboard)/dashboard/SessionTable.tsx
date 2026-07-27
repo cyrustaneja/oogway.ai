@@ -43,42 +43,57 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Move session "${name}" to the Recycle Bin? (It can be restored within 7 days)`)) return;
     
-    setDeletingId(id);
+    // OPTIMISTIC UI: Instantly remove item from state
+    const previousSessions = [...sessions];
+    const previousSelected = [...selectedIds];
+    setSessions((prev) => prev.filter((s) => s.id !== id));
+    setSelectedIds((prev) => prev.filter((item) => item !== id));
+
     try {
       const res = await fetch(`/api/analysis/${id}`, { method: "DELETE" });
-      if (res.ok) {
-        setSessions(sessions.filter(s => s.id !== id));
-        setSelectedIds(selectedIds.filter(item => item !== id));
-      } else {
+      if (!res.ok) {
+        // Rollback on error
+        setSessions(previousSessions);
+        setSelectedIds(previousSelected);
         const data = await res.json();
         alert(data.error || "Failed to delete session.");
       }
     } catch (err) {
+      // Rollback on error
+      setSessions(previousSessions);
+      setSelectedIds(previousSelected);
       alert("An error occurred while deleting.");
-    } finally {
-      setDeletingId(null);
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.length === 0) return;
-    if (!confirm(`Move ${selectedIds.length} selected session(s) to the Recycle Bin?`)) return;
+    const toDeleteIds = [...selectedIds];
+    if (!confirm(`Move ${toDeleteIds.length} selected session(s) to the Recycle Bin?`)) return;
+
+    // OPTIMISTIC UI: Instantly remove all selected items from state
+    const previousSessions = [...sessions];
+    setSessions((prev) => prev.filter((s) => !toDeleteIds.includes(s.id)));
+    setSelectedIds([]);
 
     setBulkDeleting(true);
     try {
       const res = await fetch("/api/trash/bulk-delete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "analysisSession", ids: selectedIds }),
+        body: JSON.stringify({ type: "analysisSession", ids: toDeleteIds }),
       });
-      if (res.ok) {
-        setSessions(sessions.filter((s) => !selectedIds.includes(s.id)));
-        setSelectedIds([]);
-      } else {
+      if (!res.ok) {
+        // Rollback on error
+        setSessions(previousSessions);
+        setSelectedIds(toDeleteIds);
         const data = await res.json();
         alert(data.error || "Failed to delete selected sessions.");
       }
     } catch (err) {
+      // Rollback on error
+      setSessions(previousSessions);
+      setSelectedIds(toDeleteIds);
       alert("An error occurred during bulk deletion.");
     } finally {
       setBulkDeleting(false);

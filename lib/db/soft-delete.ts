@@ -5,27 +5,48 @@ import { prisma } from "@/lib/db";
  * This effectively moves it to the 'Recycle Bin'.
  */
 export async function softDelete(model: string, id: string) {
+  return bulkSoftDelete(model, [id]);
+}
+
+/**
+ * High-performance bulk soft-deletion executing in 1 single SQL query per cascade stage.
+ */
+export async function bulkSoftDelete(model: string, ids: string[]) {
+  if (!ids || ids.length === 0) return { count: 0 };
   const modelClient = (prisma as any)[model];
   if (!modelClient) throw new Error(`Model ${model} not found in Prisma.`);
 
   const now = new Date();
 
-  // Handle Cascades
+  // Execute Cascades in parallel / bulk updateMany
   if (model === "expert") {
-    await prisma.analysisSession.updateMany({ where: { expertId: id, deletedAt: null }, data: { deletedAt: now } });
+    await prisma.analysisSession.updateMany({
+      where: { expertId: { in: ids }, deletedAt: null },
+      data: { deletedAt: now },
+    });
   } else if (model === "batch") {
-    await prisma.analysisSession.updateMany({ where: { batchId: id, deletedAt: null }, data: { deletedAt: now } });
+    await prisma.analysisSession.updateMany({
+      where: { batchId: { in: ids }, deletedAt: null },
+      data: { deletedAt: now },
+    });
   } else if (model === "course") {
-    const modules = await prisma.module.findMany({ where: { courseId: id }, select: { id: true } });
-    for (const m of modules) {
-      await softDelete("module", m.id);
+    const modules = await prisma.module.findMany({
+      where: { courseId: { in: ids } },
+      select: { id: true },
+    });
+    if (modules.length > 0) {
+      await bulkSoftDelete("module", modules.map((m) => m.id));
     }
   } else if (model === "module") {
-    await prisma.sessionNote.updateMany({ where: { moduleId: id, deletedAt: null }, data: { deletedAt: now } });
+    await prisma.sessionNote.updateMany({
+      where: { moduleId: { in: ids }, deletedAt: null },
+      data: { deletedAt: now },
+    });
   }
 
-  return await modelClient.update({
-    where: { id },
+  // Single updateMany query for ultra low latency
+  return await modelClient.updateMany({
+    where: { id: { in: ids } },
     data: { deletedAt: now },
   });
 }
