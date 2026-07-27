@@ -13,6 +13,7 @@ export interface ResolvedBatchRow extends RawBatchRow {
   courseName: string | null;
   isValid: boolean;
   validationError?: string;
+  willAutoCreateCourse?: boolean;
 }
 
 export async function POST(req: Request) {
@@ -40,7 +41,8 @@ export async function POST(req: Request) {
     // Resolve & Validate Batch Rows
     const resolvedRows: ResolvedBatchRow[] = rawRows.map((row) => {
       const name = (row.name ?? '').trim();
-      const courseTerm = (row.course ?? '').trim().toLowerCase();
+      const courseInput = (row.course ?? '').trim();
+      const courseTerm = courseInput.toLowerCase();
       const errors: string[] = [];
 
       if (!name) {
@@ -52,13 +54,13 @@ export async function POST(req: Request) {
             (c) =>
               c.id.toLowerCase() === courseTerm ||
               c.name.toLowerCase() === courseTerm ||
-              c.name.toLowerCase().includes(courseTerm)
+              c.name.toLowerCase().includes(courseTerm) ||
+              courseTerm.includes(c.name.toLowerCase())
           )
         : null;
 
-      if (courseTerm && !matchedCourse) {
-        errors.push(`Course "${row.course}" not found in database.`);
-      }
+      // If course name is specified but not in DB, mark it to be automatically created
+      const willAutoCreateCourse = Boolean(courseInput && !matchedCourse);
 
       const isValid = errors.length === 0;
 
@@ -66,8 +68,9 @@ export async function POST(req: Request) {
         ...row,
         name,
         courseId: matchedCourse?.id ?? null,
-        courseName: matchedCourse?.name ?? row.course ?? 'Unassigned',
+        courseName: matchedCourse?.name ?? (courseInput || 'Unassigned'),
         isValid,
+        willAutoCreateCourse,
         validationError: errors.length > 0 ? errors.join(' | ') : undefined,
       };
     });
@@ -91,8 +94,35 @@ export async function POST(req: Request) {
     const createdBatches = [];
     const errors = [];
 
+    // Course cache for on-the-fly created courses
+    const createdCoursesMap: Record<string, string> = {};
+
     for (const row of validRows) {
       try {
+        let courseId = row.courseId;
+
+        // Auto-create course if missing from DB
+        if (!courseId && row.courseName && row.courseName !== 'Unassigned') {
+          const cName = row.courseName.trim();
+          if (createdCoursesMap[cName.toLowerCase()]) {
+            courseId = createdCoursesMap[cName.toLowerCase()];
+          } else {
+            let existingCourse = await prisma.course.findFirst({
+              where: { name: { equals: cName, mode: 'insensitive' }, deletedAt: null },
+            });
+            if (!existingCourse) {
+              existingCourse = await prisma.course.create({
+                data: {
+                  name: cName,
+                  description: `Auto-created course for ${row.name}`,
+                },
+              });
+            }
+            courseId = existingCourse.id;
+            createdCoursesMap[cName.toLowerCase()] = courseId;
+          }
+        }
+
         let batch = await prisma.batch.findFirst({
           where: { name: row.name, deletedAt: null },
         });
@@ -102,7 +132,7 @@ export async function POST(req: Request) {
             data: {
               name: row.name,
               description: row.description || '',
-              courseId: row.courseId,
+              courseId: courseId,
             },
           });
         } else {
@@ -110,7 +140,7 @@ export async function POST(req: Request) {
             where: { id: batch.id },
             data: {
               description: row.description || batch.description,
-              courseId: row.courseId || batch.courseId,
+              courseId: courseId || batch.courseId,
             },
           });
         }

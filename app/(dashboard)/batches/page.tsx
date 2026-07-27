@@ -156,8 +156,8 @@ export default function BatchesPage() {
     const dataLines = hasHeader ? lines.slice(1) : lines;
 
     const rawRows: RawBatchRow[] = dataLines.map((line) => {
-      const cols = line.match(/(?:[^\s,",]+|"(?:\\.|[^"])*")+/g) || line.split(",");
-      const cleanCols = cols.map((c) => c.replace(/^"|"$/g, "").trim());
+      const delimiter = line.includes("\t") ? "\t" : ",";
+      const cleanCols = line.split(delimiter).map((c) => c.replace(/^["'\s]+|["'\s]+$/g, "").trim());
 
       return {
         name: cleanCols[0] || "",
