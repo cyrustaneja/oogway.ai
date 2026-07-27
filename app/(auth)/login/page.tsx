@@ -99,7 +99,7 @@ function LoginForm() {
           </button>
 
           <p className="text-[11px] text-center text-slate-500 font-medium px-2 leading-relaxed">
-            🔒 Authorized Kraftshala accounts only. Email must be pre-added in the Admin User Directory.
+            🔒 Authorized accounts only.
           </p>
         </div>
 
