@@ -13,7 +13,6 @@ export interface ResolvedBatchRow extends RawBatchRow {
   courseName: string | null;
   isValid: boolean;
   validationError?: string;
-  willAutoCreateCourse?: boolean;
 }
 
 export async function POST(req: Request) {
@@ -59,8 +58,9 @@ export async function POST(req: Request) {
           )
         : null;
 
-      // If course name is specified but not in DB, mark it to be automatically created
-      const willAutoCreateCourse = Boolean(courseInput && !matchedCourse);
+      if (courseInput && !matchedCourse) {
+        errors.push(`Course "${courseInput}" not found in database. Please create it under Courses first.`);
+      }
 
       const isValid = errors.length === 0;
 
@@ -70,7 +70,6 @@ export async function POST(req: Request) {
         courseId: matchedCourse?.id ?? null,
         courseName: matchedCourse?.name ?? (courseInput || 'Unassigned'),
         isValid,
-        willAutoCreateCourse,
         validationError: errors.length > 0 ? errors.join(' | ') : undefined,
       };
     });
@@ -94,35 +93,8 @@ export async function POST(req: Request) {
     const createdBatches = [];
     const errors = [];
 
-    // Course cache for on-the-fly created courses
-    const createdCoursesMap: Record<string, string> = {};
-
     for (const row of validRows) {
       try {
-        let courseId = row.courseId;
-
-        // Auto-create course if missing from DB
-        if (!courseId && row.courseName && row.courseName !== 'Unassigned') {
-          const cName = row.courseName.trim();
-          if (createdCoursesMap[cName.toLowerCase()]) {
-            courseId = createdCoursesMap[cName.toLowerCase()];
-          } else {
-            let existingCourse = await prisma.course.findFirst({
-              where: { name: { equals: cName, mode: 'insensitive' }, deletedAt: null },
-            });
-            if (!existingCourse) {
-              existingCourse = await prisma.course.create({
-                data: {
-                  name: cName,
-                  description: `Auto-created course for ${row.name}`,
-                },
-              });
-            }
-            courseId = existingCourse.id;
-            createdCoursesMap[cName.toLowerCase()] = courseId;
-          }
-        }
-
         let batch = await prisma.batch.findFirst({
           where: { name: row.name, deletedAt: null },
         });
@@ -132,7 +104,7 @@ export async function POST(req: Request) {
             data: {
               name: row.name,
               description: row.description || '',
-              courseId: courseId,
+              courseId: row.courseId,
             },
           });
         } else {
@@ -140,7 +112,7 @@ export async function POST(req: Request) {
             where: { id: batch.id },
             data: {
               description: row.description || batch.description,
-              courseId: courseId || batch.courseId,
+              courseId: row.courseId || batch.courseId,
             },
           });
         }
