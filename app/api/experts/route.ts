@@ -19,7 +19,13 @@ export async function GET() {
 
   try {
     const users = await prisma.user.findMany({
-      where: { deletedAt: null },
+      where: {
+        deletedAt: null,
+        OR: [
+          { expertId: null },
+          { expert: { deletedAt: null } }
+        ]
+      },
       orderBy: { createdAt: "desc" },
       include: {
         expert: {
@@ -35,17 +41,19 @@ export async function GET() {
     });
 
     // Unified format for roster display
-    const roster = users.map((u) => ({
-      id: u.expert?.id || u.id,
-      userId: u.id,
-      name: u.name || u.expert?.name || "User",
-      email: u.email,
-      tags: u.expert?.tags || [],
-      bio: u.expert?.bio || null,
-      user: { role: u.role },
-      sessions: u.expert?.sessions || [],
-      createdAt: u.createdAt,
-    }));
+    const roster = users
+      .filter((u) => u.deletedAt === null && (!u.expert || u.expert.deletedAt === null))
+      .map((u) => ({
+        id: u.expert?.id || u.id,
+        userId: u.id,
+        name: u.name || u.expert?.name || "User",
+        email: u.email,
+        tags: u.expert?.tags || [],
+        bio: u.expert?.bio || null,
+        user: { role: u.role },
+        sessions: u.expert?.sessions || [],
+        createdAt: u.createdAt,
+      }));
 
     return NextResponse.json(roster);
   } catch (error) {

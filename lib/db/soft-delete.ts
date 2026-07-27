@@ -20,6 +20,16 @@ export async function bulkSoftDelete(model: string, ids: string[]) {
 
   // Execute Cascades in parallel / bulk updateMany
   if (model === "expert") {
+    // 1. Soft delete associated User accounts
+    await prisma.user.updateMany({
+      where: {
+        OR: [{ expertId: { in: ids } }, { id: { in: ids } }],
+        deletedAt: null,
+      },
+      data: { deletedAt: now },
+    });
+
+    // 2. Soft delete associated Analysis Sessions
     await prisma.analysisSession.updateMany({
       where: { expertId: { in: ids }, deletedAt: null },
       data: { deletedAt: now },
@@ -44,7 +54,7 @@ export async function bulkSoftDelete(model: string, ids: string[]) {
     });
   }
 
-  // Single updateMany query for ultra low latency
+  // Single updateMany query for target model
   return await modelClient.updateMany({
     where: { id: { in: ids } },
     data: { deletedAt: now },
@@ -57,6 +67,13 @@ export async function bulkSoftDelete(model: string, ids: string[]) {
 export async function restore(model: string, id: string) {
   const modelClient = (prisma as any)[model];
   if (!modelClient) throw new Error(`Model ${model} not found in Prisma.`);
+
+  if (model === "expert") {
+    await prisma.user.updateMany({
+      where: { OR: [{ expertId: id }, { id }] },
+      data: { deletedAt: null },
+    });
+  }
 
   return await modelClient.update({
     where: { id },

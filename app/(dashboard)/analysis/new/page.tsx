@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, ChevronDown, ArrowLeft, Loader2, CheckCircle, BookOpen, X } from "lucide-react";
+import { Upload, ChevronDown, ArrowLeft, Loader2, CheckCircle, BookOpen, X, Search } from "lucide-react";
 
 interface Expert { id: string; name: string; email: string }
 interface SessionNote { 
@@ -35,7 +35,13 @@ export default function NewAnalysisPage() {
   const [error, setError]           = useState("");
 
   const [expertId, setExpertId]     = useState("");
+  const [expertSearch, setExpertSearch] = useState("");
+  const [showExpertPicker, setShowExpertPicker] = useState(false);
+
   const [batchId, setBatchId]       = useState("");
+  const [batchSearch, setBatchSearch] = useState("");
+  const [showBatchPicker, setShowBatchPicker] = useState(false);
+
   const [sessionDate, setSessionDate] = useState(() => {
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -213,43 +219,176 @@ export default function NewAnalysisPage() {
 
       <form onSubmit={handleSubmit} className="glass-card p-6 sm:p-8 space-y-6 sm:space-y-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          {/* Expert */}
-          <div>
+          {/* SEARCHABLE EXPERT PICKER */}
+          <div className="relative">
             <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase mb-2">Expert *</label>
-            <div className="relative">
-              <select
-                value={expertId}
-                onChange={(e) => setExpertId(e.target.value)}
-                className="w-full appearance-none liquid-input pr-10"
-                required
-              >
-                <option value="">Select expert...</option>
-                {experts.map((ex) => (
-                  <option key={ex.id} value={ex.id}>{ex.name}</option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
+            
+            {/* Display Input Button */}
+            <div
+              onClick={() => { setShowExpertPicker(!showExpertPicker); setShowBatchPicker(false); }}
+              className="w-full liquid-input flex items-center justify-between cursor-pointer select-none"
+            >
+              <span className={expertId ? "text-[var(--foreground)] font-bold" : "text-slate-400 font-medium"}>
+                {experts.find((ex) => ex.id === expertId)?.name || "Select expert..."}
+              </span>
+              <div className="flex items-center gap-1">
+                {expertId && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setExpertId(""); }}
+                    className="p-1 hover:bg-slate-200 rounded-md text-slate-400 hover:text-slate-700"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <ChevronDown className={`w-4 h-4 text-[var(--muted)] transition-transform ${showExpertPicker ? 'rotate-180' : ''}`} />
+              </div>
             </div>
+
+            {/* Dropdown Menu */}
+            {showExpertPicker && (
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={expertSearch}
+                    onChange={(e) => setExpertSearch(e.target.value)}
+                    placeholder="Search expert name or email..."
+                    className="w-full text-xs font-medium pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#E8A020]"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="max-h-52 overflow-y-auto space-y-1">
+                  {experts
+                    .filter((ex) =>
+                      !expertSearch ||
+                      ex.name.toLowerCase().includes(expertSearch.toLowerCase()) ||
+                      ex.email?.toLowerCase().includes(expertSearch.toLowerCase())
+                    )
+                    .map((ex) => (
+                      <div
+                        key={ex.id}
+                        onClick={() => {
+                          setExpertId(ex.id);
+                          setShowExpertPicker(false);
+                          setExpertSearch("");
+                        }}
+                        className={`px-3 py-2 rounded-xl text-xs font-bold cursor-pointer transition-colors flex items-center justify-between ${
+                          ex.id === expertId ? "bg-amber-50 text-[#E8A020]" : "text-slate-700 hover:bg-slate-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="font-extrabold">{ex.name}</div>
+                          {ex.email && <div className="text-[10px] text-slate-400 font-medium">{ex.email}</div>}
+                        </div>
+                        {ex.id === expertId && <CheckCircle className="w-4 h-4 text-[#E8A020]" />}
+                      </div>
+                    ))}
+                  {experts.filter((ex) =>
+                    !expertSearch ||
+                    ex.name.toLowerCase().includes(expertSearch.toLowerCase()) ||
+                    ex.email?.toLowerCase().includes(expertSearch.toLowerCase())
+                  ).length === 0 && (
+                    <div className="p-3 text-center text-xs text-slate-400 font-medium">No matching experts found</div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Batch */}
-          <div>
+          {/* SEARCHABLE BATCH PICKER */}
+          <div className="relative">
             <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase mb-2">Batch / Cohort</label>
-            <div className="relative">
-              <select
-                value={batchId}
-                onChange={(e) => setBatchId(e.target.value)}
-                className="w-full appearance-none liquid-input pr-10"
-              >
-                <option value="">Select batch...</option>
-                {batches.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name} {b.course ? `(${b.course.name})` : ""}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
+            
+            {/* Display Input Button */}
+            <div
+              onClick={() => { setShowBatchPicker(!showBatchPicker); setShowExpertPicker(false); }}
+              className="w-full liquid-input flex items-center justify-between cursor-pointer select-none"
+            >
+              <span className={batchId ? "text-[var(--foreground)] font-bold" : "text-slate-400 font-medium"}>
+                {batches.find((b) => b.id === batchId)?.name
+                  ? `${batches.find((b) => b.id === batchId)?.name} ${batches.find((b) => b.id === batchId)?.course ? `(${batches.find((b) => b.id === batchId)?.course?.name})` : ""}`
+                  : "Select batch..."}
+              </span>
+              <div className="flex items-center gap-1">
+                {batchId && (
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setBatchId(""); }}
+                    className="p-1 hover:bg-slate-200 rounded-md text-slate-400 hover:text-slate-700"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <ChevronDown className={`w-4 h-4 text-[var(--muted)] transition-transform ${showBatchPicker ? 'rotate-180' : ''}`} />
+              </div>
             </div>
+
+            {/* Dropdown Menu */}
+            {showBatchPicker && (
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 space-y-2 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="relative">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={batchSearch}
+                    onChange={(e) => setBatchSearch(e.target.value)}
+                    placeholder="Search batch or course..."
+                    className="w-full text-xs font-medium pl-8 pr-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#E8A020]"
+                    autoFocus
+                  />
+                </div>
+
+                <div className="max-h-52 overflow-y-auto space-y-1">
+                  <div
+                    onClick={() => {
+                      setBatchId("");
+                      setShowBatchPicker(false);
+                      setBatchSearch("");
+                    }}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold cursor-pointer transition-colors ${
+                      !batchId ? "bg-amber-50 text-[#E8A020]" : "text-slate-500 hover:bg-slate-50"
+                    }`}
+                  >
+                    None / Unassigned
+                  </div>
+                  {batches
+                    .filter((b) =>
+                      !batchSearch ||
+                      b.name.toLowerCase().includes(batchSearch.toLowerCase()) ||
+                      b.course?.name.toLowerCase().includes(batchSearch.toLowerCase())
+                    )
+                    .map((b) => (
+                      <div
+                        key={b.id}
+                        onClick={() => {
+                          setBatchId(b.id);
+                          setShowBatchPicker(false);
+                          setBatchSearch("");
+                        }}
+                        className={`px-3 py-2 rounded-xl text-xs font-bold cursor-pointer transition-colors flex items-center justify-between ${
+                          b.id === batchId ? "bg-amber-50 text-[#E8A020]" : "text-slate-700 hover:bg-slate-50"
+                        }`}
+                      >
+                        <div>
+                          <div className="font-extrabold">{b.name}</div>
+                          {b.course && <div className="text-[10px] text-slate-400 font-medium">{b.course.name}</div>}
+                        </div>
+                        {b.id === batchId && <CheckCircle className="w-4 h-4 text-[#E8A020]" />}
+                      </div>
+                    ))}
+                  {batches.filter((b) =>
+                    !batchSearch ||
+                    b.name.toLowerCase().includes(batchSearch.toLowerCase()) ||
+                    b.course?.name.toLowerCase().includes(batchSearch.toLowerCase())
+                  ).length === 0 && (
+                    <div className="p-3 text-center text-xs text-slate-400 font-medium">No matching batches found</div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Session Conducted Date & Time */}
