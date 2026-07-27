@@ -167,6 +167,20 @@ export default function ExpertsPage() {
     window.open("/api/experts/template", "_blank");
   };
 
+  // Handle CSV File Upload
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const text = evt.target?.result as string;
+      setBulkCsvText(text);
+      processBulkPreview(text);
+    };
+    reader.readAsText(file);
+  };
+
   // Process Bulk CSV Preview
   const processBulkPreview = async (csvText: string) => {
     setError("");
@@ -792,9 +806,33 @@ export default function ExpertsPage() {
                 </button>
               </div>
 
+              {/* Explicit File Upload Dropzone */}
               <div>
                 <label className="block font-bold text-[var(--muted)] mb-1 uppercase text-[10px]">
-                  Paste CSV Lines or Drop CSV File
+                  Upload CSV File or Paste Data
+                </label>
+                <div className="relative border-2 border-dashed border-amber-300 hover:border-[#E8A020] bg-amber-50/40 rounded-2xl p-4 text-center transition-colors cursor-pointer group">
+                  <input
+                    type="file"
+                    accept=".csv,.txt"
+                    onChange={handleFileUpload}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  />
+                  <div className="flex flex-col items-center justify-center space-y-1.5 pointer-events-none">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-amber-200 flex items-center justify-center text-[#E8A020] shadow-2xs group-hover:scale-105 transition-transform">
+                      <FileSpreadsheetIcon className="w-5 h-5" />
+                    </div>
+                    <div className="text-xs font-black text-slate-800">
+                      <span className="text-[#E8A020] underline">Click to choose CSV file</span> or drag &amp; drop file here
+                    </div>
+                    <div className="text-[10px] text-slate-400 font-medium">Supports .csv or .txt exported from Excel / Google Sheets</div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-[var(--muted)] mb-1 uppercase text-[10px]">
+                  Or Paste CSV Text directly
                 </label>
                 <textarea
                   rows={4}
