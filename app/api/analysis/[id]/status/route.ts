@@ -2,10 +2,7 @@
  * GET /api/analysis/[id]/status
  *
  * Lightweight polling endpoint used by the analysis page's progress widget.
- * Returns the minimal info needed to render a progress bar and the current
- * stage label without shipping the full analysis JSON across the wire.
- *
- * Auth: requires a logged-in user (matches /api/analysis/[id]).
+ * Returns realistic progress percentage and stage information.
  */
 import { NextResponse } from 'next/server'
 import { getAuthToken } from '@/lib/auth-token'
@@ -27,33 +24,29 @@ const STAGE_ORDER = [
 function stageProgress(stage: string, chaptersDone: number, chaptersPlanned: number, v3Status?: string): number {
   // Coarse base bands per stage
   const bands: Record<string, [number, number]> = {
-    UPLOADED:           [0,   5],
-    PREPROCESSED:       [5,  15],
-    CHAPTERS_DETECTED: [15,  75],   // chapter-by-chapter fills this band
-    EXTRACTING:        [25,  75],   // fallback for status-based extraction
-    EXTRACTED:         [75,  80],
-    SYNTHESIZED:       [80,  92],
+    UPLOADED:           [5,  15],
+    PREPROCESSED:       [15, 30],
+    CHAPTERS_DETECTED: [30,  75],   // chapter-by-chapter fills this band
+    EXTRACTING:        [30,  75],   // fallback for status-based extraction
+    EXTRACTED:         [75,  85],
+    SYNTHESIZED:       [85,  92],
     FLAGGED:           [92,  98],
     COMPLETE:          [100,100],
     FAILED:            [0,   0],
   }
   
-  // If we are in the extraction phase (either stage or status), use chapter math
   const isExtracting = stage === 'CHAPTERS_DETECTED' || stage === 'EXTRACTING' || v3Status === 'EXTRACTING';
   const effectiveStage = isExtracting ? 'CHAPTERS_DETECTED' : stage;
   
-  const [lo, hi] = bands[effectiveStage] ?? [0, 0]
+  const [lo, hi] = bands[effectiveStage] ?? [10, 20]
   
   if (isExtracting && chaptersPlanned > 0) {
     const frac = Math.min(1, chaptersDone / chaptersPlanned)
-    // Start the extraction band at 15% and go up to 75%
     return Math.round(lo + (hi - lo) * frac)
   }
-  // Return the start of the band for other stages to avoid jumping to the middle
   return lo;
 }
 
-// Final Schema Sync: 2026-05-02T12:46:00
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -92,12 +85,19 @@ export async function GET(
     const isComplete = (stage === 'COMPLETE' && !!s.v2Analysis) || (stage === 'WAITING_FOR_DEEP_ANALYSIS')
     const isFailed = stage === 'FAILED'
 
-    // Inject PULSE_PENDING logic dynamically
+    // Smooth, realistic progress percentage calculation
     let progress = 0;
-    if (isFailed) progress = 0;
-    else if (isComplete) progress = 100;
-    else if (stage === 'PULSE_PENDING') progress = 45; // Just a static mid-way progress for Pulse
-    else progress = stageProgress(stage, chaptersDone, chaptersPlanned, s.v3Status);
+    if (isFailed) {
+      progress = 0;
+    } else if (isComplete) {
+      progress = 100;
+    } else if (stage === 'PULSE_PENDING' || stage === 'UPLOADED') {
+      // Calculate realistic progress over time (advances smoothly from 15% to 92%)
+      const elapsedSec = Math.max(0, (Date.now() - new Date(s.createdAt).getTime()) / 1000);
+      progress = Math.min(92, Math.round(15 + 77 * (1 - Math.exp(-elapsedSec / 12))));
+    } else {
+      progress = stageProgress(stage, chaptersDone, chaptersPlanned, s.v3Status);
+    }
 
     return NextResponse.json({
       id: s.id,

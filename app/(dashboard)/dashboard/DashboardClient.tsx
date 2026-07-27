@@ -104,6 +104,35 @@ export default function DashboardClient({
     });
   }, [analyses, filteredExpertId, filteredBatchId, searchQuery, statusFilter]);
 
+  const [workerRunning, setWorkerRunning] = useState(false);
+  const [workerMsg, setWorkerMsg] = useState("");
+
+  const handleRunWorker = async () => {
+    setWorkerRunning(true);
+    setWorkerMsg("");
+    try {
+      const res = await fetch("/api/pipeline/tick", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        setWorkerMsg(`Processed ${data.claimed || 0} session(s)`);
+        setTimeout(() => setWorkerMsg(""), 3000);
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("Worker run failed", err);
+    } finally {
+      setWorkerRunning(false);
+    }
+  };
+
+  // Auto-trigger worker if there are pending queued sessions
+  React.useEffect(() => {
+    const hasPending = analyses.some((a) => a.v3Status === "PENDING" || a.pipeline_stage === "PULSE_PENDING" || a.pipeline_stage === "UPLOADED");
+    if (hasPending) {
+      handleRunWorker();
+    }
+  }, []);
+
   return (
     <div className="space-y-16 sm:space-y-24 max-w-5xl mx-auto px-4 lg:px-0 pt-10 sm:pt-16">
 
@@ -147,9 +176,31 @@ export default function DashboardClient({
         </div>
 
         {role !== "EXPERT" && (
-          <Link href="/analysis/new" className="btn-primary px-8 sm:px-10 py-3.5 sm:py-4 shadow-xl shadow-brand-orange/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 max-w-[280px] mx-auto w-full">
-            <CheckCircle2 className="w-5 h-5" /> Run New Analysis
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md mx-auto">
+            <Link href="/analysis/new" className="btn-primary px-8 sm:px-10 py-3.5 sm:py-4 shadow-xl shadow-brand-orange/20 hover:-translate-y-1 transition-transform flex items-center justify-center gap-2 w-full sm:w-auto">
+              <CheckCircle2 className="w-5 h-5" /> Run New Analysis
+            </Link>
+
+            <button
+              onClick={handleRunWorker}
+              disabled={workerRunning}
+              className="px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-black text-white font-extrabold text-xs shadow-md transition-all flex items-center justify-center gap-2 w-full sm:w-auto cursor-pointer disabled:opacity-50"
+            >
+              {workerRunning ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#E8A020]" /> Processing Queue...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 text-[#E8A020] fill-current" /> Process Queued Sessions
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {workerMsg && (
+          <p className="text-xs font-bold text-emerald-600 mt-3 animate-pulse">{workerMsg}</p>
         )}
       </motion.div>
 

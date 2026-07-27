@@ -62,14 +62,25 @@ async function withTimeout<T>(promise: Promise<T>, ms: number, label: string): P
   }
 }
 
+import { getAuthToken } from '@/lib/auth-token'
+
 export async function POST(req: Request) {
-  // ── Auth: verify CRON_SECRET for production. Skip in dev if not set. ────
+  // ── Auth: verify CRON_SECRET or authenticated user session ────
   const cronSecret = process.env.CRON_SECRET
-  if (cronSecret) {
-    const authHeader = req.headers.get('authorization')
-    if (authHeader !== `Bearer ${cronSecret}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  const authHeader = req.headers.get('authorization')
+  
+  let isAuthorized = false
+  if (cronSecret && authHeader === `Bearer ${cronSecret}`) {
+    isAuthorized = true
+  } else {
+    // Fallback check: Allow logged-in users from web app
+    const token = await getAuthToken()
+    if (token) isAuthorized = true
+    if (!cronSecret) isAuthorized = true // Allow in dev if CRON_SECRET not configured
+  }
+
+  if (!isAuthorized) {
+    return NextResponse.json({ error: 'Unauthorized: Missing CRON_SECRET or session token' }, { status: 401 })
   }
 
   const tickStart = Date.now()
@@ -121,10 +132,10 @@ export async function POST(req: Request) {
           SELECT id
           FROM "AnalysisSession"
           WHERE
-            next_action_at <= NOW()
+            (next_action_at <= NOW() OR next_action_at IS NULL)
             AND pipeline_stage NOT IN ('COMPLETE', 'FAILED', 'WAITING_FOR_DEEP_ANALYSIS')
             AND "deletedAt" IS NULL
-          ORDER BY next_action_at ASC
+          ORDER BY "createdAt" ASC
           LIMIT ${LIMITS.pipelineConcurrency}
           FOR UPDATE SKIP LOCKED
         )

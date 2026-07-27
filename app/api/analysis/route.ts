@@ -118,17 +118,21 @@ export async function POST(req: Request) {
         v3Status: "PENDING",
         tier,
         pipeline_stage: tier === "TIER1" ? "PULSE_PENDING" : "UPLOADED",
+        next_action_at: new Date(),
       },
     });
 
-    // Trigger the background pipeline tick immediately so it doesn't wait for cron
-    // and gets processed locally within 30 seconds.
-    setTimeout(() => {
-      triggerTick(new Request("http://localhost/api/pipeline/tick", { 
-        method: "POST",
-        headers: { authorization: `Bearer ${process.env.CRON_SECRET}` }
-      })).catch(console.error);
-    }, 1000);
+    // Trigger pipeline worker immediately
+    try {
+      await triggerTick(
+        new Request("https://master-oogway-ai.vercel.app/api/pipeline/tick", {
+          method: "POST",
+          headers: { authorization: `Bearer ${process.env.CRON_SECRET || ""}` },
+        })
+      );
+    } catch (e) {
+      console.warn("Immediate tick trigger failed:", e);
+    }
 
     return NextResponse.json(created, { status: 201 });
   } catch (err: any) {

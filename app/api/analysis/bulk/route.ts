@@ -65,6 +65,7 @@ export async function POST(req: Request) {
           v3Status: 'PENDING',
           tier: 'TIER1',
           pipeline_stage: 'PULSE_PENDING',
+          next_action_at: new Date(),
         },
       });
 
@@ -72,14 +73,16 @@ export async function POST(req: Request) {
     }
 
     // Trigger pipeline worker immediately
-    setTimeout(() => {
-      triggerTick(
-        new Request('http://localhost/api/pipeline/tick', {
-          method: 'POST',
-          headers: { authorization: `Bearer ${process.env.CRON_SECRET}` },
+    try {
+      await triggerTick(
+        new Request("https://master-oogway-ai.vercel.app/api/pipeline/tick", {
+          method: "POST",
+          headers: { authorization: `Bearer ${process.env.CRON_SECRET || ""}` },
         })
-      ).catch(console.error);
-    }, 1000);
+      );
+    } catch (e) {
+      console.warn("Immediate bulk tick trigger failed:", e);
+    }
 
     return NextResponse.json({
       success: true,
