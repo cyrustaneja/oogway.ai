@@ -21,6 +21,24 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string 
 export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
   const [sessions, setSessions] = useState(initialSessions);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkDeleting, setBulkDeleting] = useState(false);
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === sessions.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(sessions.map((s) => s.id));
+    }
+  };
+
+  const toggleSelectOne = (id: string) => {
+    if (selectedIds.includes(id)) {
+      setSelectedIds(selectedIds.filter((item) => item !== id));
+    } else {
+      setSelectedIds([...selectedIds, id]);
+    }
+  };
 
   const handleDelete = async (id: string, name: string) => {
     if (!confirm(`Move session "${name}" to the Recycle Bin? (It can be restored within 7 days)`)) return;
@@ -30,6 +48,7 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
       const res = await fetch(`/api/analysis/${id}`, { method: "DELETE" });
       if (res.ok) {
         setSessions(sessions.filter(s => s.id !== id));
+        setSelectedIds(selectedIds.filter(item => item !== id));
       } else {
         const data = await res.json();
         alert(data.error || "Failed to delete session.");
@@ -41,6 +60,31 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!confirm(`Move ${selectedIds.length} selected session(s) to the Recycle Bin?`)) return;
+
+    setBulkDeleting(true);
+    try {
+      const res = await fetch("/api/trash/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "analysisSession", ids: selectedIds }),
+      });
+      if (res.ok) {
+        setSessions(sessions.filter((s) => !selectedIds.includes(s.id)));
+        setSelectedIds([]);
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete selected sessions.");
+      }
+    } catch (err) {
+      alert("An error occurred during bulk deletion.");
+    } finally {
+      setBulkDeleting(false);
+    }
+  };
+
   if (sessions.length === 0) {
     return (
       <div className="px-6 py-20 text-center text-[var(--muted)] text-sm border-t border-[var(--card-border)]">
@@ -49,163 +93,223 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
     );
   }
 
+  const allSelected = sessions.length > 0 && selectedIds.length === sessions.length;
+
   return (
-    <div className="divide-y divide-[var(--card-border)] overflow-hidden">
-      {sessions.map((a) => {
-        const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
-        const isDeleting = deletingId === a.id;
+    <div className="space-y-2">
+      {/* Table Header Controls */}
+      <div className="flex items-center justify-between px-6 py-2.5 bg-slate-50 border-b border-[var(--card-border)] text-xs font-bold text-[var(--muted)]">
+        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={allSelected}
+            onChange={toggleSelectAll}
+            className="w-4 h-4 rounded border-slate-300 text-brand-orange focus:ring-brand-orange cursor-pointer"
+          />
+          <span>{allSelected ? "Deselect All" : "Select All Sessions"}</span>
+        </label>
 
-        const isPulseDone =
-          Boolean(a.tier1Result) ||
-          Boolean(a.tier1_result) ||
-          Boolean(a.data?.tier1_result) ||
-          Boolean(a.data?.expert_insights) ||
-          Boolean(a.data?.overall_expert_summary) ||
-          a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' ||
-          a.pipeline_stage === 'COMPLETE' ||
-          (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+        {selectedIds.length > 0 && (
+          <span className="text-[11px] font-extrabold text-brand-orange">
+            {selectedIds.length} of {sessions.length} selected
+          </span>
+        )}
+      </div>
 
-        let displayLabel = cfg.label;
-        let statusDot = cfg.dot;
-        let statusColor = cfg.color;
+      <div className="divide-y divide-[var(--card-border)] overflow-hidden">
+        {sessions.map((a) => {
+          const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
+          const isDeleting = deletingId === a.id;
+          const isChecked = selectedIds.includes(a.id);
 
-        if (isPulseDone) {
-          displayLabel = 'Pulse Completed';
-          statusDot = 'bg-brand-orange';
-          statusColor = 'text-brand-orange font-bold';
-        } else if (a.tier === 'TIER1') {
-          if (a.v3Status === 'FAILED') {
-            displayLabel = 'Pulse Processing';
-            statusDot = 'bg-brand-warning animate-pulse';
-            statusColor = 'text-brand-warning font-semibold';
-          } else {
-            displayLabel = `Pulse: ${cfg.label}`;
+          const isPulseDone =
+            Boolean(a.tier1Result) ||
+            Boolean(a.tier1_result) ||
+            Boolean(a.data?.tier1_result) ||
+            Boolean(a.data?.expert_insights) ||
+            Boolean(a.data?.overall_expert_summary) ||
+            a.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS' ||
+            a.pipeline_stage === 'COMPLETE' ||
+            (a.tier === 'TIER1' && a.v3Status === 'COMPLETE');
+
+          let displayLabel = cfg.label;
+          let statusDot = cfg.dot;
+          let statusColor = cfg.color;
+
+          if (isPulseDone) {
+            displayLabel = 'Pulse Completed';
+            statusDot = 'bg-brand-orange';
+            statusColor = 'text-brand-orange font-bold';
+          } else if (a.tier === 'TIER1') {
+            if (a.v3Status === 'FAILED') {
+              displayLabel = 'Pulse Processing';
+              statusDot = 'bg-brand-warning animate-pulse';
+              statusColor = 'text-brand-warning font-semibold';
+            } else {
+              displayLabel = `Pulse: ${cfg.label}`;
+            }
+          } else if (a.tier === 'TIER2') {
+            if (a.v3Status === 'FAILED') {
+              displayLabel = 'Analysis Processing';
+              statusDot = 'bg-brand-warning animate-pulse';
+              statusColor = 'text-brand-warning font-semibold';
+            } else if (a.v3Status === 'COMPLETE') {
+              displayLabel = 'Analysis Completed';
+            } else {
+              displayLabel = `Analysis: ${cfg.label}`;
+            }
           }
-        } else if (a.tier === 'TIER2') {
-          if (a.v3Status === 'FAILED') {
-            displayLabel = 'Analysis Processing';
-            statusDot = 'bg-brand-warning animate-pulse';
-            statusColor = 'text-brand-warning font-semibold';
-          } else if (a.v3Status === 'COMPLETE') {
-            displayLabel = 'Analysis Completed';
-          } else {
-            displayLabel = `Analysis: ${cfg.label}`;
-          }
-        }
 
-        return (
-          <div 
-            key={a.id} 
-            className={cn(
-              "flex flex-col lg:grid lg:grid-cols-13 gap-4 lg:gap-4 px-6 lg:px-8 py-6 lg:py-5 items-start lg:items-center hover:bg-[var(--inner-bg)] transition-all duration-300 relative",
-              isDeleting ? 'opacity-50 pointer-events-none' : ''
-            )}
-          >
-            {/* Session Identity - Main Column */}
-            <div className="col-span-4 min-w-0 w-full">
-              <div className="flex items-start justify-between lg:block">
-                <Link href={`/sessions/${a.id}`} className="group block min-w-0">
-                  <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
-                    {a.name}
-                  </p>
-                </Link>
-                {/* Mobile-only status indicator */}
-                <div className="lg:hidden flex items-center gap-2 shrink-0">
-                  <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`} />
-                  <span className={`text-[10px] font-bold uppercase tracking-widest ${statusColor}`}>{displayLabel}</span>
-                </div>
-              </div>
-              {a.sessionNote ? (
-                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1.5 lg:mt-0.5">
-                  <Link 
-                    href={`/modules/${a.sessionNote.moduleId}`}
-                    className="flex items-center gap-1 text-[10px] text-brand-orange hover:underline font-bold whitespace-nowrap"
-                  >
-                    <Target className="w-2.5 h-2.5" />
-                    {a.sessionNote.module?.name || "Unmapped Topic"}
-                  </Link>
-                  <span className="hidden sm:inline text-[10px] text-[var(--muted)] opacity-40">·</span>
-                  <Link 
-                    href={`/session-notes/${a.sessionNoteId}`}
-                    className="text-[10px] text-[var(--muted)] hover:text-brand-orange font-medium truncate italic hover:underline max-w-[200px]"
-                  >
-                    {a.sessionNote.name}
-                  </Link>
-                </div>
-              ) : (
-                <p className="text-[10px] text-[var(--muted-foreground)] mt-1 lg:mt-0.5 truncate font-medium uppercase tracking-widest">Standalone Analysis</p>
+          return (
+            <div 
+              key={a.id} 
+              className={cn(
+                "flex flex-col lg:grid lg:grid-cols-13 gap-4 lg:gap-4 px-6 lg:px-8 py-6 lg:py-5 items-start lg:items-center hover:bg-[var(--inner-bg)] transition-all duration-300 relative",
+                isDeleting ? 'opacity-50 pointer-events-none' : '',
+                isChecked ? 'bg-amber-50/50' : ''
               )}
-            </div>
+            >
+              {/* Checkbox & Session Identity */}
+              <div className="col-span-4 min-w-0 w-full flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleSelectOne(a.id)}
+                  className="w-4 h-4 mt-1 rounded border-slate-300 text-brand-orange focus:ring-brand-orange cursor-pointer shrink-0"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between lg:block">
+                    <Link href={`/sessions/${a.id}`} className="group block min-w-0">
+                      <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
+                        {a.name}
+                      </p>
+                    </Link>
+                    {/* Mobile-only status indicator */}
+                    <div className="lg:hidden flex items-center gap-2 shrink-0">
+                      <div className={`w-1.5 h-1.5 rounded-full ${statusDot}`} />
+                      <span className={`text-[10px] font-bold uppercase tracking-widest ${statusColor}`}>{displayLabel}</span>
+                    </div>
+                  </div>
+                  {a.sessionNote ? (
+                    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 mt-1.5 lg:mt-0.5">
+                      <Link 
+                        href={`/modules/${a.sessionNote.moduleId}`}
+                        className="flex items-center gap-1 text-[10px] text-brand-orange hover:underline font-bold whitespace-nowrap"
+                      >
+                        <Target className="w-2.5 h-2.5" />
+                        {a.sessionNote.module?.name || "Unmapped Topic"}
+                      </Link>
+                      <span className="hidden sm:inline text-[10px] text-[var(--muted)] opacity-40">·</span>
+                      <Link 
+                        href={`/session-notes/${a.sessionNoteId}`}
+                        className="text-[10px] text-[var(--muted)] hover:text-brand-orange font-medium truncate italic hover:underline max-w-[200px]"
+                      >
+                        {a.sessionNote.name}
+                      </Link>
+                    </div>
+                  ) : (
+                    <p className="text-[10px] text-[var(--muted-foreground)] mt-1 lg:mt-0.5 truncate font-medium uppercase tracking-widest">Standalone Analysis</p>
+                  )}
+                </div>
+              </div>
 
-            {/* Mobile Data Row */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full lg:contents border-t border-[var(--inner-border)] lg:border-none pt-4 lg:pt-0">
-              {/* Batch / Course */}
-              <div className="lg:col-span-2 min-w-0 flex flex-col gap-1 lg:block">
-                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Cohort</span>
-                {a.batch?.name ? (
+              {/* Mobile Data Row */}
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full lg:contents border-t border-[var(--inner-border)] lg:border-none pt-4 lg:pt-0">
+                {/* Batch / Course */}
+                <div className="lg:col-span-2 min-w-0 flex flex-col gap-1 lg:block">
+                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Cohort</span>
+                  {a.batch?.name ? (
+                    <Link 
+                      href={`/batches/${a.batchId}`}
+                      className="text-[11px] font-bold text-brand-orange hover:underline truncate block"
+                    >
+                      {a.batch.name}
+                    </Link>
+                  ) : (
+                    <span className="text-[10px] text-[var(--muted-foreground)] font-bold italic">Unassigned</span>
+                  )}
+                </div>
+
+                {/* Expert Partner */}
+                <div className="lg:col-span-2 flex items-center gap-2 min-w-0">
+                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em] mr-1">Expert</span>
+                  <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-[var(--foreground)] shrink-0 shadow-sm capitalize">
+                    {a.expert.name[0]}
+                  </div>
                   <Link 
-                    href={`/batches/${a.batchId}`}
-                    className="text-[11px] font-bold text-brand-orange hover:underline truncate block"
+                    href={`/experts/${a.expertId}`}
+                    className="text-[11px] font-bold text-[var(--foreground)] opacity-90 truncate hover:text-brand-orange transition-colors"
                   >
-                    {a.batch.name}
+                    {a.expert.name}
                   </Link>
-                ) : (
-                  <span className="text-[10px] text-[var(--muted-foreground)] font-bold italic">Unassigned</span>
-                )}
+                </div>
+
+                {/* Growth Status - Desktop Only Hidden Column */}
+                <div className="hidden lg:flex lg:col-span-2 items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${statusDot} shadow-sm`} />
+                  <span className={`text-[11px] font-bold tracking-tight ${statusColor}`}>{displayLabel}</span>
+                </div>
+
+                {/* Timeline */}
+                <div className="lg:col-span-1 text-[11px] font-bold text-[var(--muted)] flex items-center gap-2">
+                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Conducted</span>
+                  {new Date(a.conductedAt || a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+                </div>
               </div>
 
-              {/* Expert Partner */}
-              <div className="lg:col-span-2 flex items-center gap-2 min-w-0">
-                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em] mr-1">Expert</span>
-                <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center text-[9px] lg:text-[10px] font-bold text-[var(--foreground)] shrink-0 shadow-sm capitalize">
-                  {a.expert.name[0]}
-                </div>
+              {/* Actions */}
+              <div className="flex items-center gap-3 w-full lg:w-auto lg:contents mt-4 lg:mt-0 pt-4 lg:pt-0 border-t border-[var(--inner-border)] lg:border-none">
                 <Link 
-                  href={`/experts/${a.expertId}`}
-                  className="text-[11px] font-bold text-[var(--foreground)] opacity-90 truncate hover:text-brand-orange transition-colors"
+                  href={`/sessions/${a.id}`}
+                  className="lg:col-span-1 flex flex-1 lg:justify-end items-center group/arrow"
                 >
-                  {a.expert.name}
+                  <div className="w-full lg:w-auto flex items-center justify-center gap-2 px-4 py-2 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-orange/5 lg:bg-[var(--inner-bg)] border border-brand-orange/10 lg:border-[var(--inner-border)] text-brand-orange lg:text-[var(--foreground)] dark:lg:text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
+                    <span className="lg:hidden text-[10px] font-bold uppercase tracking-widest text-brand-orange lg:text-inherit">Open Analysis</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </div>
                 </Link>
-              </div>
-
-              {/* Growth Status - Desktop Only Hidden Column */}
-              <div className="hidden lg:flex lg:col-span-2 items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${statusDot} shadow-sm`} />
-                <span className={`text-[11px] font-bold tracking-tight ${statusColor}`}>{displayLabel}</span>
-              </div>
-
-              {/* Timeline */}
-              <div className="lg:col-span-1 text-[11px] font-bold text-[var(--muted)] flex items-center gap-2">
-                <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Conducted</span>
-                {new Date(a.conductedAt || a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex items-center gap-3 w-full lg:w-auto lg:contents mt-4 lg:mt-0 pt-4 lg:pt-0 border-t border-[var(--inner-border)] lg:border-none">
-              <Link 
-                href={`/sessions/${a.id}`}
-                className="lg:col-span-1 flex flex-1 lg:justify-end items-center group/arrow"
-              >
-                <div className="w-full lg:w-auto flex items-center justify-center gap-2 px-4 py-2 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-orange/5 lg:bg-[var(--inner-bg)] border border-brand-orange/10 lg:border-[var(--inner-border)] text-brand-orange lg:text-[var(--foreground)] dark:lg:text-[var(--muted-foreground)] group-hover/arrow:text-brand-orange transition-all group-hover/arrow:scale-110 shadow-sm">
-                  <span className="lg:hidden text-[10px] font-bold uppercase tracking-widest text-brand-orange lg:text-inherit">Open Analysis</span>
-                  <ChevronRight className="w-4 h-4" />
+                <div className="lg:col-span-1 flex justify-center items-center">
+                  <button
+                    onClick={() => handleDelete(a.id, a.name)}
+                    disabled={isDeleting}
+                    className="p-3 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-danger/5 border border-brand-danger/10 text-brand-danger hover:bg-brand-danger/20 transition-all hover:scale-110"
+                    title="Delete Session"
+                  >
+                    {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                  </button>
                 </div>
-              </Link>
-              <div className="lg:col-span-1 flex justify-center items-center">
-                <button
-                  onClick={() => handleDelete(a.id, a.name)}
-                  disabled={isDeleting}
-                  className="p-3 lg:p-2.5 rounded-xl lg:rounded-full bg-brand-danger/5 border border-brand-danger/10 text-brand-danger hover:bg-brand-danger/20 transition-all hover:scale-110"
-                  title="Delete Session"
-                >
-                  {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
-                </button>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+
+      {/* FLOATING ACTION BAR FOR BULK DELETION */}
+      {selectedIds.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-4 animate-in slide-in-from-bottom duration-200">
+          <span className="text-xs font-bold">
+            <span className="text-brand-orange">{selectedIds.length}</span> session(s) selected
+          </span>
+
+          <div className="h-4 w-px bg-slate-700" />
+
+          <button
+            onClick={handleBulkDelete}
+            disabled={bulkDeleting}
+            className="px-4 py-2 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white text-xs font-extrabold rounded-xl flex items-center gap-2 transition-all shadow-md cursor-pointer"
+          >
+            {bulkDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+            <span>Delete Selected Sessions</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedIds([])}
+            className="text-[11px] font-bold text-slate-400 hover:text-white transition-colors ml-1"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 }

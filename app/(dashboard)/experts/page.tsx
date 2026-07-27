@@ -272,6 +272,55 @@ export default function ExpertsPage() {
   const teamCount = experts.filter((ex) => (ex.user?.role || "EXPERT") === "TEAM").length;
   const expertCount = experts.filter((ex) => (ex.user?.role || "EXPERT") === "EXPERT").length;
 
+  // Bulk Select & Delete State
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [bulkUserDeleting, setBulkUserDeleting] = useState(false);
+
+  const toggleSelectAllUsers = () => {
+    if (selectedUserIds.length === filteredExperts.length) {
+      setSelectedUserIds([]);
+    } else {
+      setSelectedUserIds(filteredExperts.map((ex) => ex.id));
+    }
+  };
+
+  const toggleSelectOneUser = (id: string) => {
+    if (selectedUserIds.includes(id)) {
+      setSelectedUserIds(selectedUserIds.filter((item) => item !== id));
+    } else {
+      setSelectedUserIds([...selectedUserIds, id]);
+    }
+  };
+
+  const handleBulkUserDelete = async () => {
+    if (selectedUserIds.length === 0) return;
+    if (!confirm(`Move ${selectedUserIds.length} selected user account(s) to the Recycle Bin?`)) return;
+
+    setBulkUserDeleting(true);
+    try {
+      const res = await fetch("/api/trash/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "expert", ids: selectedUserIds }),
+      });
+      if (res.ok) {
+        setFlash(`Successfully archived ${selectedUserIds.length} user account(s).`);
+        setTimeout(() => setFlash(""), 4000);
+        setSelectedUserIds([]);
+        load();
+      } else {
+        const d = await res.json();
+        alert(d.error || "Failed to delete selected users.");
+      }
+    } catch (err) {
+      alert("An unexpected error occurred during bulk deletion.");
+    } finally {
+      setBulkUserDeleting(false);
+    }
+  };
+
+  const allUsersSelected = filteredExperts.length > 0 && selectedUserIds.length === filteredExperts.length;
+
   return (
     <div className="w-full max-w-7xl mx-auto space-y-6 px-4 sm:px-6 md:px-8 py-6 animate-in fade-in duration-300">
       
@@ -431,6 +480,26 @@ export default function ExpertsPage() {
         </div>
       </div>
 
+      {/* MULTI-SELECT TOOLBAR */}
+      {filteredExperts.length > 0 && (
+        <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border border-[var(--border)] rounded-xl text-xs font-bold text-[var(--muted)]">
+          <label className="flex items-center gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={allUsersSelected}
+              onChange={toggleSelectAllUsers}
+              className="w-4 h-4 rounded border-slate-300 text-[#E8A020] focus:ring-[#E8A020] cursor-pointer"
+            />
+            <span>{allUsersSelected ? "Deselect All" : "Select All Users"}</span>
+          </label>
+          {selectedUserIds.length > 0 && (
+            <span className="text-[11px] font-extrabold text-[#E8A020]">
+              {selectedUserIds.length} of {filteredExperts.length} selected
+            </span>
+          )}
+        </div>
+      )}
+
       {/* ── USER ROSTER GRID ── */}
       {loading ? (
         <div className="py-20 text-center space-y-2">
@@ -455,12 +524,25 @@ export default function ExpertsPage() {
             const role = ex.user?.role || "EXPERT";
             const isAdmin = role === "ADMIN";
             const isTeam = role === "TEAM";
+            const isChecked = selectedUserIds.includes(ex.id);
 
             return (
-              <div key={ex.id} className="glass-card p-5 rounded-2xl border border-[var(--border)] bg-white space-y-3 shadow-xs hover:border-[#E8A020]/40 transition-all flex flex-col justify-between">
+              <div
+                key={ex.id}
+                className={cn(
+                  "glass-card p-5 rounded-2xl border border-[var(--border)] bg-white space-y-3 shadow-xs hover:border-[#E8A020]/40 transition-all flex flex-col justify-between relative",
+                  isChecked ? "border-[#E8A020] bg-amber-50/40" : ""
+                )}
+              >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2 min-w-0 w-full">
                     <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleSelectOneUser(ex.id)}
+                        className="w-4 h-4 rounded border-slate-300 text-[#E8A020] focus:ring-[#E8A020] cursor-pointer shrink-0"
+                      />
                       <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center font-black text-sm text-[var(--foreground)] uppercase shrink-0">
                         {ex.name[0]}
                       </div>
@@ -489,14 +571,14 @@ export default function ExpertsPage() {
                   </div>
 
                   {ex.bio && (
-                    <p className="text-xs text-[var(--foreground)] font-medium leading-snug line-clamp-2 italic">
+                    <p className="text-xs text-[var(--foreground)] font-medium leading-snug line-clamp-2 italic pl-7">
                       "{ex.bio}"
                     </p>
                   )}
 
                   {/* Assigned Modules */}
                   {ex.tags && ex.tags.length > 0 && (
-                    <div className="space-y-1 pt-1">
+                    <div className="space-y-1 pt-1 pl-7">
                       <span className="text-[9px] font-extrabold uppercase tracking-wider text-[var(--muted)] block">
                         Assigned Modules:
                       </span>
@@ -513,7 +595,7 @@ export default function ExpertsPage() {
 
                 {/* Footer Controls */}
                 <div className="flex items-center justify-between pt-2 border-t border-[var(--border)] text-xs">
-                  <span className="text-[10px] font-bold text-[var(--muted)]">
+                  <span className="text-[10px] font-bold text-[var(--muted)] pl-7">
                     {ex.sessions?.length ?? 0} Sessions Evaluated
                   </span>
                   <div className="flex items-center gap-2">
@@ -536,6 +618,33 @@ export default function ExpertsPage() {
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* FLOATING ACTION BAR FOR BULK USER DELETION */}
+      {selectedUserIds.length > 0 && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-4 animate-in slide-in-from-bottom duration-200">
+          <span className="text-xs font-bold">
+            <span className="text-[#E8A020]">{selectedUserIds.length}</span> user account(s) selected
+          </span>
+
+          <div className="h-4 w-px bg-slate-700" />
+
+          <button
+            onClick={handleBulkUserDelete}
+            disabled={bulkUserDeleting}
+            className="px-4 py-2 bg-rose-600 hover:bg-rose-500 active:bg-rose-700 text-white text-xs font-extrabold rounded-xl flex items-center gap-2 transition-all shadow-md cursor-pointer"
+          >
+            {bulkUserDeleting ? <Loader2Icon className="w-4 h-4 animate-spin" /> : <Trash2Icon className="w-4 h-4" />}
+            <span>Delete Selected Users</span>
+          </button>
+
+          <button
+            onClick={() => setSelectedUserIds([])}
+            className="text-[11px] font-bold text-slate-400 hover:text-white transition-colors ml-1"
+          >
+            Cancel
+          </button>
         </div>
       )}
 
