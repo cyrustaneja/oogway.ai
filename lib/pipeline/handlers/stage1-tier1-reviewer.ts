@@ -71,7 +71,7 @@ Ensure you strictly populate empty strings ("") for fields where no significant 
     responseSchema: pulseResponseSchema,
     initialBudget: 8000,
     maxBudget: 16384,
-    timeoutMs: 40_000 // 40 seconds hard timeout to guarantee we return fast
+    timeoutMs: 90_000 // 90 seconds timeout for large transcripts
   })
 
   console.log(`[Pulse] Single-call review complete. Saving to DB...`)

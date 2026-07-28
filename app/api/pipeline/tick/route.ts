@@ -74,8 +74,12 @@ export async function POST(req: Request) {
     isAuthorized = true
   } else {
     // Fallback check: Allow logged-in users from web app
-    const token = await getAuthToken()
-    if (token) isAuthorized = true
+    try {
+      const token = await getAuthToken()
+      if (token) isAuthorized = true
+    } catch (e) {
+      // Ignore outside request store errors
+    }
     if (!cronSecret) isAuthorized = true // Allow in dev if CRON_SECRET not configured
   }
 
