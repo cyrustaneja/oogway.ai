@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import {
+  getInstantCurriculumProgress,
   getProactiveSessionIntelligence,
   getProactiveBatchIntelligence,
 } from '@/lib/server/expert-prep-intelligence';
@@ -10,7 +11,12 @@ export async function GET(request: Request) {
   const batchId = searchParams.get('batchId');
 
   try {
-    // Run Session Intel & Batch Intel IN PARALLEL for sub-3-second responses
+    // 1. Instant 0ms Curriculum Progress (No AI)
+    const instantProgress = batchId
+      ? await getInstantCurriculumProgress(batchId, sessionNoteId ?? undefined)
+      : null;
+
+    // 2. Parallel Session & Batch AI Prep Intelligence
     const [sessionIntel, batchIntel] = await Promise.all([
       sessionNoteId ? getProactiveSessionIntelligence(sessionNoteId) : Promise.resolve(null),
       batchId ? getProactiveBatchIntelligence(batchId, sessionNoteId ?? undefined) : Promise.resolve(null),
@@ -18,6 +24,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       success: true,
+      instantProgress,
       sessionIntel,
       batchIntel,
     });

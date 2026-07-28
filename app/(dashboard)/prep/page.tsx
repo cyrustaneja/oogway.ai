@@ -65,8 +65,33 @@ export default function ExpertPrepPage() {
   const [selectedBatchId, setSelectedBatchId] = useState<string>("");
 
   // ── Loaded Intelligence Payload ──
+  const [instantProgress, setInstantProgress] = useState<any>(null);
   const [sessionIntel, setSessionIntel] = useState<ProactiveSessionIntelligence | null>(null);
   const [batchIntel, setBatchIntel] = useState<ProactiveBatchIntelligence | null>(null);
+
+  // Instant No-AI Curriculum Progress Fetcher (0ms)
+  const handleLoadInstantProgress = async (sessId: string, bId: string) => {
+    if (!bId) return;
+    try {
+      const params = new URLSearchParams();
+      if (sessId) params.set("sessionNoteId", sessId);
+      params.set("batchId", bId);
+      const res = await fetch(`/api/prep/proactive?${params.toString()}`);
+      const data = await res.json();
+      if (data.success && data.instantProgress) {
+        setInstantProgress(data.instantProgress);
+      }
+    } catch (err) {
+      console.error("Failed to fetch instant progress:", err);
+    }
+  };
+
+  // Automatically fetch instant 0ms No-AI progress whenever batch or session selection changes
+  useEffect(() => {
+    if (selectedBatchId) {
+      handleLoadInstantProgress(selectedSessionId, selectedBatchId);
+    }
+  }, [selectedBatchId, selectedSessionId]);
 
   // Load initial dropdown options
   useEffect(() => {
@@ -145,6 +170,7 @@ export default function ExpertPrepPage() {
       const data = await res.json();
 
       if (data.success) {
+        if (data.instantProgress) setInstantProgress(data.instantProgress);
         setSessionIntel(data.sessionIntel);
         setBatchIntel(data.batchIntel);
       }
@@ -503,19 +529,19 @@ export default function ExpertPrepPage() {
                 <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider flex items-center gap-1.5">
                   <BookOpen className="w-3.5 h-3.5 text-[#E8A020]" /> Currently Learning Module
                 </span>
-                {batchIntel?.totalSessionsInCurrentModule && batchIntel.totalSessionsInCurrentModule > 0 ? (
+                {(instantProgress?.totalSessionsInCurrentModule || batchIntel?.totalSessionsInCurrentModule) ? (
                   <span className="px-2.5 py-0.5 rounded-full bg-[#E8A020] text-white text-[10px] font-black shadow-2xs">
-                    {batchIntel.completedSessionsCount} / {batchIntel.totalSessionsInCurrentModule} Sessions Completed
+                    {instantProgress?.completedSessionsCount ?? batchIntel?.completedSessionsCount ?? 0} / {instantProgress?.totalSessionsInCurrentModule ?? batchIntel?.totalSessionsInCurrentModule} Sessions Completed
                   </span>
                 ) : null}
               </div>
               <p className="text-sm font-black text-amber-950">
-                {batchIntel?.currentModuleName || "Active Curriculum Module"}
+                {instantProgress?.currentModuleName || batchIntel?.currentModuleName || "Active Curriculum Module"}
               </p>
             </div>
 
             {/* POINTER 2: Most Recent Completed Session */}
-            {batchIntel?.mostRecentSession && (
+            {(instantProgress?.mostRecentSession || batchIntel?.mostRecentSession) && (
               <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="space-y-0.5 min-w-0">
@@ -523,20 +549,20 @@ export default function ExpertPrepPage() {
                     Most Recent Session Completed
                   </span>
                   <p className="text-xs font-black text-emerald-950 truncate">
-                    "{batchIntel.mostRecentSession}"
+                    "{instantProgress?.mostRecentSession || batchIntel?.mostRecentSession}"
                   </p>
                 </div>
               </div>
             )}
 
-            {/* POINTER 3: Completed Modules Roadmap Badges (DEDUPLICATED & STRICTLY PRIOR) */}
+            {/* POINTER 3: Completed Modules Roadmap Badges */}
             <div className="space-y-2 pt-1 border-t border-[var(--border)]">
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--muted)] block">
                 Completed Modules Roadmap Prior to Current Topic
               </span>
-              {batchIntel?.completedModulesList && batchIntel.completedModulesList.length > 0 ? (
+              {(instantProgress?.completedModulesList || batchIntel?.completedModulesList)?.length ? (
                 <div className="flex flex-wrap gap-1.5 max-h-[140px] overflow-y-auto pr-1">
-                  {batchIntel.completedModulesList.map((modName, idx) => (
+                  {(instantProgress?.completedModulesList || batchIntel?.completedModulesList || []).map((modName: string, idx: number) => (
                     <span
                       key={idx}
                       className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-extrabold flex items-center gap-1 shadow-2xs"
