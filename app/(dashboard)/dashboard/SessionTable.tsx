@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; dot: string }> = {
-  PENDING:       { label: "Queued",       color: "text-[var(--muted)]", dot: "bg-slate-500" },
+  PENDING:       { label: "Processing",   color: "text-brand-warning font-semibold", dot: "bg-brand-warning animate-pulse" },
   PREPROCESSING: { label: "Processing",   color: "text-brand-warning",  dot: "bg-brand-warning animate-pulse" },
   EXTRACTING:    { label: "Scanning",     color: "text-brand-info",     dot: "bg-brand-info animate-pulse" },
   AGGREGATING:   { label: "Structuring",  color: "text-purple-400",     dot: "bg-purple-400 animate-pulse" },

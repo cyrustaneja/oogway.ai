@@ -122,17 +122,13 @@ export async function POST(req: Request) {
       },
     });
 
-    // Trigger pipeline worker immediately
-    try {
-      await triggerTick(
-        new Request("https://master-oogway-ai.vercel.app/api/pipeline/tick", {
-          method: "POST",
-          headers: { authorization: `Bearer ${process.env.CRON_SECRET || ""}` },
-        })
-      );
-    } catch (e) {
-      console.warn("Immediate tick trigger failed:", e);
-    }
+    // Trigger pipeline worker immediately (non-blocking)
+    void triggerTick(
+      new Request("https://master-oogway-ai.vercel.app/api/pipeline/tick", {
+        method: "POST",
+        headers: { authorization: `Bearer ${process.env.CRON_SECRET || ""}` },
+      })
+    ).catch((e) => console.warn("Immediate tick trigger failed:", e));
 
     return NextResponse.json(created, { status: 201 });
   } catch (err: any) {

@@ -43,9 +43,8 @@ export async function handleTier1Review(sessionId: string): Promise<void> {
     ? `Session Topic: ${(session.sessionNote as any).name ?? 'Unknown'}\nPlanned Topics: ${((session.sessionNote as any).keyTopics ?? []).join(', ') || 'Not specified'}`
     : 'No session notes provided.'
 
-  // Slice transcript to a maximum of 250,000 characters to keep latency extremely low (under 15-20 seconds)
-  // while ensuring we capture all the crucial context of the session.
-  const slicedTranscript = transcript.slice(0, 250000)
+  // Slice transcript to 120,000 characters for ultra-fast Gemini response (under 12-18 seconds)
+  const slicedTranscript = transcript.slice(0, 120000)
 
   console.log(`[Pulse] Triggering single-call Oogway Pulse review for session ${sessionId} (${slicedTranscript.length} chars).`)
 

@@ -144,6 +144,7 @@ export default function NewAnalysisPage() {
       const created = await createRes.json();
 
       setSessionId(created.id);
+      router.push(`/sessions/${created.id}`);
     } catch (err: any) {
       setError(err.message);
     } finally {

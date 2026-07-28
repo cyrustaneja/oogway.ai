@@ -7,6 +7,7 @@
 import { NextResponse } from 'next/server'
 import { getAuthToken } from '@/lib/auth-token'
 import { prisma } from '@/lib/db'
+import { POST as triggerTick } from '@/app/api/pipeline/tick/route'
 
 export const dynamic = 'force-dynamic'
 
@@ -91,7 +92,15 @@ export async function GET(
       progress = 0;
     } else if (isComplete) {
       progress = 100;
-    } else if (stage === 'PULSE_PENDING' || stage === 'UPLOADED') {
+    } else if (stage === 'PULSE_PENDING' || stage === 'UPLOADED' || s.v3Status === 'PENDING') {
+      // Trigger tick non-blocking if session hasn't been claimed yet
+      void triggerTick(
+        new Request("https://master-oogway-ai.vercel.app/api/pipeline/tick", {
+          method: "POST",
+          headers: { authorization: `Bearer ${process.env.CRON_SECRET || ""}` },
+        })
+      ).catch(() => {});
+
       // Calculate realistic progress over time (advances smoothly from 15% to 92%)
       const elapsedSec = Math.max(0, (Date.now() - new Date(s.createdAt).getTime()) / 1000);
       progress = Math.min(92, Math.round(15 + 77 * (1 - Math.exp(-elapsedSec / 12))));

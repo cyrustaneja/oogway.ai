@@ -45,6 +45,8 @@ const KRAFTSHALA_QUOTES: { quote: string; tag: string }[] = [
 ];
 
 const STAGE_LABEL: Record<string, string> = {
+  PENDING: 'Processing Session Analysis',
+  PULSE_PENDING: 'Processing Oogway Pulse Review',
   UPLOADED: 'Transcript received',
   PREPROCESSED: 'Cleaning transcript',
   CHAPTERS_DETECTED: 'Detecting chapters',
@@ -57,8 +59,12 @@ const STAGE_LABEL: Record<string, string> = {
 };
 
 const STAGE_COPY: Record<string, string> = {
+  PENDING:
+    'Master Oogway is analyzing the transcript. Progress update live in real-time.',
+  PULSE_PENDING:
+    'Master Oogway is running the Tier 1 Pulse AI audit across expert execution, doubts, & analogies.',
   UPLOADED:
-    'Pipeline has picked up the transcript and queued the first stage.',
+    'Pipeline has picked up the transcript and started active processing.',
   PREPROCESSED:
     'Transcript is being cleaned and timestamp-normalised. Hindi/English/Hinglish mixing is being detected.',
   CHAPTERS_DETECTED:
