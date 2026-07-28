@@ -68,13 +68,20 @@ export default function DashboardClient({
       if (filteredExpertId && a.expertId !== filteredExpertId) return false;
       if (filteredBatchId && a.batchId !== filteredBatchId) return false;
 
-      // Text search
+      // Text search (Session ID, Module ID, Session Name, Module Name, Expert, Batch)
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const inName = a.name?.toLowerCase().includes(q);
         const inExpert = a.expert?.name?.toLowerCase().includes(q);
         const inBatch = a.batch?.name?.toLowerCase().includes(q);
-        if (!inName && !inExpert && !inBatch) return false;
+        const inId = a.id?.toLowerCase().includes(q);
+        const inSessionNoteId = a.sessionNoteId?.toLowerCase().includes(q);
+        const inSessionNoteName = (a.sessionNote as any)?.name?.toLowerCase().includes(q);
+        const inSessionNoteSheetId = (a.sessionNote as any)?.sessionId?.toLowerCase().includes(q);
+        const inModuleId = (a.sessionNote as any)?.module?.sheetModuleId?.toLowerCase().includes(q) || (a.sessionNote as any)?.moduleId?.toLowerCase().includes(q);
+        const inModuleName = (a.sessionNote as any)?.module?.name?.toLowerCase().includes(q);
+
+        if (!inName && !inExpert && !inBatch && !inId && !inSessionNoteId && !inSessionNoteName && !inSessionNoteSheetId && !inModuleId && !inModuleName) return false;
       }
 
       // Status filter
@@ -239,14 +246,14 @@ export default function DashboardClient({
             </div>
 
             {/* Search input */}
-            <div className="relative flex-1 max-w-xs">
+            <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)]" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search sessions…"
-                className="w-full pl-8 pr-3 py-2 text-sm bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange/50 transition-all"
+                placeholder="Search by ID (S101, MM109), Name, Expert..."
+                className="w-full pl-8 pr-3 py-2 text-xs bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange/50 transition-all"
               />
               {searchQuery && (
                 <button
@@ -256,6 +263,9 @@ export default function DashboardClient({
                   <X className="w-3 h-3" />
                 </button>
               )}
+              <span className="text-[10px] text-[var(--muted)] font-medium block mt-1 ml-1 opacity-75">
+                🔍 Search using Session ID, Module ID, or Name
+              </span>
             </div>
           </div>
 

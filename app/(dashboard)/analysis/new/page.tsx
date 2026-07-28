@@ -7,10 +7,13 @@ import { Upload, ChevronDown, ArrowLeft, Loader2, CheckCircle, BookOpen, X, Sear
 interface Expert { id: string; name: string; email: string }
 interface SessionNote { 
   id: string; 
+  sessionId?: string | null;
   name: string; 
   moduleId: string;
   deletedAt: string | null;
   module: { 
+    id?: string;
+    sheetModuleId?: string | null;
     name: string; 
     courseId: string;
     course: { name: string }
@@ -90,9 +93,14 @@ export default function NewAnalysisPage() {
     const matches = validSessions.filter(s => {
       if (selectedModuleId && s.moduleId !== selectedModuleId) return false;
       if (!sessionSearch.trim()) return true; 
-      return s.name.toLowerCase().includes(sessionSearch.toLowerCase()) ||
-             s.module.name.toLowerCase().includes(sessionSearch.toLowerCase()) ||
-             s.module.course.name.toLowerCase().includes(sessionSearch.toLowerCase());
+      const q = sessionSearch.toLowerCase();
+      return s.name.toLowerCase().includes(q) ||
+             (s.sessionId && s.sessionId.toLowerCase().includes(q)) ||
+             s.id.toLowerCase().includes(q) ||
+             s.module.name.toLowerCase().includes(q) ||
+             (s.module.sheetModuleId && s.module.sheetModuleId.toLowerCase().includes(q)) ||
+             (s.module.id && s.module.id.toLowerCase().includes(q)) ||
+             s.module.course.name.toLowerCase().includes(q);
     });
     
     const selectedBatch = batches.find(b => b.id === batchId);
@@ -432,7 +440,7 @@ export default function NewAnalysisPage() {
         {/* Searchable Session Note */}
         <div className="space-y-3">
           <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase mb-1">
-            Curriculum Mapping <span className="text-[var(--muted)] opacity-75 normal-case font-medium ml-1">(Search session name)</span>
+            Curriculum Mapping <span className="text-brand-orange normal-case font-bold ml-1">(Search by ID or Name)</span>
           </label>
           <div className="relative">
             <input
@@ -444,17 +452,22 @@ export default function NewAnalysisPage() {
                 setSessionSearch(e.target.value);
                 setNoteId("");
               }}
-              placeholder="e.g. Introduction to Programmatic"
+              placeholder="Search by Session ID (e.g. S101), Module ID (e.g. MM109), or Name..."
               className="w-full liquid-input pr-10"
             />
             <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none transition-transform duration-300 ${isFocused ? 'rotate-180 text-[var(--foreground)]' : ''}`} />
             
+            <p className="text-[11px] text-[var(--muted)] font-medium mt-1">
+              💡 You can search using Session ID, Module ID, or Name.
+            </p>
+
             {/* Dropdown / Search Results */}
             {(isFocused && !noteId && potentialMatches.length > 0) && (
               <div className="absolute z-50 w-full mt-2 bg-white backdrop-blur-xl border border-[var(--border)] rounded-2xl shadow-xl max-h-64 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
                 {(!sessionSearch.trim()) && (
-                  <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--layer-2)] sticky top-0">
+                  <div className="px-4 py-3 border-b border-[var(--border)] bg-[var(--layer-2)] sticky top-0 flex items-center justify-between">
                     <p className="text-[10px] font-bold text-[var(--muted-foreground)] uppercase tracking-widest">Select From Curriculum</p>
+                    <span className="text-[10px] text-brand-orange font-bold">Search with ID or Name</span>
                   </div>
                 )}
                 {potentialMatches.map((m) => (
@@ -468,7 +481,21 @@ export default function NewAnalysisPage() {
                     }}
                     className="w-full text-left px-5 py-3 text-sm text-[var(--foreground)] hover:bg-[var(--layer-2)] transition-colors border-b border-[var(--border)] last:border-0"
                   >
-                    <div className="font-semibold tracking-tight">{m.name}</div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-semibold tracking-tight">{m.name}</span>
+                      <div className="flex items-center gap-1 shrink-0">
+                        {m.sessionId && (
+                          <span className="px-1.5 py-0.5 rounded bg-amber-100 border border-amber-300 text-amber-900 text-[10px] font-mono font-bold">
+                            {m.sessionId}
+                          </span>
+                        )}
+                        {m.module?.sheetModuleId && (
+                          <span className="px-1.5 py-0.5 rounded bg-blue-100 border border-blue-300 text-blue-900 text-[10px] font-mono font-bold">
+                            {m.module.sheetModuleId}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     <div className="text-[11px] text-[var(--muted)] font-medium mt-1">
                       {m.module.course.name} <span className="mx-1 text-[var(--border)]">/</span> {m.module.name}
                     </div>
