@@ -8,6 +8,8 @@ import Link from "next/link";
 import { SessionTable } from "../../dashboard/SessionTable";
 import { Loader2 } from "lucide-react";
 
+import { MacroPulseCard } from "@/components/analysis/MacroPulseCard";
+
 const fadeInUp: any = {
   hidden: { opacity: 0, y: 20 },
   visible: { 
@@ -98,6 +100,13 @@ export default function ModuleDetailPage() {
           </div>
         </div>
       </motion.div>
+
+      {/* 10-Session Macro AI Audit Card */}
+      <MacroPulseCard
+        targetType="module"
+        targetId={id as string}
+        targetName={module.name}
+      />
 
       {/* Cross-Session Analysis */}
       <motion.div 
