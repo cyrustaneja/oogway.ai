@@ -1,5 +1,8 @@
 import { prisma } from '@/lib/db';
 import { callStage } from '@/lib/pipeline/utils/call-stage';
+import { saveMacroPulseSummary, getSavedMacroPulseSummary } from './macro-pulse-store';
+
+export { getSavedMacroPulseSummary };
 
 export interface MacroPulseSummary {
   targetType: 'course' | 'module' | 'batch' | 'expert';
@@ -20,6 +23,7 @@ export interface MacroPulseSummary {
 /**
  * 10-SESSION MACRO AI PULSE SYNTHESIZER
  * Synthesizes the last 10 Oogway Pulse Tier-1 audits for Course, Module, Batch, or Expert
+ * Automatically saves & replaces the stored analysis upon each generation.
  */
 export async function generateMacroPulseSummary(
   targetType: 'course' | 'module' | 'batch' | 'expert',
@@ -67,7 +71,7 @@ export async function generateMacroPulseSummary(
   const sessionCount = sessions.length;
 
   if (sessionCount === 0) {
-    return {
+    const emptySummary: MacroPulseSummary = {
       targetType,
       targetId,
       targetName,
@@ -81,6 +85,8 @@ export async function generateMacroPulseSummary(
       growthActionPlan: ['Run Oogway Pulse on sessions to generate 10-session macro audit.'],
       generatedAt: new Date().toISOString(),
     };
+    await saveMacroPulseSummary(emptySummary);
+    return emptySummary;
   }
 
   // Compact payload of last 10 session audits
@@ -132,7 +138,7 @@ Return strictly valid JSON format matching the schema above.`;
 
     const parsed = typeof result === 'string' ? JSON.parse(result) : result;
 
-    return {
+    const summary: MacroPulseSummary = {
       targetType,
       targetId,
       targetName,
@@ -147,9 +153,13 @@ Return strictly valid JSON format matching the schema above.`;
       growthActionPlan: (parsed.growth_action_plan ?? []).slice(0, 3),
       generatedAt: new Date().toISOString(),
     };
+
+    // Save and replace saved summary in store
+    await saveMacroPulseSummary(summary);
+    return summary;
   } catch (err) {
     console.warn(`[MacroPulse] Failed for ${targetType} ${targetId}:`, err);
-    return {
+    const fallbackSummary: MacroPulseSummary = {
       targetType,
       targetId,
       targetName,
@@ -169,5 +179,7 @@ Return strictly valid JSON format matching the schema above.`;
       growthActionPlan: ['Review Acad Expert Briefs before class.'],
       generatedAt: new Date().toISOString(),
     };
+    await saveMacroPulseSummary(fallbackSummary);
+    return fallbackSummary;
   }
 }

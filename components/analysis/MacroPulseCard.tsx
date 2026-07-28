@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Sparkles, Loader2, Zap, Award, AlertTriangle, Lightbulb, Users, CheckCircle2, Lock } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Sparkles, Loader2, Zap, Award, AlertTriangle, Lightbulb, Users, CheckCircle2, Lock, RefreshCw, Calendar } from "lucide-react";
 import { MacroPulseSummary } from "@/lib/server/macro-pulse-analyzer";
 
 interface Props {
@@ -16,6 +16,20 @@ export function MacroPulseCard({ targetType, targetId, targetName, userRole = "A
   const isAdmin = userRole === "ADMIN";
   const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState<MacroPulseSummary | null>(initialSummary);
+
+  // Fetch saved Macro Analysis summary on mount
+  useEffect(() => {
+    if (!initialSummary && targetId) {
+      fetch(`/api/macro-pulse?targetType=${targetType}&targetId=${targetId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.success && data.summary) {
+            setSummary(data.summary);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [targetType, targetId, initialSummary]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -80,6 +94,10 @@ export function MacroPulseCard({ targetType, targetId, targetName, userRole = "A
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" /> Analyzing 10 Sessions...
                 </>
+              ) : summary ? (
+                <>
+                  <RefreshCw className="w-4 h-4 text-slate-900" /> Regenerate &amp; Replace Audit
+                </>
               ) : (
                 <>
                   <Zap className="w-4 h-4 fill-current text-slate-900" /> Generate 10-Session Macro Audit
@@ -96,7 +114,14 @@ export function MacroPulseCard({ targetType, targetId, targetName, userRole = "A
           {/* Health Score Banner */}
           <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-0.5">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#E8A020]">Macro Verdict</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-[#E8A020]">Saved Macro Verdict</span>
+                {summary.generatedAt && (
+                  <span className="text-[9px] font-bold text-[var(--muted)] flex items-center gap-1">
+                    <Calendar className="w-3 h-3 text-[#E8A020]" /> Last updated {new Date(summary.generatedAt).toLocaleDateString("en-GB", { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                )}
+              </div>
               <p className="text-sm font-black text-[var(--foreground)]">{summary.summaryTitle}</p>
               <p className="text-[10px] font-medium text-[var(--muted)]">Analyzed across {summary.sessionCount} Oogway Pulse sessions</p>
             </div>
