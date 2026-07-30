@@ -4,19 +4,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Target, AlertTriangle, Copy, Check,
+  Target, Copy, Check,
   Loader2, Rocket, Mail, Flame, Sparkles,
   BookOpen, Presentation, Clock, Heart, Mic,
   TriangleAlert, CircleCheck, CircleMinus, FileSpreadsheet, LayoutGrid, Filter,
-  CheckCircle2, XCircle, ExternalLink, Send
+  CheckCircle2, XCircle, Send, X, ChevronRight, Layers, FileText
 } from 'lucide-react';
 import { useVideoPreview } from '@/components/analysis/VideoPreviewContext';
 
 // ── Types ────────────────────────────────────────────────────────────────
 type ScorecardItem = {
   dimension: string;
-  score?: number;
-  weight?: number;
   one_line_summary?: string;
   summary?: string;
   top_strength: string;
@@ -90,14 +88,18 @@ function getSeverityBadge(severity: string) {
   }
 }
 
-function getVerdictStyle(verdict: string) {
+function getVerdictBadgeStyle(verdict: string) {
   const v = verdict?.toLowerCase() || '';
-  if (v.includes('excellent') || v.includes('good')) return 'from-emerald-600 via-teal-600 to-green-700';
-  if (v.includes('improvement') || v.includes('moderate')) return 'from-amber-500 via-orange-600 to-amber-700';
-  return 'from-red-600 via-rose-700 to-red-800';
+  if (v.includes('excellent') || v.includes('good')) {
+    return 'bg-emerald-100 text-emerald-900 border-emerald-300';
+  }
+  if (v.includes('improvement') || v.includes('moderate')) {
+    return 'bg-amber-100 text-amber-900 border-amber-300';
+  }
+  return 'bg-red-100 text-red-900 border-red-300';
 }
 
-// ── Interactive Hoverable Timestamp Pill ──────────────────────────────────
+// ── Hoverable Timestamp Pill ──────────────────────────────────────────────
 function TimestampPill({
   timestamp,
   onClick,
@@ -123,7 +125,7 @@ function TimestampPill({
   );
 }
 
-// ── Main Component ───────────────────────────────────────────────────────
+// ── Main Component (Kraftshala Sidebar Layout) ───────────────────────────
 export function OogwayGoReview({
   sessionId,
   sessionData,
@@ -140,10 +142,13 @@ export function OogwayGoReview({
   const [status, setStatus] = useState<string>('NOT_STARTED');
   const [loading, setLoading] = useState(true);
   const [triggerLoading, setTriggerLoading] = useState(false);
-  const [activeSubTab, setActiveSubTab] = useState<'scorecard' | 'findings' | 'emails'>('scorecard');
-  const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
+  
+  // Kraftshala Sidebar Active Item: 'overview' | 'findings' | dimension_name
+  const [activeSideNav, setActiveSideNav] = useState<string>('overview');
   const [filterSeverity, setFilterSeverity] = useState<string>('ALL');
   const [progress, setProgress] = useState(0);
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const fetchStatus = useCallback(async () => {
@@ -209,7 +214,7 @@ export function OogwayGoReview({
     if (onTimestampClick) onTimestampClick(ts);
   };
 
-  // ── Email metadata helpers ──
+  // ── Email Metadata Helpers ──
   const expertName = sessionData?.expert?.name || 'Expert';
   const expertEmail = sessionData?.expert?.email || '';
   const sessionTitle = sessionData?.name || 'Kraftshala Session';
@@ -224,7 +229,6 @@ export function OogwayGoReview({
     ? result?.feedback_email_warm || ''
     : result?.feedback_email_direct || '';
 
-  // Dynamically sign with current user's name
   const formattedEmailBody = rawEmailBody
     ? rawEmailBody.replace(/Prerna/g, userName)
     : '';
@@ -263,9 +267,9 @@ export function OogwayGoReview({
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-orange-200/50">
               <Target className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Oogway Go</h3>
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Oogway Go Audit</h3>
             <p className="text-sm text-slate-600 font-medium max-w-md mx-auto leading-relaxed mb-1">
-              Deep 6-dimension expert audit with qualitative evaluation, timestamped findings, and quick-draft feedback emails.
+              Deep 6-dimension session quality audit powered by Kraftshala evaluation standards.
             </p>
 
             {status === 'FAILED' && (
@@ -362,7 +366,7 @@ export function OogwayGoReview({
     );
   }
 
-  // ── Results view ─────────────────────────────────────────────────
+  // ── Results view (KRAFTSHALA SIDEBAR LAYOUT) ─────────────────────
   if (!result) return null;
 
   const notableFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'NOTABLE');
@@ -373,370 +377,463 @@ export function OogwayGoReview({
     ? result.detailed_findings
     : result.detailed_findings.filter(f => f.severity?.toUpperCase() === filterSeverity);
 
+  // Selected dimension if navigating a dimension side tab
+  const selectedDimensionItem = result.scorecard.find(s => s.dimension === activeSideNav);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="w-full max-w-[1200px] mx-auto space-y-6 mt-4 pb-24"
+      className="w-full max-w-[1280px] mx-auto space-y-5 mt-2 pb-24"
     >
-      {/* ── Executive Verdict Header (NO NUMERICAL MARKS) ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="ks-card overflow-hidden border-none shadow-xl"
-      >
-        <div className={`bg-gradient-to-r ${getVerdictStyle(result.overall_verdict)} p-6 sm:p-8 text-white relative overflow-hidden`}>
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
-            <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-inner text-amber-300 shrink-0">
-                <Target className="w-8 h-8" />
-              </div>
-              <div className="space-y-1 text-center sm:text-left">
-                <div className="flex items-center gap-2 justify-center sm:justify-start">
-                  <span className="px-3 py-1 rounded-full bg-white/25 backdrop-blur-md text-xs font-black uppercase tracking-wider">
-                    Audit Status: {result.overall_verdict}
-                  </span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight">Oogway Go Audit Workbook</h2>
-                <p className="text-xs sm:text-sm text-white/90 font-medium leading-relaxed max-w-xl">{result.overall_summary}</p>
-              </div>
+      {/* ── Top Header Bar (Kraftshala Style) ── */}
+      <div className="ks-card p-5 flex flex-col sm:flex-row items-center justify-between gap-4 border-slate-200 shadow-sm rounded-2xl">
+        <div className="flex items-center gap-3 text-center sm:text-left">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 shrink-0">
+            <Target className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2 justify-center sm:justify-start">
+              <h2 className="text-lg font-black text-slate-900 tracking-tight">Oogway Go Audit</h2>
+              <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${getVerdictBadgeStyle(result.overall_verdict)}`}>
+                {result.overall_verdict}
+              </span>
             </div>
-
-            <button
-              onClick={handleTrigger}
-              className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs uppercase tracking-wider backdrop-blur-md border border-white/30 transition-all cursor-pointer shrink-0"
-            >
-              Re-run Audit
-            </button>
+            <p className="text-xs text-slate-500 font-medium">Deep session audit across 6 quality dimensions</p>
           </div>
         </div>
-      </motion.div>
 
-      {/* ── Workbook 3 Sub-Tabs Navigation (Scorecard, Findings, Feedback Emails) ── */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] shadow-inner overflow-x-auto scrollbar-hide">
-        <button
-          onClick={() => setActiveSubTab('scorecard')}
-          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeSubTab === 'scorecard'
-              ? 'bg-slate-900 text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <LayoutGrid className="w-4 h-4 text-amber-400" />
-          <span>Scorecard Summary</span>
-        </button>
+        {/* Top Action Buttons */}
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setShowEmailModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-extrabold text-xs shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95 border border-purple-400/30"
+          >
+            <Mail className="w-4 h-4 text-amber-300" />
+            <span>Send Feedback Email ✉️</span>
+          </button>
 
-        <button
-          onClick={() => setActiveSubTab('findings')}
-          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeSubTab === 'findings'
-              ? 'bg-slate-900 text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <FileSpreadsheet className="w-4 h-4 text-orange-400" />
-          <span>Detailed Findings ({result.detailed_findings.length})</span>
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('emails')}
-          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
-            activeSubTab === 'emails'
-              ? 'bg-slate-900 text-white shadow-md'
-              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
-          }`}
-        >
-          <Mail className="w-4 h-4 text-emerald-400" />
-          <span>Feedback Emails (Quick Send)</span>
-        </button>
+          <button
+            onClick={handleTrigger}
+            className="px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs border border-slate-200 transition-all cursor-pointer"
+          >
+            Re-run
+          </button>
+        </div>
       </div>
 
-      {/* ── Sub-Tab 1: Scorecard Summary (NO BOX SQUARES / NO MARKS) ── */}
-      {activeSubTab === 'scorecard' && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-          {/* Critical Red Flags Section */}
-          {result.critical_red_flags && result.critical_red_flags.length > 0 && (
-            <div className="ks-card border-red-200 overflow-hidden rounded-2xl">
-              <div className="bg-red-50 border-b border-red-200 px-5 py-3 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Flame className="w-5 h-5 text-red-600" />
-                  <h3 className="text-sm font-black text-red-900">Critical Quality Alerts ({result.critical_red_flags.length})</h3>
-                </div>
-                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-100 text-red-700">Mandatory Action</span>
-              </div>
-              <div className="p-4 space-y-2.5">
-                {result.critical_red_flags.map((flag, i) => (
-                  <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 bg-red-50/70 rounded-2xl border border-red-100">
-                    <div className="flex items-start gap-3 min-w-0">
-                      <TriangleAlert className="w-4.5 h-4.5 text-red-600 shrink-0 mt-0.5" />
-                      <div>
-                        <p className="text-sm font-bold text-red-950 leading-snug">{flag.flag}</p>
-                        <p className="text-xs text-red-800 mt-0.5 leading-relaxed">{flag.impact}</p>
-                      </div>
-                    </div>
-                    {flag.timestamp && (
-                      <TimestampPill timestamp={flag.timestamp} onClick={handleTimestamp} />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+      {/* ── Main Layout: Kraftshala Left Sidebar + Right Panel ── */}
+      <div className="flex flex-col md:flex-row gap-6 items-start">
+        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style) ── */}
+        <div className="w-full md:w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
+          <div className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            Audit Views
+          </div>
 
-          {/* Pre-Scoring Checklist Verification (Smooth Pills / List view — NO SQUARE CARDS) */}
-          {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
-            <div className="ks-card p-5 rounded-2xl">
-              <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
-                <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Quality Audit Checklist</h3>
-                <span className="text-[10px] font-bold text-slate-500">8 Verification Criteria</span>
+          <button
+            onClick={() => setActiveSideNav('overview')}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left ${
+              activeSideNav === 'overview'
+                ? 'border-l-4 border-amber-500 font-black text-amber-600 bg-amber-50/70 shadow-xs'
+                : 'font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <LayoutGrid className="w-4 h-4 text-amber-500" />
+              <span>Audit Overview</span>
+            </div>
+            <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+          </button>
+
+          <button
+            onClick={() => setActiveSideNav('findings')}
+            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left ${
+              activeSideNav === 'findings'
+                ? 'border-l-4 border-amber-500 font-black text-amber-600 bg-amber-50/70 shadow-xs'
+                : 'font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <FileSpreadsheet className="w-4 h-4 text-orange-500" />
+              <span>Detailed Findings</span>
+            </div>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-600">
+              {result.detailed_findings.length}
+            </span>
+          </button>
+
+          <div className="pt-3 pb-1 px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-t border-slate-100 mt-2">
+            Quality Dimensions
+          </div>
+
+          {result.scorecard.map((dim) => {
+            const Icon = DIMENSION_ICONS[dim.dimension] || BookOpen;
+            const isActive = activeSideNav === dim.dimension;
+            const sev = getSeverityBadge(dim.severity_tag);
+
+            return (
+              <button
+                key={dim.dimension}
+                onClick={() => setActiveSideNav(dim.dimension)}
+                className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left ${
+                  isActive
+                    ? 'border-l-4 border-amber-500 font-black text-amber-600 bg-amber-50/70 shadow-xs'
+                    : 'font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0 pr-1">
+                  <Icon className="w-4 h-4 text-slate-500 shrink-0" />
+                  <span className="truncate">{dim.dimension}</span>
+                </div>
+                <span className={`w-2 h-2 rounded-full shrink-0 ${sev.bg.replace('bg-', 'bg-').replace('-100', '-500')}`} />
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── RIGHT CONTENT PANEL (Kraftshala Content Style) ── */}
+        <div className="flex-1 min-w-0 w-full space-y-5">
+          {/* VIEW 1: Audit Overview */}
+          {activeSideNav === 'overview' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+              {/* Executive Summary */}
+              <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4.5 h-4.5 text-amber-500" />
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Executive Session Summary</h3>
+                </div>
+                <p className="text-sm text-slate-700 leading-relaxed font-medium">{result.overall_summary}</p>
               </div>
-              
-              <div className="space-y-2">
-                {result.pre_scoring_checklist.map((item, i) => (
-                  <div
-                    key={i}
-                    className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-2xl border transition-all ${
-                      item.passed
-                        ? 'bg-emerald-50/40 border-emerald-100/80 text-emerald-950'
-                        : 'bg-red-50/40 border-red-100/80 text-red-950'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      {item.passed ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                      ) : (
-                        <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                      )}
-                      <div>
-                        <span className="text-xs font-bold leading-tight">{item.check}</span>
-                        {item.note && (
-                          <p className="text-[11px] opacity-80 mt-0.5 leading-relaxed">{item.note}</p>
+
+              {/* Critical Red Flags */}
+              {result.critical_red_flags && result.critical_red_flags.length > 0 && (
+                <div className="ks-card border-red-200 overflow-hidden rounded-2xl">
+                  <div className="bg-red-50 border-b border-red-200 px-5 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Flame className="w-5 h-5 text-red-600" />
+                      <h3 className="text-sm font-black text-red-900">Critical Quality Alerts ({result.critical_red_flags.length})</h3>
+                    </div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-100 text-red-700">Action Required</span>
+                  </div>
+                  <div className="p-4 space-y-2.5">
+                    {result.critical_red_flags.map((flag, i) => (
+                      <div key={i} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 bg-red-50/70 rounded-2xl border border-red-100">
+                        <div className="flex items-start gap-3 min-w-0">
+                          <TriangleAlert className="w-4.5 h-4.5 text-red-600 shrink-0 mt-0.5" />
+                          <div>
+                            <p className="text-sm font-bold text-red-950 leading-snug">{flag.flag}</p>
+                            <p className="text-xs text-red-800 mt-0.5 leading-relaxed">{flag.impact}</p>
+                          </div>
+                        </div>
+                        {flag.timestamp && (
+                          <TimestampPill timestamp={flag.timestamp} onClick={handleTimestamp} />
                         )}
                       </div>
-                    </div>
-                    
-                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 ${
-                      item.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {item.passed ? 'Verified' : 'Flagged'}
-                    </span>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
+              )}
+
+              {/* Quality Audit Checklist (Kraftshala Clean List Style) */}
+              {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
+                <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Layers className="w-4.5 h-4.5 text-amber-500" />
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Kraftshala Session Quality Checklist</h3>
+                    </div>
+                    <span className="text-xs font-bold text-slate-500">8 Verification Standards</span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {result.pre_scoring_checklist.map((item, i) => (
+                      <div
+                        key={i}
+                        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl border transition-all ${
+                          item.passed
+                            ? 'bg-emerald-50/40 border-emerald-100 text-emerald-950'
+                            : 'bg-red-50/40 border-red-100 text-red-950'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          {item.passed ? (
+                            <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-0.5" />
+                          ) : (
+                            <XCircle className="w-4.5 h-4.5 text-red-600 shrink-0 mt-0.5" />
+                          )}
+                          <div>
+                            <span className="text-xs font-bold leading-tight block text-slate-900">{item.check}</span>
+                            {item.note && (
+                              <p className="text-[11px] opacity-80 mt-0.5 leading-relaxed">{item.note}</p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 ${
+                          item.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {item.passed ? 'Verified' : 'Flagged'}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </motion.div>
           )}
 
-          {/* 6-Dimension Breakdown List (Smooth horizontal rows — NO MARKS) */}
-          <div>
-            <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-3 px-1">Dimension Quality Breakdown</h3>
-            <div className="space-y-3">
-              {result.scorecard.map((dim) => {
-                const Icon = DIMENSION_ICONS[dim.dimension] || BookOpen;
-                const sevBadge = getSeverityBadge(dim.severity_tag);
+          {/* VIEW 2: Detailed Findings */}
+          {activeSideNav === 'findings' && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+              {/* Filter Bar */}
+              <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
+                <div className="flex items-center gap-1.5">
+                  <Filter className="w-4 h-4 text-slate-500 ml-1" />
+                  <span className="text-xs font-bold text-slate-700">Filter Severity:</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  {[
+                    { id: 'ALL', label: `All (${result.detailed_findings.length})` },
+                    { id: 'NOTABLE', label: `Notable (${notableFindings.length})` },
+                    { id: 'MODERATE', label: `Moderate (${moderateFindings.length})` },
+                    { id: 'MINOR', label: `Minor (${minorFindings.length})` },
+                  ].map((f) => (
+                    <button
+                      key={f.id}
+                      onClick={() => setFilterSeverity(f.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        filterSeverity === f.id
+                          ? 'bg-slate-900 text-white shadow-xs'
+                          : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                return (
-                  <div key={dim.dimension} className="ks-card p-4 rounded-2xl hover:shadow-md transition-shadow">
-                    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
-                          <Icon className="w-5 h-5 text-slate-700" />
+              {/* Structured Findings List */}
+              <div className="space-y-4">
+                {filteredFindings.map((finding, idx) => {
+                  const sev = getSeverityBadge(finding.severity);
+                  return (
+                    <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl">
+                      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center">
+                            {finding.finding_number || idx + 1}
+                          </span>
+                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
+                            {sev.label}
+                          </span>
+                          <span className="text-xs font-black text-slate-800">{finding.dimension}</span>
+                        </div>
+
+                        {finding.timestamp && (
+                          <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div>
+                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
+                          <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="text-sm font-black text-slate-900">{dim.dimension}</h4>
-                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sevBadge.bg} ${sevBadge.text} ${sevBadge.border}`}>
-                              {sevBadge.label}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-600 leading-relaxed mt-0.5">{dim.one_line_summary || dim.summary}</p>
+                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
+                          <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
+                        </div>
+                        <div>
+                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
+                          <p className="text-emerald-800 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
                         </div>
                       </div>
-                    </div>
 
-                    {(dim.top_strength || dim.top_weakness) && (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3 pt-3 border-t border-slate-100 text-xs">
-                        {dim.top_strength && (
-                          <div className="flex items-start gap-1.5 text-emerald-900 bg-emerald-50/70 p-2.5 rounded-xl border border-emerald-100">
-                            <CircleCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                            <span className="font-medium leading-snug">{dim.top_strength}</span>
+                      {finding.verbatim_quote && (
+                        <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                          <div>
+                            <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-0.5">Transcript Evidence</span>
+                            <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
                           </div>
-                        )}
-                        {dim.top_weakness && (
-                          <div className="flex items-start gap-1.5 text-red-900 bg-red-50/70 p-2.5 rounded-xl border border-red-100">
-                            <CircleMinus className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
-                            <span className="font-medium leading-snug">{dim.top_weakness}</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-      {/* ── Sub-Tab 2: Detailed Findings ── */}
-      {activeSubTab === 'findings' && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-          {/* Filter Bar */}
-          <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
-            <div className="flex items-center gap-1.5">
-              <Filter className="w-4 h-4 text-slate-500 ml-1" />
-              <span className="text-xs font-bold text-slate-700">Filter Severity:</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              {[
-                { id: 'ALL', label: `All (${result.detailed_findings.length})` },
-                { id: 'NOTABLE', label: `Notable (${notableFindings.length})` },
-                { id: 'MODERATE', label: `Moderate (${moderateFindings.length})` },
-                { id: 'MINOR', label: `Minor (${minorFindings.length})` },
-              ].map((f) => (
-                <button
-                  key={f.id}
-                  onClick={() => setFilterSeverity(f.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    filterSeverity === f.id
-                      ? 'bg-slate-900 text-white shadow-xs'
-                      : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
-                  }`}
-                >
-                  {f.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Structured Findings List */}
-          <div className="space-y-4">
-            {filteredFindings.map((finding, idx) => {
-              const sev = getSeverityBadge(finding.severity);
-              return (
-                <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl">
-                  <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center">
-                        {finding.finding_number || idx + 1}
-                      </span>
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
-                        {finding.severity}
-                      </span>
-                      <span className="text-xs font-black text-slate-800">{finding.dimension}</span>
-                    </div>
-
-                    {finding.timestamp && (
-                      <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <div>
-                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
-                      <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
-                    </div>
-                    <div>
-                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
-                      <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
-                    </div>
-                    <div>
-                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
-                      <p className="text-emerald-800 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
-                    </div>
-                  </div>
-
-                  {finding.verbatim_quote && (
-                    <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                      <div>
-                        <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-0.5">Transcript Evidence</span>
-                        <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
-                      </div>
-                      {finding.timestamp && (
-                        <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
+                          {finding.timestamp && (
+                            <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
+                          )}
+                        </div>
                       )}
                     </div>
-                  )}
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+
+          {/* VIEW 3: Specific Dimension View */}
+          {selectedDimensionItem && (
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
+              {/* Dimension Header Banner */}
+              <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-3">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                      {React.createElement(DIMENSION_ICONS[selectedDimensionItem.dimension] || BookOpen, { className: "w-5 h-5" })}
+                    </div>
+                    <div>
+                      <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
+                      <p className="text-xs text-slate-500">Kraftshala Audit Dimension Evaluation</p>
+                    </div>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${getSeverityBadge(selectedDimensionItem.severity_tag).bg} ${getSeverityBadge(selectedDimensionItem.severity_tag).text} ${getSeverityBadge(selectedDimensionItem.severity_tag).border}`}>
+                    {getSeverityBadge(selectedDimensionItem.severity_tag).label}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </motion.div>
-      )}
 
-      {/* ── Sub-Tab 3: Feedback Emails (GMAIL QUICK SEND + USER SIGNATURE) ── */}
-      {activeSubTab === 'emails' && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-5">
-          {/* Tone Toggle & Quick Actions */}
-          <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-3 rounded-2xl border border-slate-200">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setActiveEmailVariant('warm')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeEmailVariant === 'warm'
-                    ? 'bg-amber-400 text-slate-950 shadow-sm font-extrabold'
-                    : 'bg-white text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Variant A — Warm / Developmental
-              </button>
-              <button
-                onClick={() => setActiveEmailVariant('direct')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  activeEmailVariant === 'direct'
-                    ? 'bg-slate-900 text-white shadow-sm font-extrabold'
-                    : 'bg-white text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                Variant B — Direct / Accountability
-              </button>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {/* Quick Send to Gmail */}
-              <button
-                onClick={handleOpenGmail}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black bg-red-600 text-white hover:bg-red-700 transition-all shadow-md active:scale-95 cursor-pointer"
-                title="Opens Gmail compose tab pre-filled with Recipient, Subject, and Body"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>Send via Gmail ✉️</span>
-              </button>
-
-              {/* Copy to Clipboard */}
-              <button
-                onClick={handleCopyEmail}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
-              >
-                {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-300" />}
-                <span>{copiedEmail ? 'Copied!' : 'Copy Text'}</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Formatted Pre-filled Email Container */}
-          <div className="ks-card overflow-hidden shadow-lg border-slate-300 rounded-2xl">
-            <div className="bg-slate-900 text-white p-4 space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-amber-300 flex items-center gap-1.5">
-                  <Mail className="w-4 h-4" />
-                  {activeEmailVariant === 'warm' ? 'Variant A: Warm / Developmental Feedback' : 'Variant B: Direct / Accountability Feedback'}
-                </span>
-                <span className="text-[10px] text-slate-400">Signed by: {userName}</span>
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium pt-2 border-t border-slate-100">
+                  {selectedDimensionItem.one_line_summary || selectedDimensionItem.summary}
+                </p>
               </div>
-              <div className="text-xs space-y-1 pt-2 border-t border-slate-800 font-mono text-slate-300">
-                <p><span className="text-slate-500 font-bold">To:</span> {expertEmail ? `${expertName} <${expertEmail}>` : `${expertName}`}</p>
-                <p><span className="text-slate-500 font-bold">Subject:</span> {emailSubject}</p>
-              </div>
-            </div>
 
-            <div className="p-6 bg-slate-50">
-              <pre className="text-xs sm:text-sm text-slate-800 font-sans whitespace-pre-wrap leading-relaxed">
-                {formattedEmailBody}
-              </pre>
-            </div>
+              {/* Strengths & Weaknesses */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {selectedDimensionItem.top_strength && (
+                  <div className="ks-card p-4 rounded-2xl border-emerald-200 bg-emerald-50/40 space-y-2">
+                    <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
+                      <CircleCheck className="w-4 h-4 text-emerald-600" />
+                      <span>Key Strength</span>
+                    </div>
+                    <p className="text-xs text-emerald-950 font-medium leading-relaxed">{selectedDimensionItem.top_strength}</p>
+                  </div>
+                )}
+
+                {selectedDimensionItem.top_weakness && (
+                  <div className="ks-card p-4 rounded-2xl border-red-200 bg-red-50/40 space-y-2">
+                    <div className="flex items-center gap-2 text-red-800 font-bold text-xs uppercase tracking-wider">
+                      <CircleMinus className="w-4 h-4 text-red-600" />
+                      <span>Development Area</span>
+                    </div>
+                    <p className="text-xs text-red-950 font-medium leading-relaxed">{selectedDimensionItem.top_weakness}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Specific Dimension Findings */}
+              <div className="space-y-3 pt-2">
+                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Dimension Findings</h4>
+                {result.detailed_findings
+                  .filter(f => f.dimension.toLowerCase().includes(selectedDimensionItem.dimension.toLowerCase()) || selectedDimensionItem.dimension.toLowerCase().includes(f.dimension.toLowerCase()))
+                  .map((finding, idx) => {
+                    const sev = getSeverityBadge(finding.severity);
+                    return (
+                      <div key={idx} className="ks-card p-4 rounded-2xl border-slate-200 space-y-2 text-xs">
+                        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
+                            {sev.label}
+                          </span>
+                          {finding.timestamp && (
+                            <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
+                          )}
+                        </div>
+                        <p className="text-slate-800 font-medium leading-relaxed"><strong className="text-slate-900">Observed:</strong> {finding.what_happened}</p>
+                        <p className="text-emerald-800 font-medium bg-emerald-50 p-2 rounded-xl border border-emerald-100 leading-relaxed"><strong className="text-emerald-900">Recommendation:</strong> {finding.recommendation}</p>
+                      </div>
+                    );
+                  })}
+              </div>
+            </motion.div>
+          )}
+        </div>
+      </div>
+
+      {/* ── FEEDBACK EMAIL MODAL OVERLAY ── */}
+      <AnimatePresence>
+        {showEmailModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-3xl max-w-3xl w-full max-h-[90vh] overflow-hidden shadow-2xl border border-slate-200 flex flex-col"
+            >
+              {/* Modal Header */}
+              <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-amber-300" />
+                  <h3 className="text-base font-extrabold">Send Feedback Email</h3>
+                </div>
+                <button
+                  onClick={() => setShowEmailModal(false)}
+                  className="p-1.5 rounded-full hover:bg-white/20 transition-colors text-white/80 hover:text-white cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 space-y-4 overflow-y-auto bg-slate-50">
+                {/* Tone Toggle & Actions */}
+                <div className="flex items-center justify-between flex-wrap gap-3 bg-white p-3 rounded-2xl border border-slate-200">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setActiveEmailVariant('warm')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        activeEmailVariant === 'warm'
+                          ? 'bg-amber-400 text-slate-950 shadow-xs font-black'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      Variant A — Warm
+                    </button>
+                    <button
+                      onClick={() => setActiveEmailVariant('direct')}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                        activeEmailVariant === 'direct'
+                          ? 'bg-slate-900 text-white shadow-xs font-black'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      Variant B — Direct
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={handleOpenGmail}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-black bg-red-600 text-white hover:bg-red-700 transition-all shadow-md active:scale-95 cursor-pointer"
+                      title="Opens Gmail compose with Recipient, Subject, and Body pre-filled"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>Send via Gmail ✉️</span>
+                    </button>
+
+                    <button
+                      onClick={handleCopyEmail}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-xs cursor-pointer"
+                    >
+                      {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-300" />}
+                      <span>{copiedEmail ? 'Copied!' : 'Copy'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Pre-filled Email Box */}
+                <div className="ks-card overflow-hidden shadow-md border-slate-300 rounded-2xl bg-white">
+                  <div className="bg-slate-900 text-white p-4 space-y-1.5 text-xs font-mono">
+                    <p><span className="text-slate-500 font-bold">To:</span> {expertEmail ? `${expertName} <${expertEmail}>` : `${expertName}`}</p>
+                    <p><span className="text-slate-500 font-bold">Subject:</span> {emailSubject}</p>
+                    <p><span className="text-slate-500 font-bold">Signed by:</span> {userName}</p>
+                  </div>
+
+                  <div className="p-6">
+                    <pre className="text-xs sm:text-sm text-slate-800 font-sans whitespace-pre-wrap leading-relaxed">
+                      {formattedEmailBody}
+                    </pre>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
-      )}
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
