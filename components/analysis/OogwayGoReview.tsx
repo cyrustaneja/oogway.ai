@@ -3,18 +3,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Target, AlertTriangle, ChevronDown, ChevronUp, Copy, Check,
-  Loader2, Rocket, Mail, Shield, Flame, Sparkles,
+  Target, AlertTriangle, Copy, Check,
+  Loader2, Rocket, Mail, Flame, Sparkles,
   BookOpen, Presentation, Clock, Heart, Mic,
-  ArrowRight, ExternalLink, TriangleAlert, CircleCheck, CircleMinus
+  TriangleAlert, CircleCheck, CircleMinus, FileSpreadsheet, LayoutGrid, Filter, CheckCircle2, XCircle
 } from 'lucide-react';
 
 // ── Types ────────────────────────────────────────────────────────────────
 type ScorecardItem = {
   dimension: string;
   score: number;
-  weight: number;
-  summary: string;
+  weight?: number;
+  one_line_summary?: string;
+  summary?: string;
   top_strength: string;
   top_weakness: string;
   severity_tag: string;
@@ -27,6 +28,7 @@ type RedFlag = {
 };
 
 type Finding = {
+  finding_number?: number;
   dimension: string;
   severity: string;
   what_happened: string;
@@ -35,6 +37,12 @@ type Finding = {
   verbatim_quote: string;
   timestamp: string;
   is_positive: boolean;
+};
+
+type ChecklistItem = {
+  check: string;
+  passed: boolean;
+  note: string;
 };
 
 type OogwayGoResult = {
@@ -46,86 +54,65 @@ type OogwayGoResult = {
   detailed_findings: Finding[];
   feedback_email_warm: string;
   feedback_email_direct: string;
+  pre_scoring_checklist?: ChecklistItem[];
 };
 
 // ── Dimension Icons ──────────────────────────────────────────────────────
 const DIMENSION_ICONS: Record<string, any> = {
+  'Content Accuracy': BookOpen,
   'Content Accuracy & Depth': BookOpen,
   'Pedagogical Approach': Sparkles,
   'Live Platform Walkthrough': Presentation,
+  'Pacing and Time Management': Clock,
   'Pacing & Time Management': Clock,
   'Student Emotional Support': Heart,
   'Delivery Fluency': Mic,
 };
 
-// ── Score color helpers ──────────────────────────────────────────────────
-function getScoreColor(score: number) {
-  if (score >= 8) return { bg: 'bg-emerald-50', border: 'border-emerald-200', text: 'text-emerald-700', ring: 'ring-emerald-300', fill: 'bg-emerald-500' };
-  if (score >= 6) return { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700', ring: 'ring-amber-300', fill: 'bg-amber-500' };
-  return { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', ring: 'ring-red-300', fill: 'bg-red-500' };
+// ── Score Color Helpers ──────────────────────────────────────────────────
+function getScoreBadge(score: number) {
+  if (score >= 7) return { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300', label: 'Good (≥7)' };
+  if (score >= 5) return { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300', label: 'Moderate (5-6)' };
+  return { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300', label: 'Needs Improvement (≤4)' };
 }
 
-function getSeverityStyle(severity: string) {
-  switch (severity) {
-    case 'NOTABLE': return { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300', dot: 'bg-red-500' };
-    case 'MODERATE': return { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300', dot: 'bg-amber-500' };
-    case 'MINOR': return { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-300', dot: 'bg-blue-500' };
-    case 'CLEAN': return { bg: 'bg-emerald-100', text: 'text-emerald-800', border: 'border-emerald-300', dot: 'bg-emerald-500' };
-    default: return { bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300', dot: 'bg-slate-500' };
+function getSeverityBadge(severity: string) {
+  const s = severity?.toUpperCase() || 'MINOR';
+  switch (s) {
+    case 'NOTABLE': return { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' };
+    case 'MODERATE': return { bg: 'bg-amber-100', text: 'text-amber-800', border: 'border-amber-300' };
+    case 'MINOR': return { bg: 'bg-blue-100', text: 'text-blue-800', border: 'border-blue-300' };
+    default: return { bg: 'bg-slate-100', text: 'text-slate-700', border: 'border-slate-300' };
   }
 }
 
 function getVerdictStyle(verdict: string) {
   switch (verdict) {
-    case 'Excellent': return 'from-emerald-500 to-green-600';
-    case 'Good': return 'from-emerald-400 to-teal-500';
-    case 'Needs Improvement': return 'from-amber-500 to-orange-500';
-    case 'Below Standard': return 'from-red-400 to-red-600';
-    case 'Critical': return 'from-red-600 to-red-800';
-    default: return 'from-slate-500 to-slate-600';
+    case 'Excellent': return 'from-emerald-600 via-teal-600 to-green-700';
+    case 'Good': return 'from-emerald-500 via-teal-600 to-cyan-700';
+    case 'Needs Improvement': return 'from-amber-500 via-orange-600 to-amber-700';
+    case 'Below Standard': return 'from-red-500 via-rose-600 to-red-700';
+    case 'Critical': return 'from-red-700 via-rose-800 to-red-900';
+    default: return 'from-slate-700 via-slate-800 to-slate-900';
   }
 }
 
-// ── Score Ring ────────────────────────────────────────────────────────────
-function ScoreRing({ score, size = 72 }: { score: number; size?: number }) {
-  const radius = (size - 8) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const fillPercent = (score / 10) * circumference;
-  const color = getScoreColor(score);
-
-  return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="transform -rotate-90">
-        <circle cx={size/2} cy={size/2} r={radius} stroke="currentColor" strokeWidth="4"
-          fill="none" className="text-slate-200" />
-        <motion.circle
-          cx={size/2} cy={size/2} r={radius} stroke="currentColor" strokeWidth="4"
-          fill="none" strokeLinecap="round"
-          className={color.text}
-          initial={{ strokeDashoffset: circumference }}
-          animate={{ strokeDashoffset: circumference - fillPercent }}
-          transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
-          style={{ strokeDasharray: circumference }}
-        />
-      </svg>
-      <span className={`absolute text-lg font-black ${color.text}`}>{score.toFixed(1)}</span>
-    </div>
-  );
-}
-
 // ── Copy Button ──────────────────────────────────────────────────────────
-function CopyButton({ text }: { text: string }) {
+function CopyButton({ text, label = 'Copy Email' }: { text: string; label?: string }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
   return (
-    <button onClick={handleCopy}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-200 bg-white hover:bg-slate-50 transition-all active:scale-95 cursor-pointer">
-      {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
-      <span>{copied ? 'Copied!' : 'Copy'}</span>
+    <button
+      onClick={handleCopy}
+      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all shadow-sm active:scale-95 cursor-pointer"
+    >
+      {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-amber-300" />}
+      <span>{copied ? 'Copied to Clipboard!' : label}</span>
     </button>
   );
 }
@@ -142,8 +129,8 @@ export function OogwayGoReview({
   const [status, setStatus] = useState<string>('NOT_STARTED');
   const [loading, setLoading] = useState(true);
   const [triggerLoading, setTriggerLoading] = useState(false);
-  const [activeEmailTab, setActiveEmailTab] = useState<'warm' | 'direct'>('warm');
-  const [expandedFindings, setExpandedFindings] = useState<Set<number>>(new Set());
+  const [activeSubTab, setActiveSubTab] = useState<'scorecard' | 'findings' | 'emails'>('scorecard');
+  const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
   const [filterSeverity, setFilterSeverity] = useState<string>('ALL');
   const [progress, setProgress] = useState(0);
 
@@ -206,15 +193,6 @@ export function OogwayGoReview({
     }
   };
 
-  const toggleFinding = (idx: number) => {
-    setExpandedFindings(prev => {
-      const next = new Set(prev);
-      if (next.has(idx)) next.delete(idx);
-      else next.add(idx);
-      return next;
-    });
-  };
-
   const handleTimestamp = (ts: string) => {
     if (onTimestampClick) onTimestampClick(ts);
   };
@@ -224,7 +202,7 @@ export function OogwayGoReview({
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-pulse">
         <Loader2 className="w-8 h-8 text-orange-500 animate-spin mb-3" />
-        <p className="text-sm text-slate-500 font-medium">Loading Oogway Go…</p>
+        <p className="text-sm text-slate-500 font-medium">Loading Oogway Go Audit…</p>
       </div>
     );
   }
@@ -261,7 +239,7 @@ export function OogwayGoReview({
               className="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black text-sm tracking-wide shadow-md shadow-orange-200/50 transition-all active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
             >
               {triggerLoading ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Starting...</>
+                <><Loader2 className="w-4 h-4 animate-spin" /> Starting Audit...</>
               ) : (
                 <><Rocket className="w-4 h-4" /> Run Oogway Go Audit</>
               )}
@@ -303,7 +281,7 @@ export function OogwayGoReview({
               </div>
             </div>
 
-            <div className="mt-4 space-y-2 max-w-xs mx-auto">
+            <div className="mt-4 space-y-2 max-w-xs mx-auto text-left">
               {[
                 { label: 'Reading transcript', target: 25 },
                 { label: 'Scoring 6 quality dimensions', target: 55 },
@@ -344,13 +322,13 @@ export function OogwayGoReview({
   // ── Results view ─────────────────────────────────────────────────
   if (!result) return null;
 
+  const notableFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'NOTABLE');
+  const moderateFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'MODERATE');
+  const minorFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'MINOR');
+
   const filteredFindings = filterSeverity === 'ALL'
     ? result.detailed_findings
-    : result.detailed_findings.filter(f => f.severity === filterSeverity);
-
-  const notableCount = result.detailed_findings.filter(f => f.severity === 'NOTABLE').length;
-  const moderateCount = result.detailed_findings.filter(f => f.severity === 'MODERATE').length;
-  const minorCount = result.detailed_findings.filter(f => f.severity === 'MINOR').length;
+    : result.detailed_findings.filter(f => f.severity?.toUpperCase() === filterSeverity);
 
   return (
     <motion.div
@@ -358,283 +336,321 @@ export function OogwayGoReview({
       animate={{ opacity: 1 }}
       className="w-full max-w-[1200px] mx-auto space-y-6 mt-4 pb-24"
     >
-      {/* ── Overall Score Hero ── */}
+      {/* ── Executive Overall Score Banner ── */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="ks-card overflow-hidden"
+        className="ks-card overflow-hidden border-none shadow-xl"
       >
-        <div className={`bg-gradient-to-r ${getVerdictStyle(result.overall_verdict)} p-6 sm:p-8 text-white`}>
-          <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="relative">
-              <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-4 border-white/30">
-                <span className="text-4xl font-black">{result.overall_score.toFixed(1)}</span>
+        <div className={`bg-gradient-to-r ${getVerdictStyle(result.overall_verdict)} p-6 sm:p-8 text-white relative overflow-hidden`}>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="flex items-center gap-5">
+              <div className="relative shrink-0">
+                <div className="w-24 h-24 rounded-2xl bg-white/20 backdrop-blur-md flex flex-col items-center justify-center border border-white/30 shadow-inner">
+                  <span className="text-3xl font-black">{result.overall_score.toFixed(1)}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-white/80">/ 10</span>
+                </div>
               </div>
-              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-white/25 backdrop-blur-sm px-3 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase">
-                {result.overall_verdict}
+              <div className="space-y-1 text-center sm:text-left">
+                <div className="flex items-center gap-2 justify-center sm:justify-start">
+                  <span className="px-2.5 py-0.5 rounded-full bg-white/25 backdrop-blur-md text-[11px] font-black uppercase tracking-wider">
+                    {result.overall_verdict}
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black tracking-tight">Oogway Go Audit Workbook</h2>
+                <p className="text-xs sm:text-sm text-white/90 font-medium leading-relaxed max-w-xl">{result.overall_summary}</p>
               </div>
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <div className="flex items-center gap-2 justify-center sm:justify-start mb-2">
-                <Target className="w-5 h-5" />
-                <h2 className="text-xl sm:text-2xl font-black tracking-tight">Oogway Go Audit</h2>
-              </div>
-              <p className="text-sm text-white/90 font-medium leading-relaxed max-w-lg">{result.overall_summary}</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Quick stats bar */}
-        <div className="flex items-center justify-around px-4 py-3 bg-slate-50 border-t border-slate-100 text-xs font-bold text-slate-600">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-red-500" /> {notableCount} Notable
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-500" /> {moderateCount} Moderate
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-blue-500" /> {minorCount} Minor
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-slate-400" /> {result.detailed_findings.length} Total
-          </span>
+            <button
+              onClick={handleTrigger}
+              className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 text-white font-bold text-xs uppercase tracking-wider backdrop-blur-md border border-white/30 transition-all cursor-pointer shrink-0"
+            >
+              Re-run Audit
+            </button>
+          </div>
         </div>
       </motion.div>
 
-      {/* ── Critical Red Flags ── */}
-      {result.critical_red_flags.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="ks-card overflow-hidden border-red-200"
+      {/* ── Workbook 3 Sub-Tabs Navigation (Scorecard, Findings, Feedback Emails) ── */}
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] shadow-inner overflow-x-auto scrollbar-hide">
+        <button
+          onClick={() => setActiveSubTab('scorecard')}
+          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            activeSubTab === 'scorecard'
+              ? 'bg-slate-900 text-white shadow-md'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+          }`}
         >
-          <div className="bg-red-50 border-b border-red-200 px-4 py-3 flex items-center gap-2">
-            <Flame className="w-4.5 h-4.5 text-red-600" />
-            <h3 className="text-sm font-black text-red-800">Critical Red Flags</h3>
-          </div>
-          <div className="p-4 space-y-3">
-            {result.critical_red_flags.map((flag, i) => (
-              <div key={i} className="flex gap-3 p-3 bg-red-50/60 rounded-xl border border-red-100">
-                <TriangleAlert className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-red-900 leading-snug">{flag.flag}</p>
-                  <p className="text-xs text-red-700 mt-1 leading-relaxed">{flag.impact}</p>
-                  <button onClick={() => handleTimestamp(flag.timestamp)}
-                    className="mt-1.5 text-[10px] font-black text-red-600 bg-red-100 px-2 py-0.5 rounded-md hover:bg-red-200 transition-colors cursor-pointer">
-                    ⏱ {flag.timestamp}
-                  </button>
+          <LayoutGrid className="w-4 h-4 text-amber-400" />
+          <span>Scorecard Summary</span>
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('findings')}
+          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            activeSubTab === 'findings'
+              ? 'bg-slate-900 text-white shadow-md'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+          }`}
+        >
+          <FileSpreadsheet className="w-4 h-4 text-orange-400" />
+          <span>Detailed Findings ({result.detailed_findings.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('emails')}
+          className={`flex-1 min-w-[160px] py-2.5 px-4 rounded-xl text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            activeSubTab === 'emails'
+              ? 'bg-slate-900 text-white shadow-md'
+              : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+          }`}
+        >
+          <Mail className="w-4 h-4 text-emerald-400" />
+          <span>Feedback Emails (2 Tones)</span>
+        </button>
+      </div>
+
+      {/* ── Sub-Tab 1: Scorecard Summary ── */}
+      {activeSubTab === 'scorecard' && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
+          {/* Critical Red Flags Box */}
+          {result.critical_red_flags && result.critical_red_flags.length > 0 && (
+            <div className="ks-card border-red-200 overflow-hidden">
+              <div className="bg-red-50 border-b border-red-200 px-5 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Flame className="w-5 h-5 text-red-600" />
+                  <h3 className="text-sm font-black text-red-900">Critical Red Flags ({result.critical_red_flags.length})</h3>
                 </div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-red-100 text-red-700">Mandatory Review</span>
               </div>
-            ))}
+              <div className="p-4 space-y-3">
+                {result.critical_red_flags.map((flag, i) => (
+                  <div key={i} className="flex gap-3 p-3 bg-red-50/70 rounded-xl border border-red-100">
+                    <TriangleAlert className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-red-950 leading-snug">{flag.flag}</p>
+                      <p className="text-xs text-red-800 mt-1 leading-relaxed">{flag.impact}</p>
+                      <button
+                        onClick={() => handleTimestamp(flag.timestamp)}
+                        className="mt-2 text-[10px] font-mono font-black text-red-700 bg-red-100 px-2.5 py-1 rounded-md hover:bg-red-200 transition-colors cursor-pointer inline-flex items-center gap-1"
+                      >
+                        ⏱ {flag.timestamp} — Jump to Evidence
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Pre-Scoring Checklist Verification */}
+          {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
+            <div className="ks-card p-5">
+              <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider mb-3">Pre-Scoring Checklist Verification</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {result.pre_scoring_checklist.map((item, i) => (
+                  <div key={i} className={`p-3 rounded-xl border flex items-start gap-2.5 ${item.passed ? 'bg-emerald-50/60 border-emerald-100 text-emerald-900' : 'bg-red-50/60 border-red-100 text-red-900'}`}>
+                    {item.passed ? <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" /> : <XCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />}
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold leading-tight">{item.check}</p>
+                      {item.note && <p className="text-[10px] opacity-80 mt-1 leading-tight">{item.note}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 6-Dimension Scorecard Grid */}
+          <div>
+            <h3 className="text-sm font-black text-slate-800 uppercase tracking-wider mb-3 px-1">Dimension Quality Breakdown</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {result.scorecard.map((dim, i) => {
+                const Icon = DIMENSION_ICONS[dim.dimension] || BookOpen;
+                const scoreBadge = getScoreBadge(dim.score);
+                const sevBadge = getSeverityBadge(dim.severity_tag);
+
+                return (
+                  <div key={dim.dimension} className="ks-card p-5 flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                            <Icon className="w-4.5 h-4.5 text-slate-700" />
+                          </div>
+                          <h4 className="text-xs font-black text-slate-900 leading-tight">{dim.dimension}</h4>
+                        </div>
+                        <span className={`px-2.5 py-1 rounded-xl text-sm font-black border ${scoreBadge.bg} ${scoreBadge.text} ${scoreBadge.border}`}>
+                          {dim.score.toFixed(1)}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-slate-600 leading-relaxed mb-3">{dim.one_line_summary || dim.summary}</p>
+                    </div>
+
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                      {dim.top_strength && (
+                        <div className="flex items-start gap-1.5 text-[11px] text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-100">
+                          <CircleCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                          <span className="font-medium leading-snug">{dim.top_strength}</span>
+                        </div>
+                      )}
+                      {dim.top_weakness && (
+                        <div className="flex items-start gap-1.5 text-[11px] text-red-800 bg-red-50 p-2 rounded-lg border border-red-100">
+                          <CircleMinus className="w-3.5 h-3.5 text-red-600 shrink-0 mt-0.5" />
+                          <span className="font-medium leading-snug">{dim.top_weakness}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </motion.div>
       )}
 
-      {/* ── Scorecard Grid ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-      >
-        <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider mb-3 px-1">Dimension Scorecard</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {result.scorecard.map((dim, i) => {
-            const Icon = DIMENSION_ICONS[dim.dimension] || BookOpen;
-            const scoreColor = getScoreColor(dim.score);
-            const sevStyle = getSeverityStyle(dim.severity_tag);
+      {/* ── Sub-Tab 2: Detailed Findings ── */}
+      {activeSubTab === 'findings' && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+          {/* Filter Bar */}
+          <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
+            <div className="flex items-center gap-1.5">
+              <Filter className="w-4 h-4 text-slate-500 ml-1" />
+              <span className="text-xs font-bold text-slate-700">Filter Severity:</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              {[
+                { id: 'ALL', label: `All (${result.detailed_findings.length})` },
+                { id: 'NOTABLE', label: `Notable (${notableFindings.length})` },
+                { id: 'MODERATE', label: `Moderate (${moderateFindings.length})` },
+                { id: 'MINOR', label: `Minor (${minorFindings.length})` },
+              ].map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setFilterSeverity(f.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    filterSeverity === f.id
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            return (
-              <motion.div
-                key={dim.dimension}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.15 + i * 0.05 }}
-                className="ks-card overflow-hidden hover:shadow-md transition-shadow"
-              >
-                <div className="p-4">
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2 min-w-0">
-                      <div className={`w-8 h-8 rounded-lg ${scoreColor.bg} ${scoreColor.border} border flex items-center justify-center shrink-0`}>
-                        <Icon className={`w-4 h-4 ${scoreColor.text}`} />
-                      </div>
-                      <div className="min-w-0">
-                        <h4 className="text-xs font-black text-slate-800 leading-tight truncate">{dim.dimension}</h4>
-                        <span className="text-[10px] text-slate-400 font-medium">{(dim.weight * 100).toFixed(0)}% weight</span>
-                      </div>
+          {/* Structured Findings List */}
+          <div className="space-y-4">
+            {filteredFindings.map((finding, idx) => {
+              const sev = getSeverityBadge(finding.severity);
+              return (
+                <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200">
+                  <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 rounded-md bg-slate-900 text-white text-xs font-black flex items-center justify-center">
+                        {finding.finding_number || idx + 1}
+                      </span>
+                      <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
+                        {finding.severity}
+                      </span>
+                      <span className="text-xs font-black text-slate-800">{finding.dimension}</span>
                     </div>
-                    <ScoreRing score={dim.score} size={48} />
+
+                    {finding.timestamp && (
+                      <button
+                        onClick={() => handleTimestamp(finding.timestamp)}
+                        className="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-slate-100 hover:bg-slate-900 hover:text-white transition-colors cursor-pointer border border-slate-200"
+                      >
+                        ⏱ {finding.timestamp}
+                      </button>
+                    )}
                   </div>
 
-                  <p className="text-xs text-slate-600 leading-relaxed mb-2.5">{dim.summary}</p>
-
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${sevStyle.bg} ${sevStyle.text} ${sevStyle.border} border`}>
-                      {dim.severity_tag}
-                    </span>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div>
+                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
+                      <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
+                    </div>
+                    <div>
+                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
+                      <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
+                    </div>
+                    <div>
+                      <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
+                      <p className="text-emerald-800 font-medium bg-emerald-50 p-2 rounded-lg border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
+                    </div>
                   </div>
 
-                  {dim.top_strength && (
-                    <div className="flex gap-1.5 items-start text-[11px] text-emerald-700 bg-emerald-50 rounded-lg p-2 mb-1.5 border border-emerald-100">
-                      <CircleCheck className="w-3 h-3 shrink-0 mt-0.5" />
-                      <span className="font-medium leading-snug">{dim.top_strength}</span>
-                    </div>
-                  )}
-
-                  {dim.top_weakness && (
-                    <div className="flex gap-1.5 items-start text-[11px] text-red-700 bg-red-50 rounded-lg p-2 border border-red-100">
-                      <CircleMinus className="w-3 h-3 shrink-0 mt-0.5" />
-                      <span className="font-medium leading-snug">{dim.top_weakness}</span>
+                  {finding.verbatim_quote && (
+                    <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs">
+                      <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-1">Transcript Evidence</span>
+                      <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
                     </div>
                   )}
                 </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
-
-      {/* ── Detailed Findings ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className="flex items-center justify-between mb-3 px-1">
-          <h3 className="text-sm font-black text-slate-700 uppercase tracking-wider">Detailed Findings</h3>
-          <div className="flex items-center gap-1">
-            {['ALL', 'NOTABLE', 'MODERATE', 'MINOR'].map(sev => {
-              const active = filterSeverity === sev;
-              const sevStyle = sev === 'ALL' ? { bg: 'bg-slate-100', text: 'text-slate-700' } : getSeverityStyle(sev);
-              return (
-                <button key={sev} onClick={() => setFilterSeverity(sev)}
-                  className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all cursor-pointer ${
-                    active ? `${sevStyle.bg} ${sevStyle.text} ring-1 ring-current/30` : 'text-slate-400 hover:text-slate-600'
-                  }`}>
-                  {sev === 'ALL' ? `All (${result.detailed_findings.length})` : sev}
-                </button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
+      )}
 
-        <div className="space-y-2">
-          {filteredFindings.map((finding, i) => {
-            const isExpanded = expandedFindings.has(i);
-            const sevStyle = getSeverityStyle(finding.severity);
-
-            return (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.03 }}
-                className={`ks-card overflow-hidden transition-shadow hover:shadow-sm ${finding.is_positive ? 'border-emerald-200' : ''}`}
+      {/* ── Sub-Tab 3: Feedback Emails ── */}
+      {activeSubTab === 'emails' && (
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-5">
+          {/* Tone Toggle & Copy Action */}
+          <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-3 rounded-2xl border border-slate-200">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setActiveEmailVariant('warm')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeEmailVariant === 'warm'
+                    ? 'bg-amber-400 text-slate-950 shadow-sm font-extrabold'
+                    : 'bg-white text-slate-600 hover:bg-slate-200'
+                }`}
               >
-                <button onClick={() => toggleFinding(i)}
-                  className="w-full p-3.5 flex items-start gap-3 text-left cursor-pointer group">
-                  <div className={`w-2 h-2 rounded-full ${sevStyle.dot} shrink-0 mt-1.5`} />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
-                      <span className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${sevStyle.bg} ${sevStyle.text}`}>
-                        {finding.severity}
-                      </span>
-                      <span className="text-[10px] font-bold text-slate-400">{finding.dimension}</span>
-                      {finding.is_positive && (
-                        <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">✓ STRENGTH</span>
-                      )}
-                    </div>
-                    <p className="text-sm text-slate-800 font-semibold leading-snug">{finding.what_happened}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <button onClick={(e) => { e.stopPropagation(); handleTimestamp(finding.timestamp); }}
-                      className="text-[10px] font-black text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md hover:bg-orange-100 transition-colors cursor-pointer">
-                      ⏱ {finding.timestamp}
-                    </button>
-                    {isExpanded ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
-                  </div>
-                </button>
+                Variant A — Warm / Developmental
+              </button>
+              <button
+                onClick={() => setActiveEmailVariant('direct')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeEmailVariant === 'direct'
+                    ? 'bg-slate-900 text-white shadow-sm font-extrabold'
+                    : 'bg-white text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                Variant B — Direct / Accountability
+              </button>
+            </div>
 
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-4 pb-4 pt-0 space-y-2.5 border-t border-slate-100">
-                        <div className="pt-2.5">
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Why It Matters</p>
-                          <p className="text-sm text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Recommendation</p>
-                          <p className="text-sm text-slate-700 leading-relaxed">{finding.recommendation}</p>
-                        </div>
-                        <div className="bg-slate-50 rounded-lg p-3 border border-slate-100">
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Verbatim Evidence</p>
-                          <p className="text-xs text-slate-700 italic leading-relaxed">"{finding.verbatim_quote}"</p>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
-        </div>
-      </motion.div>
+            <CopyButton
+              text={activeEmailVariant === 'warm' ? result.feedback_email_warm : result.feedback_email_direct}
+              label={activeEmailVariant === 'warm' ? 'Copy Warm Email' : 'Copy Direct Email'}
+            />
+          </div>
 
-      {/* ── Feedback Emails ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="ks-card overflow-hidden"
-      >
-        <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Mail className="w-4.5 h-4.5 text-slate-600" />
-            <h3 className="text-sm font-black text-slate-800">Feedback Email Drafts</h3>
-          </div>
-          <div className="flex items-center gap-1 bg-white p-0.5 rounded-lg border border-slate-200">
-            <button onClick={() => setActiveEmailTab('warm')}
-              className={`text-[10px] font-bold px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-                activeEmailTab === 'warm' ? 'bg-amber-100 text-amber-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-              }`}>
-              🤝 Warm
-            </button>
-            <button onClick={() => setActiveEmailTab('direct')}
-              className={`text-[10px] font-bold px-3 py-1.5 rounded-md transition-all cursor-pointer ${
-                activeEmailTab === 'direct' ? 'bg-red-100 text-red-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'
-              }`}>
-              🎯 Direct
-            </button>
-          </div>
-        </div>
+          {/* Formatted Email Container */}
+          <div className="ks-card overflow-hidden shadow-lg border-slate-300">
+            <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Mail className="w-4.5 h-4.5 text-amber-300" />
+                <span className="text-xs font-bold">
+                  {activeEmailVariant === 'warm' ? 'Variant A: Warm / Developmental Feedback' : 'Variant B: Direct / Accountability Feedback'}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-slate-400">Signed: Prerna (Academic Team)</span>
+            </div>
 
-        <div className="p-5">
-          <div className="flex justify-end mb-3">
-            <CopyButton text={activeEmailTab === 'warm' ? result.feedback_email_warm : result.feedback_email_direct} />
+            <div className="p-6 bg-slate-50">
+              <pre className="text-xs sm:text-sm text-slate-800 font-sans whitespace-pre-wrap leading-relaxed">
+                {activeEmailVariant === 'warm' ? result.feedback_email_warm : result.feedback_email_direct}
+              </pre>
+            </div>
           </div>
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-inner">
-            <pre className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap font-sans">
-              {activeEmailTab === 'warm' ? result.feedback_email_warm : result.feedback_email_direct}
-            </pre>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── Re-run button ── */}
-      <div className="text-center pt-4">
-        <button onClick={handleTrigger} disabled={triggerLoading || status === 'RUNNING'}
-          className="text-xs font-bold text-slate-400 hover:text-orange-600 transition-colors cursor-pointer flex items-center gap-1.5 mx-auto">
-          <Rocket className="w-3.5 h-3.5" />
-          {triggerLoading ? 'Starting...' : 'Re-run Oogway Go (replaces current analysis)'}
-        </button>
-      </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
