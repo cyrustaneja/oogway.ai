@@ -8,7 +8,7 @@ import {
   Loader2, Rocket, Mail, Flame, Sparkles,
   BookOpen, Presentation, Clock, Heart, Mic,
   TriangleAlert, CircleCheck, CircleMinus, LayoutGrid,
-  Send, X, ChevronRight, Layers, CheckCircle2, XCircle
+  Send, X, ChevronRight, Layers, FileText
 } from 'lucide-react';
 import { useVideoPreview } from '@/components/analysis/VideoPreviewContext';
 
@@ -415,7 +415,7 @@ export function OogwayGoReview({
 
       {/* ── Main Layout: Kraftshala Left Sidebar + Right Panel ── */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style — CLEAN & FOCUSED) ── */}
+        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style) ── */}
         <div className="w-full md:w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
           <div className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
             Audit Navigation
@@ -530,7 +530,7 @@ export function OogwayGoReview({
                         }`}
                       >
                         <div className="flex items-start gap-3.5">
-                          {/* Prominent Solid Circle Badge with ✓ or ✕ */}
+                          {/* Solid Circle Badge with ✓ or ✕ */}
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-sm shrink-0 shadow-sm mt-0.5 ${
                             item.passed ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
                           }`}>
@@ -558,144 +558,165 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 2: Specific Dimension View (UNIFIED WITH DETAILED FINDINGS) */}
+          {/* VIEW 2: Specific Dimension View (SYNTHESIZED UNIFIED DIMENSION CARD AT FIRST GLANCE) */}
           {selectedDimensionItem && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
-              {/* Dimension Header Banner */}
-              <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
-                      {React.createElement(DIMENSION_ICONS[selectedDimensionItem.dimension] || BookOpen, { className: "w-6 h-6" })}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
-                      <p className="text-xs text-slate-500 font-medium">Kraftshala Audit Dimension Evaluation</p>
-                    </div>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${getSeverityBadge(selectedDimensionItem.severity_tag).bg} ${getSeverityBadge(selectedDimensionItem.severity_tag).text} ${getSeverityBadge(selectedDimensionItem.severity_tag).border}`}>
-                    {getSeverityBadge(selectedDimensionItem.severity_tag).label}
-                  </span>
-                </div>
+              {(() => {
+                const dimensionFindings = result.detailed_findings.filter(f => {
+                  const fDim = (f.dimension || '').toLowerCase();
+                  const sDim = (selectedDimensionItem.dimension || '').toLowerCase();
+                  return fDim.includes(sDim) || sDim.includes(fDim) ||
+                    (sDim.includes('content') && fDim.includes('content')) ||
+                    (sDim.includes('pedagogical') && fDim.includes('pedagogical')) ||
+                    (sDim.includes('platform') && fDim.includes('platform')) ||
+                    (sDim.includes('pacing') && fDim.includes('pacing')) ||
+                    (sDim.includes('emotional') && fDim.includes('emotional')) ||
+                    (sDim.includes('fluency') && fDim.includes('fluency'));
+                });
 
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium pt-2 border-t border-slate-100">
-                  {selectedDimensionItem.one_line_summary || selectedDimensionItem.summary}
-                </p>
-              </div>
+                // Compute worst severity badge among findings for this dimension
+                let worstSeverityTag = selectedDimensionItem.severity_tag || 'CLEAN';
+                if (dimensionFindings.some(f => f.severity?.toUpperCase() === 'NOTABLE')) worstSeverityTag = 'NOTABLE';
+                else if (dimensionFindings.some(f => f.severity?.toUpperCase() === 'MODERATE')) worstSeverityTag = 'MODERATE';
+                const sevBadge = getSeverityBadge(worstSeverityTag);
 
-              {/* Strengths & Weaknesses */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {selectedDimensionItem.top_strength && (
-                  <div className="ks-card p-4 rounded-2xl border-emerald-200 bg-emerald-50/40 space-y-2">
-                    <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
-                      <CircleCheck className="w-4 h-4 text-emerald-600" />
-                      <span>Key Strength</span>
-                    </div>
-                    <p className="text-xs text-emerald-950 font-medium leading-relaxed">{selectedDimensionItem.top_strength}</p>
-                  </div>
-                )}
-
-                {selectedDimensionItem.top_weakness && (
-                  <div className="ks-card p-4 rounded-2xl border-red-200 bg-red-50/40 space-y-2">
-                    <div className="flex items-center gap-2 text-red-800 font-bold text-xs uppercase tracking-wider">
-                      <CircleMinus className="w-4 h-4 text-red-600" />
-                      <span>Development Area</span>
-                    </div>
-                    <p className="text-xs text-red-950 font-medium leading-relaxed">{selectedDimensionItem.top_weakness}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Specific Dimension Findings (FULL UNIFIED DETAILED FORMAT) */}
-              <div className="space-y-4 pt-2">
-                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Detailed Findings for {selectedDimensionItem.dimension}</h4>
-                  <span className="text-xs font-bold text-slate-500">
-                    {result.detailed_findings.filter(f => {
-                      const fDim = (f.dimension || '').toLowerCase();
-                      const sDim = (selectedDimensionItem.dimension || '').toLowerCase();
-                      return fDim.includes(sDim) || sDim.includes(fDim) ||
-                        (sDim.includes('content') && fDim.includes('content')) ||
-                        (sDim.includes('pedagogical') && fDim.includes('pedagogical')) ||
-                        (sDim.includes('platform') && fDim.includes('platform')) ||
-                        (sDim.includes('pacing') && fDim.includes('pacing')) ||
-                        (sDim.includes('emotional') && fDim.includes('emotional')) ||
-                        (sDim.includes('fluency') && fDim.includes('fluency'));
-                    }).length} Findings
-                  </span>
-                </div>
-
-                {(() => {
-                  const dimensionFindings = result.detailed_findings.filter(f => {
-                    const fDim = (f.dimension || '').toLowerCase();
-                    const sDim = (selectedDimensionItem.dimension || '').toLowerCase();
-                    return fDim.includes(sDim) || sDim.includes(fDim) ||
-                      (sDim.includes('content') && fDim.includes('content')) ||
-                      (sDim.includes('pedagogical') && fDim.includes('pedagogical')) ||
-                      (sDim.includes('platform') && fDim.includes('platform')) ||
-                      (sDim.includes('pacing') && fDim.includes('pacing')) ||
-                      (sDim.includes('emotional') && fDim.includes('emotional')) ||
-                      (sDim.includes('fluency') && fDim.includes('fluency'));
-                  });
-
-                  if (dimensionFindings.length === 0) {
-                    return (
-                      <div className="ks-card p-6 text-center text-slate-500 rounded-2xl">
-                        <p className="text-xs font-medium">No critical findings flagged for this dimension. The expert met all standard criteria.</p>
-                      </div>
-                    );
-                  }
-
-                  return dimensionFindings.map((finding, idx) => {
-                    const sev = getSeverityBadge(finding.severity);
-                    return (
-                      <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl bg-white">
-                        <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
-                          <div className="flex items-center gap-2">
-                            <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center">
-                              {finding.finding_number || idx + 1}
-                            </span>
-                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
-                              {sev.label}
-                            </span>
-                          </div>
-
-                          {finding.timestamp && (
-                            <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                          <div>
-                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
-                            <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
+                return (
+                  <div className="space-y-5">
+                    {/* Dimension Header Banner */}
+                    <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-3 shadow-sm bg-white">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                            {React.createElement(DIMENSION_ICONS[selectedDimensionItem.dimension] || BookOpen, { className: "w-6 h-6" })}
                           </div>
                           <div>
-                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
-                            <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
-                          </div>
-                          <div>
-                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
-                            <p className="text-emerald-800 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
+                            <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
+                            <p className="text-xs text-slate-500 font-medium">Dimension Quality Synthesis</p>
                           </div>
                         </div>
-
-                        {finding.verbatim_quote && (
-                          <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                            <div>
-                              <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-0.5">Transcript Evidence</span>
-                              <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
-                            </div>
-                            {finding.timestamp && (
-                              <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
-                            )}
-                          </div>
-                        )}
+                        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${sevBadge.bg} ${sevBadge.text} ${sevBadge.border}`}>
+                          {sevBadge.label}
+                        </span>
                       </div>
-                    );
-                  });
-                })()}
-              </div>
+
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium pt-2 border-t border-slate-100">
+                        {selectedDimensionItem.one_line_summary || selectedDimensionItem.summary}
+                      </p>
+                    </div>
+
+                    {/* Side-by-side Strengths & Development Areas */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {selectedDimensionItem.top_strength && (
+                        <div className="ks-card p-4.5 rounded-2xl border-emerald-200 bg-emerald-50/40 space-y-2">
+                          <div className="flex items-center gap-2 text-emerald-800 font-bold text-xs uppercase tracking-wider">
+                            <CircleCheck className="w-4 h-4 text-emerald-600" />
+                            <span>Key Strength</span>
+                          </div>
+                          <p className="text-xs text-emerald-950 font-medium leading-relaxed">{selectedDimensionItem.top_strength}</p>
+                        </div>
+                      )}
+
+                      {selectedDimensionItem.top_weakness && (
+                        <div className="ks-card p-4.5 rounded-2xl border-red-200 bg-red-50/40 space-y-2">
+                          <div className="flex items-center gap-2 text-red-800 font-bold text-xs uppercase tracking-wider">
+                            <CircleMinus className="w-4 h-4 text-red-600" />
+                            <span>Development Area</span>
+                          </div>
+                          <p className="text-xs text-red-950 font-medium leading-relaxed">{selectedDimensionItem.top_weakness}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* UNIFIED SYNTHESIS ANALYSIS CARD (Everything Combined at First Glance) */}
+                    <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-5 shadow-sm bg-white">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4.5 h-4.5 text-amber-500" />
+                          <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Unified Dimension Analysis</h4>
+                        </div>
+                        <span className="text-xs font-bold text-slate-500">
+                          {dimensionFindings.length} Finding{dimensionFindings.length === 1 ? '' : 's'} Synthesized
+                        </span>
+                      </div>
+
+                      {dimensionFindings.length === 0 ? (
+                        <p className="text-xs font-medium text-slate-500 py-2">
+                          No critical gaps flagged for this dimension. The expert consistently satisfied Kraftshala quality standards.
+                        </p>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+                          {/* Combined What Happened */}
+                          <div className="space-y-2">
+                            <span className="font-extrabold text-slate-400 uppercase tracking-wider text-[10px] block">
+                              What Happened (Combined Observations)
+                            </span>
+                            <ul className="space-y-2.5">
+                              {dimensionFindings.map((f, i) => (
+                                <li key={i} className="text-slate-800 font-medium leading-relaxed pl-3 border-l-2 border-slate-300">
+                                  {f.what_happened}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Combined Why It Matters */}
+                          <div className="space-y-2">
+                            <span className="font-extrabold text-slate-400 uppercase tracking-wider text-[10px] block">
+                              Why It Matters (Impact on Students)
+                            </span>
+                            <ul className="space-y-2.5">
+                              {dimensionFindings.map((f, i) => (
+                                <li key={i} className="text-slate-700 leading-relaxed pl-3 border-l-2 border-amber-300">
+                                  {f.why_it_matters}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Combined Action Recommendations */}
+                          <div className="space-y-2">
+                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider text-[10px] block">
+                              Action Recommendations
+                            </span>
+                            <ul className="space-y-2.5">
+                              {dimensionFindings.map((f, i) => (
+                                <li key={i} className="text-emerald-900 font-medium bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">
+                                  {f.recommendation}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Supporting Transcript Evidence & Timestamps Bar */}
+                      {dimensionFindings.some(f => f.verbatim_quote || f.timestamp) && (
+                        <div className="pt-4 border-t border-slate-100 space-y-3">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">
+                            Transcript Evidence & Timestamp Moments
+                          </span>
+                          <div className="space-y-2">
+                            {dimensionFindings.map((f, i) => (
+                              <div key={i} className="p-3 bg-amber-50/60 border border-amber-200/70 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                                <div className="min-w-0 flex-1">
+                                  {f.verbatim_quote ? (
+                                    <p className="italic text-amber-950 font-serif leading-relaxed">"{f.verbatim_quote}"</p>
+                                  ) : (
+                                    <p className="text-slate-700 font-medium">{f.what_happened}</p>
+                                  )}
+                                </div>
+                                {f.timestamp && (
+                                  <TimestampPill timestamp={f.timestamp} onClick={handleTimestamp} />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
             </motion.div>
           )}
         </div>
