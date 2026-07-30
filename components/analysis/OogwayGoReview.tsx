@@ -688,7 +688,7 @@ export function OogwayGoReview({
                           </div>
                           <div>
                             <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
-                            <p className="text-xs text-slate-500 font-medium">Dimension Quality Audit</p>
+                            <p className="text-xs text-slate-500 font-medium">Dimension Analysis</p>
                           </div>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${sevBadge.bg} ${sevBadge.text} ${sevBadge.border}`}>
@@ -728,7 +728,7 @@ export function OogwayGoReview({
                     <div className="space-y-4 pt-2">
                       <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                         <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">
-                          Key Audit Observations & Recommendations
+                          Dimension Analysis & Findings
                         </h4>
                         <span className="text-xs font-bold text-slate-500">
                           {dimensionFindings.length} Finding{dimensionFindings.length === 1 ? '' : 's'}
