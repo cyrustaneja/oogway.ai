@@ -8,7 +8,7 @@ import {
   Loader2, Rocket, Mail, Flame, Sparkles,
   BookOpen, Presentation, Clock, Heart, Mic,
   TriangleAlert, CircleCheck, CircleMinus, FileSpreadsheet, LayoutGrid, Filter,
-  CheckCircle2, XCircle, Send, X, ChevronRight, Layers, FileText
+  Send, X, ChevronRight, Layers
 } from 'lucide-react';
 import { useVideoPreview } from '@/components/analysis/VideoPreviewContext';
 
@@ -339,7 +339,7 @@ export function OogwayGoReview({
                 return (
                   <div key={step.label} className="flex items-center gap-2 text-xs font-medium text-slate-600">
                     {isDone ? (
-                      <CircleCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                      <Check className="w-4 h-4 text-emerald-500 shrink-0" />
                     ) : (
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-400 shrink-0" />
                     )}
@@ -534,7 +534,7 @@ export function OogwayGoReview({
                 </div>
               )}
 
-              {/* Quality Audit Checklist (Kraftshala Clean List Style) */}
+              {/* Quality Audit Checklist (PROMINENT TICKS AND CROSSES) */}
               {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
                 <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -542,37 +542,39 @@ export function OogwayGoReview({
                       <Layers className="w-4.5 h-4.5 text-amber-500" />
                       <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider">Kraftshala Session Quality Checklist</h3>
                     </div>
-                    <span className="text-xs font-bold text-slate-500">8 Verification Standards</span>
+                    <span className="text-xs font-bold text-slate-500">8 Standards Verified</span>
                   </div>
 
-                  <div className="space-y-2.5">
+                  <div className="space-y-3">
                     {result.pre_scoring_checklist.map((item, i) => (
                       <div
                         key={i}
-                        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl border transition-all ${
+                        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border transition-all ${
                           item.passed
-                            ? 'bg-emerald-50/40 border-emerald-100 text-emerald-950'
-                            : 'bg-red-50/40 border-red-100 text-red-950'
+                            ? 'bg-emerald-50/30 border-emerald-200/70'
+                            : 'bg-red-50/30 border-red-200/70'
                         }`}
                       >
-                        <div className="flex items-start gap-3">
-                          {item.passed ? (
-                            <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600 shrink-0 mt-0.5" />
-                          ) : (
-                            <XCircle className="w-4.5 h-4.5 text-red-600 shrink-0 mt-0.5" />
-                          )}
+                        <div className="flex items-start gap-3.5">
+                          {/* Prominent Tick or Cross Badge */}
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0 shadow-sm mt-0.5 ${
+                            item.passed ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
+                          }`}>
+                            {item.passed ? '✓' : '✕'}
+                          </div>
+
                           <div>
-                            <span className="text-xs font-bold leading-tight block text-slate-900">{item.check}</span>
+                            <span className="text-sm font-bold text-slate-900 leading-tight block">{item.check}</span>
                             {item.note && (
-                              <p className="text-[11px] opacity-80 mt-0.5 leading-relaxed">{item.note}</p>
+                              <p className="text-xs text-slate-600 font-medium mt-1 leading-relaxed">{item.note}</p>
                             )}
                           </div>
                         </div>
                         
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 ${
-                          item.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'
+                        <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider shrink-0 ${
+                          item.passed ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-red-100 text-red-800 border border-red-200'
                         }`}>
-                          {item.passed ? 'Verified' : 'Flagged'}
+                          {item.passed ? 'Verified ✓' : 'Flagged ✕'}
                         </span>
                       </div>
                     ))}
@@ -582,7 +584,7 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 2: Detailed Findings */}
+          {/* VIEW 2: Detailed Findings (All Findings across dimensions) */}
           {activeSideNav === 'findings' && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
               {/* Filter Bar */}
@@ -668,19 +670,19 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 3: Specific Dimension View */}
+          {/* VIEW 3: Specific Dimension View (UNIFIED WITH DETAILED FINDINGS) */}
           {selectedDimensionItem && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
               {/* Dimension Header Banner */}
               <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-3">
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
-                      {React.createElement(DIMENSION_ICONS[selectedDimensionItem.dimension] || BookOpen, { className: "w-5 h-5" })}
+                    <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600">
+                      {React.createElement(DIMENSION_ICONS[selectedDimensionItem.dimension] || BookOpen, { className: "w-6 h-6" })}
                     </div>
                     <div>
                       <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
-                      <p className="text-xs text-slate-500">Kraftshala Audit Dimension Evaluation</p>
+                      <p className="text-xs text-slate-500 font-medium">Kraftshala Audit Dimension Evaluation</p>
                     </div>
                   </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${getSeverityBadge(selectedDimensionItem.severity_tag).bg} ${getSeverityBadge(selectedDimensionItem.severity_tag).text} ${getSeverityBadge(selectedDimensionItem.severity_tag).border}`}>
@@ -716,25 +718,62 @@ export function OogwayGoReview({
                 )}
               </div>
 
-              {/* Specific Dimension Findings */}
-              <div className="space-y-3 pt-2">
-                <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Dimension Findings</h4>
+              {/* Specific Dimension Findings (FULL DETAILED UNIFIED FORMAT) */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Detailed Findings for {selectedDimensionItem.dimension}</h4>
+                  <span className="text-xs font-bold text-slate-500">
+                    {result.detailed_findings.filter(f => f.dimension.toLowerCase().includes(selectedDimensionItem.dimension.toLowerCase()) || selectedDimensionItem.dimension.toLowerCase().includes(f.dimension.toLowerCase())).length} Findings
+                  </span>
+                </div>
+
                 {result.detailed_findings
                   .filter(f => f.dimension.toLowerCase().includes(selectedDimensionItem.dimension.toLowerCase()) || selectedDimensionItem.dimension.toLowerCase().includes(f.dimension.toLowerCase()))
                   .map((finding, idx) => {
                     const sev = getSeverityBadge(finding.severity);
                     return (
-                      <div key={idx} className="ks-card p-4 rounded-2xl border-slate-200 space-y-2 text-xs">
-                        <div className="flex items-center justify-between gap-2 border-b border-slate-100 pb-2">
-                          <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
-                            {sev.label}
-                          </span>
+                      <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl bg-white">
+                        <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
+                          <div className="flex items-center gap-2">
+                            <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center">
+                              {finding.finding_number || idx + 1}
+                            </span>
+                            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
+                              {sev.label}
+                            </span>
+                          </div>
+
                           {finding.timestamp && (
                             <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
                           )}
                         </div>
-                        <p className="text-slate-800 font-medium leading-relaxed"><strong className="text-slate-900">Observed:</strong> {finding.what_happened}</p>
-                        <p className="text-emerald-800 font-medium bg-emerald-50 p-2 rounded-xl border border-emerald-100 leading-relaxed"><strong className="text-emerald-900">Recommendation:</strong> {finding.recommendation}</p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                          <div>
+                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
+                            <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
+                            <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
+                          </div>
+                          <div>
+                            <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
+                            <p className="text-emerald-800 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
+                          </div>
+                        </div>
+
+                        {finding.verbatim_quote && (
+                          <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+                            <div>
+                              <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-0.5">Transcript Evidence</span>
+                              <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
+                            </div>
+                            {finding.timestamp && (
+                              <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
