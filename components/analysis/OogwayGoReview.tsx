@@ -145,14 +145,17 @@ export function OogwayGoReview({
   const [activeEmailTab, setActiveEmailTab] = useState<'warm' | 'direct'>('warm');
   const [expandedFindings, setExpandedFindings] = useState<Set<number>>(new Set());
   const [filterSeverity, setFilterSeverity] = useState<string>('ALL');
+  const [progress, setProgress] = useState(0);
 
   const fetchStatus = useCallback(async () => {
     try {
       const res = await fetch(`/api/analysis/${sessionId}/oogway-go`);
       const data = await res.json();
-      setStatus(data.status || 'NOT_STARTED');
+      const currentStatus = data.status || 'NOT_STARTED';
+      setStatus(currentStatus);
       if (data.result) {
         setResult(data.result);
+        setProgress(100);
       }
     } catch (err) {
       console.error('[OogwayGoReview] Failed to fetch status', err);
@@ -165,21 +168,39 @@ export function OogwayGoReview({
     fetchStatus();
   }, [fetchStatus]);
 
-  // Poll while RUNNING
+  // Poll faster (every 3s) & smoothly increment progress percentage while RUNNING
   useEffect(() => {
-    if (status !== 'RUNNING') return;
-    const interval = setInterval(fetchStatus, 5000);
-    return () => clearInterval(interval);
-  }, [status, fetchStatus]);
+    if (status !== 'RUNNING') {
+      if (status === 'COMPLETE' || result) setProgress(100);
+      return;
+    }
+    
+    const pollInterval = setInterval(fetchStatus, 3000);
+
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 92) return 92;
+        return prev + Math.floor(Math.random() * 3) + 1;
+      });
+    }, 700);
+
+    return () => {
+      clearInterval(pollInterval);
+      clearInterval(progressInterval);
+    };
+  }, [status, result, fetchStatus]);
 
   const handleTrigger = async () => {
     setTriggerLoading(true);
+    setProgress(5);
+    setStatus('RUNNING');
     try {
       const res = await fetch(`/api/analysis/${sessionId}/oogway-go`, { method: 'POST' });
       const data = await res.json();
       setStatus(data.status || 'RUNNING');
     } catch (err) {
       console.error('[OogwayGoReview] Failed to trigger', err);
+      setStatus('FAILED');
     } finally {
       setTriggerLoading(false);
     }
@@ -228,7 +249,7 @@ export function OogwayGoReview({
 
             {status === 'FAILED' && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
-                <p className="text-xs font-bold text-red-700">Previous analysis failed. Click below to retry.</p>
+                <p className="text-xs font-bold text-red-700">Previous analysis failed or timed out. Click below to re-run.</p>
               </div>
             )}
           </div>
@@ -264,23 +285,56 @@ export function OogwayGoReview({
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-orange-200/50 animate-pulse">
               <Target className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">Oogway Go is Analyzing...</h3>
-            <p className="text-sm text-slate-500 font-medium">Running deep 6-dimension session audit. This takes 1–2 minutes.</p>
+            <h3 className="text-xl font-black text-slate-900 tracking-tight mb-1">Oogway Go is Analyzing...</h3>
+            <p className="text-xs text-slate-500 font-medium">Deep 6-dimension session audit in progress.</p>
 
-            <div className="mt-6 space-y-2">
-              {['Reading transcript', 'Scoring 6 dimensions', 'Finding evidence', 'Generating feedback emails'].map((step, i) => (
+            {/* Percentage Bar */}
+            <div className="my-6 space-y-2 max-w-sm mx-auto text-left">
+              <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                <span>Audit Progress</span>
+                <span className="text-orange-600 font-mono text-sm">{progress}%</span>
+              </div>
+              <div className="w-full bg-slate-200/80 h-3 rounded-full overflow-hidden p-0.5 border border-slate-300/40">
                 <motion.div
-                  key={step}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.3 }}
-                  className="flex items-center gap-2 text-xs text-slate-500 font-medium"
-                >
-                  <Loader2 className="w-3 h-3 animate-spin text-orange-400" />
-                  <span>{step}</span>
-                </motion.div>
-              ))}
+                  className="bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 h-full rounded-full shadow-sm"
+                  animate={{ width: `${Math.min(progress, 100)}%` }}
+                  transition={{ ease: 'easeOut', duration: 0.4 }}
+                />
+              </div>
             </div>
+
+            <div className="mt-4 space-y-2 max-w-xs mx-auto">
+              {[
+                { label: 'Reading transcript', target: 25 },
+                { label: 'Scoring 6 quality dimensions', target: 55 },
+                { label: 'Finding timestamped evidence', target: 80 },
+                { label: 'Drafting feedback emails', target: 95 },
+              ].map((step) => {
+                const isDone = progress >= step.target;
+                return (
+                  <div key={step.label} className="flex items-center gap-2 text-xs font-medium text-slate-600">
+                    {isDone ? (
+                      <CircleCheck className="w-4 h-4 text-emerald-500 shrink-0" />
+                    ) : (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-orange-400 shrink-0" />
+                    )}
+                    <span className={isDone ? 'text-slate-900 font-bold' : ''}>{step.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {progress >= 90 && (
+              <div className="mt-6 pt-4 border-t border-amber-200/60">
+                <p className="text-xs text-slate-500 mb-2 font-medium">Taking longer than expected?</p>
+                <button
+                  onClick={handleTrigger}
+                  className="px-3.5 py-1.5 rounded-lg text-xs font-bold bg-white border border-amber-300 text-amber-900 hover:bg-amber-100 transition-colors shadow-xs cursor-pointer"
+                >
+                  Force Re-Run Audit
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>

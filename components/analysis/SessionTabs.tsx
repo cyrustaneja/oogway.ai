@@ -11,9 +11,9 @@ import { AnalysisHeader } from '@/components/analysis/sections';
 import { FileText, Zap, Video, Clock, Target, Copy, Check, Download, X, MessageCircle, Sparkles } from "lucide-react";
 
 const TABS = [
-  { id: 'timeline',       label: 'Timeline',     icon: Clock },
-  { id: 'first_analysis', label: 'Oogway Pulse', icon: Zap },
-  { id: 'oogway_go',      label: 'Oogway Go',    icon: Target },
+  { id: 'timeline',       label: 'Timeline',     subtitle: 'Milestones', icon: Clock },
+  { id: 'first_analysis', label: 'Oogway Pulse', subtitle: 'Instant overview of entire session', icon: Zap },
+  { id: 'oogway_go',      label: 'Oogway Go',    subtitle: 'Deep expert audit', icon: Target },
 ] as const;
 
 type TabId = (typeof TABS)[number]['id'];
@@ -117,10 +117,13 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as TabId)}
-                    className={`relative px-4 sm:px-6 py-2 text-xs sm:text-sm font-semibold transition-all rounded-xl whitespace-nowrap flex items-center gap-2 active:scale-95 cursor-pointer ${styleClass}`}
+                    className={`relative px-3.5 sm:px-5 py-1.5 transition-all rounded-xl whitespace-nowrap flex flex-col items-start justify-center active:scale-95 cursor-pointer ${styleClass}`}
                   >
-                    <Icon className="w-4 h-4 shrink-0" />
-                    <span>{tab.label}</span>
+                    <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold">
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span>{tab.label}</span>
+                    </div>
+                    <span className="text-[9px] font-medium opacity-75 leading-none mt-0.5">{tab.subtitle}</span>
                   </button>
                 );
               })}

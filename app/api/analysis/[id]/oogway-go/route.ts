@@ -57,12 +57,7 @@ export async function POST(
       return NextResponse.json({ error: 'Session not found' }, { status: 404 });
     }
 
-    // If already running, don't start again
-    if (session.oogwayGoStatus === 'RUNNING') {
-      return NextResponse.json({ status: 'RUNNING', message: 'Oogway Go analysis is already in progress' });
-    }
-
-    // Fire and forget — run in background
+    // Always trigger background execution (resets status to RUNNING inside handler)
     handleOogwayGo(id).catch(err => {
       console.error(`[Oogway Go API] Background analysis failed for ${id}:`, err);
     });
