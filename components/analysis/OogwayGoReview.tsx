@@ -145,11 +145,23 @@ export function OogwayGoReview({
   
   // Kraftshala Sidebar Active Item: 'overview' | dimension_name
   const [activeSideNav, setActiveSideNav] = useState<string>('overview');
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(`expert_go_progress_${sessionId}`);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [showEvidence, setShowEvidence] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && progress > 0) {
+      localStorage.setItem(`expert_go_progress_${sessionId}`, progress.toString());
+    }
+  }, [progress, sessionId]);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -160,6 +172,9 @@ export function OogwayGoReview({
       if (data.result) {
         setResult(data.result);
         setProgress(100);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`expert_go_progress_${sessionId}`, '100');
+        }
       }
     } catch (err) {
       console.error('[OogwayGoReview] Failed to fetch status', err);

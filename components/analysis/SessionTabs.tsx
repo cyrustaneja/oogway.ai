@@ -186,29 +186,14 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               </motion.div>
             )}
 
-            {activeTab === 'expert_go' && (
-              <motion.div
-                key="expert_go"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
-              </motion.div>
-            )}
+            {/* Persistent DOM Mounting for Expert Go & Student Go so progress & background tasks persist across tab switches */}
+            <div className={activeTab === 'expert_go' ? 'block' : 'hidden'}>
+              <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
+            </div>
 
-            {activeTab === 'student_go' && (
-              <motion.div
-                key="student_go"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <StudentGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
-              </motion.div>
-            )}
+            <div className={activeTab === 'student_go' ? 'block' : 'hidden'}>
+              <StudentGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
+            </div>
           </AnimatePresence>
         </div>
 

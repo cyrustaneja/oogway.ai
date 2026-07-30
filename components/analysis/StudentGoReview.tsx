@@ -103,7 +103,19 @@ export function StudentGoReview({
   const [loading, setLoading] = useState(true);
   const [triggerLoading, setTriggerLoading] = useState(false);
   const [activeSideNav, setActiveSideNav] = useState<string>('overview');
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem(`student_go_progress_${sessionId}`);
+      return saved ? parseInt(saved, 10) : 0;
+    }
+    return 0;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && progress > 0) {
+      localStorage.setItem(`student_go_progress_${sessionId}`, progress.toString());
+    }
+  }, [progress, sessionId]);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -114,6 +126,9 @@ export function StudentGoReview({
       if (data.result) {
         setResult(data.result);
         setProgress(100);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(`student_go_progress_${sessionId}`, '100');
+        }
       }
     } catch (err) {
       console.error('[StudentGoReview] Failed to fetch status', err);
