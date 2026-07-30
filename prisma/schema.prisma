@@ -169,6 +169,8 @@ model AnalysisSession {
   source                     String?                 @default("manual")
   tier                       String                  @default("TIER1")
   tier1Result                Json?
+  oogwayGoResult             Json?
+  oogwayGoStatus             String?                 @default("NOT_STARTED")
   AnalysisChapterResult      AnalysisChapterResult[]
   batch                      Batch?                  @relation(fields: [batchId], references: [id])
   expert                     Expert                  @relation(fields: [expertId], references: [id])

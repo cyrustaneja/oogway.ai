@@ -14,12 +14,16 @@ import {
 import { CoachingTipsPanel } from '@/components/analysis/CoachingTipsPanel';
 import { Tier1Review } from '@/components/analysis/Tier1Review';
 import { AskOogwayChat } from '@/components/analysis/AskOogwayChat';
+import { OogwayGoReview } from '@/components/analysis/OogwayGoReview';
+import { SessionTimeline } from '@/components/analysis/tier1/SessionTimeline';
 import { VideoPreviewProvider } from '@/components/analysis/VideoPreviewContext';
-import { Play, BarChart2, CheckCircle2, ChevronRight, Lock, Loader2, Sparkles, X, Flag, Layers, FileText, Zap, MessageCircle, Video } from "lucide-react";
+import { Play, BarChart2, CheckCircle2, ChevronRight, Lock, Loader2, Sparkles, X, Flag, Layers, FileText, Zap, MessageCircle, Video, Clock, Target } from "lucide-react";
 
 const TABS = [
   { id: 'first_analysis', label: 'Pulse', icon: Zap },
-  { id: 'ask_oogway',    label: 'Ask Oogway', icon: MessageCircle },
+  { id: 'timeline',       label: 'Timeline', icon: Clock },
+  { id: 'oogway_go',      label: 'Oogway Go', icon: Target },
+  { id: 'ask_oogway',     label: 'Ask Oogway', icon: MessageCircle },
   { id: 'source_material', label: 'Source', icon: Video },
 ] as const;
 
@@ -28,13 +32,7 @@ type TabId = (typeof TABS)[number]['id'];
 export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
   const [activeTab, setActiveTab] = useState<TabId>('first_analysis');
   const [seekTime, setSeekTime] = useState<number | null>(null);
-  const [showDeepModal, setShowDeepModal] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
-
-  // Deep Analysis state
-  const isLocked = data?.pipeline_stage === 'WAITING_FOR_DEEP_ANALYSIS';
-  const [deepAnalysisRunning, setDeepAnalysisRunning] = useState(false);
-  const [deepAnalysisUnlocked, setDeepAnalysisUnlocked] = useState(!isLocked);
 
   React.useEffect(() => {
     if (activeTab === 'source_material' && seekTime !== null) {
@@ -61,21 +59,8 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
     setActiveTab('source_material');
   };
 
-  const handleRunDeepAnalysis = async () => {
-    setDeepAnalysisRunning(true);
-    try {
-      const res = await fetch(`/api/analysis/${sessionId}/run-deep`, { method: 'POST' });
-      if (!res.ok) throw new Error('Failed to trigger deep analysis');
-      setTimeout(() => {
-        setDeepAnalysisRunning(false);
-        setDeepAnalysisUnlocked(true);
-        window.location.reload();
-      }, 3000);
-    } catch (err) {
-      console.error(err);
-      setDeepAnalysisRunning(false);
-    }
-  };
+  // Extract session_flow for the Timeline tab
+  const sessionFlow = data?.session_flow ?? data?.tier1_result?.session_flow ?? [];
 
   return (
     <VideoPreviewProvider videoUrl={data.videoUrl} onNavigate={handleTimestampClick}>
@@ -117,26 +102,6 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                 );
               })}
             </div>
-
-            {/* Right: Deep Analysis Action Button */}
-            <button
-              onClick={() => {
-                if (!deepAnalysisUnlocked && !deepAnalysisRunning) {
-                  handleRunDeepAnalysis();
-                }
-                setShowDeepModal(true);
-              }}
-              disabled={deepAnalysisRunning}
-              className="shrink-0 flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-extrabold border border-brand-orange/40 bg-gradient-to-r from-orange-50 via-amber-50 to-orange-100 hover:from-orange-100 hover:to-amber-100 text-brand-orange transition-all shadow-sm whitespace-nowrap active:scale-95 cursor-pointer"
-            >
-              {deepAnalysisRunning ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-orange" />
-              ) : (
-                <BarChart2 className="w-3.5 h-3.5 text-brand-orange" />
-              )}
-              <span className="hidden sm:inline">{deepAnalysisRunning ? "Running Deep Analysis..." : "Deep Analysis"}</span>
-              <span className="sm:hidden">{deepAnalysisRunning ? "Running..." : "Deep Analysis"}</span>
-            </button>
           </div>
         </div>
 
@@ -152,6 +117,39 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                 transition={{ duration: 0.2 }}
               >
                 <Tier1Review data={data} sessionId={sessionId} onTimestampClick={handleTimestampClick} />
+              </motion.div>
+            )}
+
+            {activeTab === 'timeline' && (
+              <motion.div
+                key="timeline"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+                className="max-w-3xl mx-auto mt-4"
+              >
+                {sessionFlow.length > 0 ? (
+                  <SessionTimeline sessionFlow={sessionFlow} onTimestampClick={handleTimestampClick} />
+                ) : (
+                  <div className="ks-card p-8 flex flex-col items-center justify-center text-center">
+                    <Clock className="w-10 h-10 text-[var(--muted)] mb-3 opacity-40" />
+                    <h4 className="font-bold text-[var(--foreground)]">No Timeline Data</h4>
+                    <p className="text-sm text-[var(--muted)] mt-1">Session flow timeline will appear after Pulse analysis completes.</p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab === 'oogway_go' && (
+              <motion.div
+                key="oogway_go"
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2 }}
+              >
+                <OogwayGoReview sessionId={sessionId} onTimestampClick={handleTimestampClick} />
               </motion.div>
             )}
 
@@ -241,43 +239,6 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
         </div>
       </div>
 
-      {/* ── Deep Analysis Modal — COMING SOON ── */}
-      <AnimatePresence>
-        {showDeepModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl border border-slate-200 text-center space-y-5"
-            >
-              <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mx-auto shadow-inner">
-                <Sparkles className="w-8 h-8" />
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                  Deep Analysis — Coming Soon
-                </h3>
-                <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                  Granular chapter-by-chapter extraction and automated pedagogical rubric scoring are currently under active development and will be available in the next release.
-                </p>
-              </div>
-
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-[11px] font-bold text-amber-900 leading-snug">
-                💡 Oogway's initial evaluation and coaching copy are fully active above.
-              </div>
-
-              <button
-                onClick={() => setShowDeepModal(false)}
-                className="w-full py-3 rounded-xl bg-slate-900 text-white font-black text-xs uppercase tracking-wider hover:bg-slate-800 transition-colors shadow-md cursor-pointer"
-              >
-                Got It
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </VideoPreviewProvider>
   );
 }
