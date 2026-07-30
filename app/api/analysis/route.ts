@@ -97,7 +97,7 @@ export async function POST(req: Request) {
     // Validate VTT format if transcriptText is provided
     if (transcriptText && !transcriptText.includes('-->') && !transcriptText.toUpperCase().includes('WEBVTT')) {
       return NextResponse.json(
-        { error: "Only valid WebVTT (.vtt) format transcripts are allowed to prevent prompt injection." },
+        { error: "Only valid WebVTT (.vtt) format transcripts are supported." },
         { status: 400 }
       );
     }

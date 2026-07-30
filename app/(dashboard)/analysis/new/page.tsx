@@ -57,7 +57,7 @@ export default function NewAnalysisPage() {
   
   // Asset links
   const [videoUrl, setVideoUrl] = useState("");
-  const [transcriptMode, setTranscriptMode] = useState<'file' | 'url'>('file');
+  const [transcriptMode, setTranscriptMode] = useState<'url' | 'file'>('url');
   const [transcriptUrl, setTranscriptUrl] = useState("");
   const [transcriptText, setTranscriptText] = useState("");
   const [vttFileName, setVttFileName] = useState("");
@@ -67,7 +67,7 @@ export default function NewAnalysisPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.name.toLowerCase().endsWith('.vtt')) {
-      setError("Only .vtt files are allowed to prevent prompt injection.");
+      setError("Only .vtt transcript files are supported.");
       setVttFileName("");
       setTranscriptText("");
       return;
@@ -561,15 +561,8 @@ export default function NewAnalysisPage() {
 
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-              <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase">Transcript (.vtt File Only) *</label>
+              <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase">Transcript (.vtt) *</label>
               <div className="flex bg-[var(--layer-2)] rounded-lg p-1 border border-[var(--border)]">
-                <button
-                  type="button"
-                  onClick={() => setTranscriptMode('file')}
-                  className={`flex-1 sm:flex-none px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === 'file' ? 'bg-white text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
-                >
-                  Upload .vtt File
-                </button>
                 <button
                   type="button"
                   onClick={() => setTranscriptMode('url')}
@@ -577,10 +570,26 @@ export default function NewAnalysisPage() {
                 >
                   VTT Link
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setTranscriptMode('file')}
+                  className={`flex-1 sm:flex-none px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === 'file' ? 'bg-white text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
+                >
+                  Upload .vtt File
+                </button>
               </div>
             </div>
 
-            {transcriptMode === 'file' ? (
+            {transcriptMode === 'url' ? (
+              <input
+                type="url"
+                value={transcriptUrl}
+                onChange={(e) => setTranscriptUrl(e.target.value)}
+                placeholder="https://... (VTT link ending in .vtt)"
+                className="w-full liquid-input"
+                required={transcriptMode === 'url'}
+              />
+            ) : (
               <div className="border-2 border-dashed border-[var(--border)] rounded-2xl p-6 text-center hover:border-brand-orange transition-colors bg-[var(--layer-1)]">
                 <input
                   type="file"
@@ -594,18 +603,9 @@ export default function NewAnalysisPage() {
                   <span className="text-sm font-bold text-[var(--foreground)]">
                     {vttFileName ? vttFileName : "Click to select a .vtt transcript file"}
                   </span>
-                  <span className="text-xs text-[var(--muted)]">Only valid WebVTT (.vtt) files allowed (secures against prompt injection)</span>
+                  <span className="text-xs text-[var(--muted)]">Only valid WebVTT (.vtt) files supported</span>
                 </label>
               </div>
-            ) : (
-              <input
-                type="url"
-                value={transcriptUrl}
-                onChange={(e) => setTranscriptUrl(e.target.value)}
-                placeholder="https://... (VTT link ending in .vtt)"
-                className="w-full liquid-input"
-                required={transcriptMode === 'url'}
-              />
             )}
           </div>
         </div>
