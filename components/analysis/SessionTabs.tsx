@@ -184,7 +184,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
               >
-                <OogwayGoReview sessionId={sessionId} onTimestampClick={handleTimestampClick} />
+                <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
               </motion.div>
             )}
           </AnimatePresence>
