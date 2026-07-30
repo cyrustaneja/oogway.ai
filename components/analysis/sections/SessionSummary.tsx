@@ -5,7 +5,7 @@ import { SessionAnalysis, ChapterResult } from '@/lib/types/analysis';
 import { TOKENS, chipKeyForLabel, chipKeyForScore } from '@/lib/ui/tokens';
 import { RubricChip } from '../primitives/RubricChip';
 import { RubricReference } from '../RubricReference';
-import { Calendar, Clock, FileDown, Loader2, Coins } from 'lucide-react';
+import { Calendar, Clock, FileDown, Loader2, Coins, Video } from 'lucide-react';
 
 type Props = {
   data: SessionAnalysis;
@@ -20,6 +20,7 @@ type Props = {
   };
   chapters: ChapterResult[];
   activeTab?: string;
+  onOpenSource?: () => void;
 };
 
 function StatPill({
@@ -39,7 +40,7 @@ function StatPill({
   );
 }
 
-export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeTab = 'first_analysis' }: Props) {
+export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeTab = 'first_analysis', onOpenSource }: Props) {
   const completenessTone = chipKeyForLabel(data.session_completeness?.label);
   
   // Robust flag detection (AI + Auto-detect from Red rubrics + Incompleteness)
@@ -145,34 +146,17 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeT
               label={data.hygiene?.punctuality?.label ?? '—'}
               rationale="Expert punctuality at session start"
             />
-            <div className="w-full sm:w-auto mt-2 sm:mt-0 flex items-center gap-2">
-              {activeTab === 'first_analysis' && (
-                <button
-                  onClick={() => alert("Flagged for Manager Review. Message box coming soon.")}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest
-                    bg-red-500/10 border border-red-500/30 text-red-600
-                    hover:bg-red-500/20 hover:border-red-500/60 transition-all duration-150 whitespace-nowrap"
-                >
-                  Flag Session
-                </button>
-              )}
-              {activeTab === 'deep_analysis' && <RubricReference />}
+            {onOpenSource && (
               <button
-                id="export-pdf-btn"
-                onClick={handleExportPDF}
-                disabled={downloading}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-[11px] font-bold uppercase tracking-widest
-                  bg-brand-orange/10 border border-brand-orange/30 text-brand-orange
-                  hover:bg-brand-orange/20 hover:border-brand-orange/60
-                  disabled:opacity-50 disabled:cursor-not-allowed
-                  transition-all duration-150 whitespace-nowrap"
+                onClick={onOpenSource}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider
+                  bg-slate-900 text-white hover:bg-slate-800 shadow-sm
+                  transition-all duration-150 whitespace-nowrap active:scale-95 cursor-pointer"
               >
-                {downloading
-                  ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  : <FileDown className="w-3.5 h-3.5" />}
-                {downloading ? 'Generating…' : activeTab === 'deep_analysis' ? 'Export Deep Analysis' : 'Export Oogway Pulse'}
+                <Video className="w-4 h-4 text-orange-400" />
+                <span>View Source</span>
               </button>
-            </div>
+            )}
           </div>
         </div>
 
