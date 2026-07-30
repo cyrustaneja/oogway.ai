@@ -221,15 +221,9 @@ export function OogwayGoReview({
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-orange-200/50">
               <Target className="w-10 h-10" />
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-200/80 text-amber-900 border border-amber-300 text-[11px] font-black uppercase tracking-wider mb-3">
-              Step 3 • Deep Expert Dive
-            </div>
             <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Oogway Go</h3>
             <p className="text-sm text-slate-600 font-medium max-w-md mx-auto leading-relaxed mb-1">
               Deep 6-dimension expert audit with strict scoring criteria, timestamped findings, and ready-to-send feedback emails.
-            </p>
-            <p className="text-xs text-slate-500 font-medium mt-2">
-              <span className="opacity-70">Sequence:</span> Step 1: Timeline → Step 2: Oogway Pulse → <strong className="text-amber-900 font-bold">Step 3: Oogway Go</strong>
             </p>
 
             {status === 'FAILED' && (

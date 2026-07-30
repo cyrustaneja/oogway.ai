@@ -146,17 +146,6 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeT
               label={data.hygiene?.punctuality?.label ?? '—'}
               rationale="Expert punctuality at session start"
             />
-            {onOpenSource && (
-              <button
-                onClick={onOpenSource}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider
-                  bg-slate-900 text-white hover:bg-slate-800 shadow-sm
-                  transition-all duration-150 whitespace-nowrap active:scale-95 cursor-pointer"
-              >
-                <Video className="w-4 h-4 text-orange-400" />
-                <span>View Source</span>
-              </button>
-            )}
           </div>
         </div>
 

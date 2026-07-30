@@ -63,9 +63,11 @@ export async function getSessionAnalysis(
     costEstimate: session.v2Analysis?.costEstimate || 0,
   };
 
+  const rawTranscriptText = (session as any).transcript_clean || (session as any).transcriptRaw || '';
+
   if (session.tier === 'TIER1') {
     if (!session.tier1Result) return null;
-    return { data: { ...((session.tier1Result as any) || {}), session_info, videoUrl: session.videoUrl, transcriptUrl: session.transcriptUrl }, tier: 'TIER1' };
+    return { data: { ...((session.tier1Result as any) || {}), session_info, videoUrl: session.videoUrl, transcriptUrl: session.transcriptUrl, transcriptText: rawTranscriptText }, tier: 'TIER1' };
   }
 
   let data: any = { session_info, pipeline_stage: session.pipeline_stage, videoUrl: session.videoUrl, transcriptUrl: session.transcriptUrl };
@@ -166,8 +168,11 @@ export async function getSessionAnalysis(
   const finalEnrichedData = {
     ...enrichedData,
     session_info,
+    videoUrl: session.videoUrl,
+    transcriptUrl: session.transcriptUrl,
+    transcriptText: rawTranscript || (session as any).transcript_clean || (session as any).transcriptRaw || '',
   } as any;
 
-  return { data: finalEnrichedData, chapters, tier: 'TIER3' };
+  return { data: finalEnrichedData, chapters, tier: session.tier || 'TIER1' };
 }
 
