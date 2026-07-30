@@ -57,10 +57,36 @@ export default function NewAnalysisPage() {
   
   // Asset links
   const [videoUrl, setVideoUrl] = useState("");
-  const [transcriptMode, setTranscriptMode] = useState<'url' | 'manual'>('url');
+  const [transcriptMode, setTranscriptMode] = useState<'file' | 'url'>('file');
   const [transcriptUrl, setTranscriptUrl] = useState("");
   const [transcriptText, setTranscriptText] = useState("");
+  const [vttFileName, setVttFileName] = useState("");
   const [isFocused, setIsFocused]   = useState(false);
+
+  const handleVttFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.name.toLowerCase().endsWith('.vtt')) {
+      setError("Only .vtt files are allowed to prevent prompt injection.");
+      setVttFileName("");
+      setTranscriptText("");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (!content.includes('-->') && !content.toUpperCase().includes('WEBVTT')) {
+        setError("The selected file is not a valid WebVTT format.");
+        setVttFileName("");
+        setTranscriptText("");
+        return;
+      }
+      setError("");
+      setVttFileName(file.name);
+      setTranscriptText(content);
+    };
+    reader.readAsText(file);
+  };
 
   useEffect(() => {
     Promise.all([
@@ -126,8 +152,8 @@ export default function NewAnalysisPage() {
 
     if (!expertId) { setError("Expert selection is required."); return; }
     if (!videoUrl.trim()) { setError("Video link is required."); return; }
-    if (transcriptMode === 'url' && !transcriptUrl.trim()) { setError("Please provide a Transcript URL."); return; }
-    if (transcriptMode === 'manual' && !transcriptText.trim()) { setError("Please paste the manual transcript text."); return; }
+    if (transcriptMode === 'url' && !transcriptUrl.trim()) { setError("Please provide a VTT Transcript URL."); return; }
+    if (transcriptMode === 'file' && !transcriptText.trim()) { setError("Please select a valid .vtt transcript file."); return; }
 
     setLoading(true);
     try {
@@ -141,7 +167,7 @@ export default function NewAnalysisPage() {
           sessionDate: sessionDate || undefined,
           videoUrl: videoUrl.trim(),
           transcriptUrl: transcriptMode === 'url' ? transcriptUrl.trim() : undefined,
-          transcriptText: transcriptMode === 'manual' ? transcriptText.trim() : undefined,
+          transcriptText: transcriptMode === 'file' ? transcriptText.trim() : undefined,
         }),
       });
 
@@ -535,42 +561,50 @@ export default function NewAnalysisPage() {
 
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-              <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase">Transcript *</label>
+              <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase">Transcript (.vtt File Only) *</label>
               <div className="flex bg-[var(--layer-2)] rounded-lg p-1 border border-[var(--border)]">
+                <button
+                  type="button"
+                  onClick={() => setTranscriptMode('file')}
+                  className={`flex-1 sm:flex-none px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === 'file' ? 'bg-white text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
+                >
+                  Upload .vtt File
+                </button>
                 <button
                   type="button"
                   onClick={() => setTranscriptMode('url')}
                   className={`flex-1 sm:flex-none px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === 'url' ? 'bg-white text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
                 >
-                  Link
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTranscriptMode('manual')}
-                  className={`flex-1 sm:flex-none px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider rounded-md transition-all ${transcriptMode === 'manual' ? 'bg-white text-[var(--foreground)] shadow-sm' : 'text-[var(--muted)] hover:text-[var(--foreground)]'}`}
-                >
-                  Manual Text
+                  VTT Link
                 </button>
               </div>
             </div>
 
-            {transcriptMode === 'url' ? (
+            {transcriptMode === 'file' ? (
+              <div className="border-2 border-dashed border-[var(--border)] rounded-2xl p-6 text-center hover:border-brand-orange transition-colors bg-[var(--layer-1)]">
+                <input
+                  type="file"
+                  accept=".vtt"
+                  onChange={handleVttFileChange}
+                  className="hidden"
+                  id="vtt-file-input"
+                />
+                <label htmlFor="vtt-file-input" className="cursor-pointer flex flex-col items-center gap-2">
+                  <Upload className="w-8 h-8 text-brand-orange" />
+                  <span className="text-sm font-bold text-[var(--foreground)]">
+                    {vttFileName ? vttFileName : "Click to select a .vtt transcript file"}
+                  </span>
+                  <span className="text-xs text-[var(--muted)]">Only valid WebVTT (.vtt) files allowed (secures against prompt injection)</span>
+                </label>
+              </div>
+            ) : (
               <input
                 type="url"
                 value={transcriptUrl}
                 onChange={(e) => setTranscriptUrl(e.target.value)}
-                placeholder="https://... (VTT link)"
+                placeholder="https://... (VTT link ending in .vtt)"
                 className="w-full liquid-input"
                 required={transcriptMode === 'url'}
-              />
-            ) : (
-              <textarea
-                value={transcriptText}
-                onChange={(e) => setTranscriptText(e.target.value)}
-                placeholder="Paste the raw transcript text here..."
-                rows={6}
-                className="w-full liquid-input resize-y"
-                required={transcriptMode === 'manual'}
               />
             )}
           </div>

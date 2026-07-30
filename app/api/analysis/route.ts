@@ -94,6 +94,14 @@ export async function POST(req: Request) {
 
     const { name, expertId, sessionNoteId, schedDuration, batchId, videoUrl, transcriptUrl, transcriptText, tier, sessionDate } = parsed.data;
 
+    // Validate VTT format if transcriptText is provided
+    if (transcriptText && !transcriptText.includes('-->') && !transcriptText.toUpperCase().includes('WEBVTT')) {
+      return NextResponse.json(
+        { error: "Only valid WebVTT (.vtt) format transcripts are allowed to prevent prompt injection." },
+        { status: 400 }
+      );
+    }
+
     // Generate name if missing
     let finalName = name;
     if (!finalName) {
