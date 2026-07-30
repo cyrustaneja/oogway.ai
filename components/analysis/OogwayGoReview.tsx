@@ -7,8 +7,8 @@ import {
   Target, Copy, Check,
   Loader2, Rocket, Mail, Flame, Sparkles,
   BookOpen, Presentation, Clock, Heart, Mic,
-  TriangleAlert, CircleCheck, CircleMinus, FileSpreadsheet, LayoutGrid, Filter,
-  Send, X, ChevronRight, Layers
+  TriangleAlert, CircleCheck, CircleMinus, LayoutGrid,
+  Send, X, ChevronRight, Layers, CheckCircle2, XCircle
 } from 'lucide-react';
 import { useVideoPreview } from '@/components/analysis/VideoPreviewContext';
 
@@ -143,9 +143,8 @@ export function OogwayGoReview({
   const [loading, setLoading] = useState(true);
   const [triggerLoading, setTriggerLoading] = useState(false);
   
-  // Kraftshala Sidebar Active Item: 'overview' | 'findings' | dimension_name
+  // Kraftshala Sidebar Active Item: 'overview' | dimension_name
   const [activeSideNav, setActiveSideNav] = useState<string>('overview');
-  const [filterSeverity, setFilterSeverity] = useState<string>('ALL');
   const [progress, setProgress] = useState(0);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
@@ -369,15 +368,7 @@ export function OogwayGoReview({
   // ── Results view (KRAFTSHALA SIDEBAR LAYOUT) ─────────────────────
   if (!result) return null;
 
-  const notableFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'NOTABLE');
-  const moderateFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'MODERATE');
-  const minorFindings = result.detailed_findings.filter(f => f.severity?.toUpperCase() === 'MINOR');
-
-  const filteredFindings = filterSeverity === 'ALL'
-    ? result.detailed_findings
-    : result.detailed_findings.filter(f => f.severity?.toUpperCase() === filterSeverity);
-
-  // Selected dimension if navigating a dimension side tab
+  // Selected dimension item from scorecard
   const selectedDimensionItem = result.scorecard.find(s => s.dimension === activeSideNav);
 
   return (
@@ -424,10 +415,10 @@ export function OogwayGoReview({
 
       {/* ── Main Layout: Kraftshala Left Sidebar + Right Panel ── */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style) ── */}
+        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style — CLEAN & FOCUSED) ── */}
         <div className="w-full md:w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
           <div className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Audit Views
+            Audit Navigation
           </div>
 
           <button
@@ -443,23 +434,6 @@ export function OogwayGoReview({
               <span>Audit Overview</span>
             </div>
             <ChevronRight className="w-3.5 h-3.5 opacity-40" />
-          </button>
-
-          <button
-            onClick={() => setActiveSideNav('findings')}
-            className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs transition-all cursor-pointer text-left ${
-              activeSideNav === 'findings'
-                ? 'border-l-4 border-amber-500 font-black text-amber-600 bg-amber-50/70 shadow-xs'
-                : 'font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900'
-            }`}
-          >
-            <div className="flex items-center gap-2.5">
-              <FileSpreadsheet className="w-4 h-4 text-orange-500" />
-              <span>Detailed Findings</span>
-            </div>
-            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-600">
-              {result.detailed_findings.length}
-            </span>
           </button>
 
           <div className="pt-3 pb-1 px-3 text-[10px] font-black text-slate-400 uppercase tracking-widest border-t border-slate-100 mt-2">
@@ -534,7 +508,7 @@ export function OogwayGoReview({
                 </div>
               )}
 
-              {/* Quality Audit Checklist (PROMINENT TICKS AND CROSSES) */}
+              {/* Quality Audit Checklist (PROMINENT TICK AND CROSS BADGES) */}
               {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
                 <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -551,13 +525,13 @@ export function OogwayGoReview({
                         key={i}
                         className={`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-2xl border transition-all ${
                           item.passed
-                            ? 'bg-emerald-50/30 border-emerald-200/70'
-                            : 'bg-red-50/30 border-red-200/70'
+                            ? 'bg-emerald-50/40 border-emerald-200/70'
+                            : 'bg-red-50/40 border-red-200/70'
                         }`}
                       >
                         <div className="flex items-start gap-3.5">
-                          {/* Prominent Tick or Cross Badge */}
-                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0 shadow-sm mt-0.5 ${
+                          {/* Prominent Solid Circle Badge with ✓ or ✕ */}
+                          <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-sm shrink-0 shadow-sm mt-0.5 ${
                             item.passed ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
                           }`}>
                             {item.passed ? '✓' : '✕'}
@@ -584,93 +558,7 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 2: Detailed Findings (All Findings across dimensions) */}
-          {activeSideNav === 'findings' && (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
-              {/* Filter Bar */}
-              <div className="flex items-center justify-between flex-wrap gap-3 bg-slate-100 p-2.5 rounded-2xl border border-slate-200">
-                <div className="flex items-center gap-1.5">
-                  <Filter className="w-4 h-4 text-slate-500 ml-1" />
-                  <span className="text-xs font-bold text-slate-700">Filter Severity:</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {[
-                    { id: 'ALL', label: `All (${result.detailed_findings.length})` },
-                    { id: 'NOTABLE', label: `Notable (${notableFindings.length})` },
-                    { id: 'MODERATE', label: `Moderate (${moderateFindings.length})` },
-                    { id: 'MINOR', label: `Minor (${minorFindings.length})` },
-                  ].map((f) => (
-                    <button
-                      key={f.id}
-                      onClick={() => setFilterSeverity(f.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                        filterSeverity === f.id
-                          ? 'bg-slate-900 text-white shadow-xs'
-                          : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
-                      }`}
-                    >
-                      {f.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Structured Findings List */}
-              <div className="space-y-4">
-                {filteredFindings.map((finding, idx) => {
-                  const sev = getSeverityBadge(finding.severity);
-                  return (
-                    <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl">
-                      <div className="flex items-center justify-between gap-3 flex-wrap border-b border-slate-100 pb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center">
-                            {finding.finding_number || idx + 1}
-                          </span>
-                          <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${sev.bg} ${sev.text} ${sev.border}`}>
-                            {sev.label}
-                          </span>
-                          <span className="text-xs font-black text-slate-800">{finding.dimension}</span>
-                        </div>
-
-                        {finding.timestamp && (
-                          <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
-                        )}
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                        <div>
-                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">What Happened</span>
-                          <p className="text-slate-800 font-medium leading-relaxed">{finding.what_happened}</p>
-                        </div>
-                        <div>
-                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Why It Matters</span>
-                          <p className="text-slate-700 leading-relaxed">{finding.why_it_matters}</p>
-                        </div>
-                        <div>
-                          <span className="font-bold text-slate-400 uppercase tracking-wider text-[9px] block mb-1">Action Recommendation</span>
-                          <p className="text-emerald-800 font-medium bg-emerald-50 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">{finding.recommendation}</p>
-                        </div>
-                      </div>
-
-                      {finding.verbatim_quote && (
-                        <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                          <div>
-                            <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wider block mb-0.5">Transcript Evidence</span>
-                            <p className="italic text-amber-950 font-serif leading-relaxed">"{finding.verbatim_quote}"</p>
-                          </div>
-                          {finding.timestamp && (
-                            <TimestampPill timestamp={finding.timestamp} onClick={handleTimestamp} />
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          )}
-
-          {/* VIEW 3: Specific Dimension View (UNIFIED WITH DETAILED FINDINGS) */}
+          {/* VIEW 2: Specific Dimension View (UNIFIED WITH DETAILED FINDINGS) */}
           {selectedDimensionItem && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
               {/* Dimension Header Banner */}
@@ -718,18 +606,47 @@ export function OogwayGoReview({
                 )}
               </div>
 
-              {/* Specific Dimension Findings (FULL DETAILED UNIFIED FORMAT) */}
+              {/* Specific Dimension Findings (FULL UNIFIED DETAILED FORMAT) */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-center justify-between border-b border-slate-200 pb-2">
                   <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">Detailed Findings for {selectedDimensionItem.dimension}</h4>
                   <span className="text-xs font-bold text-slate-500">
-                    {result.detailed_findings.filter(f => f.dimension.toLowerCase().includes(selectedDimensionItem.dimension.toLowerCase()) || selectedDimensionItem.dimension.toLowerCase().includes(f.dimension.toLowerCase())).length} Findings
+                    {result.detailed_findings.filter(f => {
+                      const fDim = (f.dimension || '').toLowerCase();
+                      const sDim = (selectedDimensionItem.dimension || '').toLowerCase();
+                      return fDim.includes(sDim) || sDim.includes(fDim) ||
+                        (sDim.includes('content') && fDim.includes('content')) ||
+                        (sDim.includes('pedagogical') && fDim.includes('pedagogical')) ||
+                        (sDim.includes('platform') && fDim.includes('platform')) ||
+                        (sDim.includes('pacing') && fDim.includes('pacing')) ||
+                        (sDim.includes('emotional') && fDim.includes('emotional')) ||
+                        (sDim.includes('fluency') && fDim.includes('fluency'));
+                    }).length} Findings
                   </span>
                 </div>
 
-                {result.detailed_findings
-                  .filter(f => f.dimension.toLowerCase().includes(selectedDimensionItem.dimension.toLowerCase()) || selectedDimensionItem.dimension.toLowerCase().includes(f.dimension.toLowerCase()))
-                  .map((finding, idx) => {
+                {(() => {
+                  const dimensionFindings = result.detailed_findings.filter(f => {
+                    const fDim = (f.dimension || '').toLowerCase();
+                    const sDim = (selectedDimensionItem.dimension || '').toLowerCase();
+                    return fDim.includes(sDim) || sDim.includes(fDim) ||
+                      (sDim.includes('content') && fDim.includes('content')) ||
+                      (sDim.includes('pedagogical') && fDim.includes('pedagogical')) ||
+                      (sDim.includes('platform') && fDim.includes('platform')) ||
+                      (sDim.includes('pacing') && fDim.includes('pacing')) ||
+                      (sDim.includes('emotional') && fDim.includes('emotional')) ||
+                      (sDim.includes('fluency') && fDim.includes('fluency'));
+                  });
+
+                  if (dimensionFindings.length === 0) {
+                    return (
+                      <div className="ks-card p-6 text-center text-slate-500 rounded-2xl">
+                        <p className="text-xs font-medium">No critical findings flagged for this dimension. The expert met all standard criteria.</p>
+                      </div>
+                    );
+                  }
+
+                  return dimensionFindings.map((finding, idx) => {
                     const sev = getSeverityBadge(finding.severity);
                     return (
                       <div key={idx} className="ks-card p-5 space-y-3 hover:shadow-md transition-shadow border-slate-200 rounded-2xl bg-white">
@@ -776,7 +693,8 @@ export function OogwayGoReview({
                         )}
                       </div>
                     );
-                  })}
+                  });
+                })()}
               </div>
             </motion.div>
           )}
