@@ -125,6 +125,105 @@ function TimestampPill({
   );
 }
 
+// ── Full-Width Horizontal Finding Card with Expandable Transcript Evidence ──
+function FindingCard({
+  finding,
+  idx,
+  onTimestampClick,
+}: {
+  finding: Finding;
+  idx: number;
+  onTimestampClick?: (t: string) => void;
+}) {
+  const [showEvidence, setShowEvidence] = useState(false);
+  const findingSev = getSeverityBadge(finding.severity);
+
+  return (
+    <div className="ks-card p-6 rounded-2xl border-slate-200 shadow-sm bg-white space-y-4 hover:shadow-md transition-shadow">
+      {/* Horizontal Card Header */}
+      <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3 flex-wrap">
+        <div className="flex items-center gap-2.5">
+          <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center shadow-xs">
+            {finding.finding_number || idx + 1}
+          </span>
+          <span className={`px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${findingSev.bg} ${findingSev.text} ${findingSev.border}`}>
+            {findingSev.label}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {finding.verbatim_quote && (
+            <button
+              onClick={() => setShowEvidence(!showEvidence)}
+              className="text-[11px] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full transition-colors cursor-pointer flex items-center gap-1.5 border border-slate-200"
+            >
+              <FileText className="w-3.5 h-3.5 text-amber-600" />
+              <span>{showEvidence ? 'Hide Evidence ✕' : 'View Transcript Evidence 📜'}</span>
+            </button>
+          )}
+          {finding.timestamp && (
+            <TimestampPill timestamp={finding.timestamp} onClick={onTimestampClick} />
+          )}
+        </div>
+      </div>
+
+      {/* Row 1: What Happened (Full Width) */}
+      <div className="space-y-1">
+        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
+          What Happened (Observed Detail)
+        </span>
+        <p className="text-sm font-semibold text-slate-900 leading-relaxed">
+          {finding.what_happened}
+        </p>
+      </div>
+
+      {/* Row 2: Why It Matters (Full Width Container) */}
+      <div className="space-y-1">
+        <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider">
+          Why It Matters (Impact on Student Job Readiness)
+        </span>
+        <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-950 font-medium leading-relaxed">
+          {finding.why_it_matters}
+        </div>
+      </div>
+
+      {/* Row 3: Action Recommendation (Full Width Container) */}
+      <div className="space-y-1">
+        <span className="text-[10px] font-black uppercase text-emerald-700 tracking-wider">
+          Action Recommendation for Next Session
+        </span>
+        <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 font-medium leading-relaxed">
+          {finding.recommendation}
+        </div>
+      </div>
+
+      {/* Row 4: Expandable Transcript Evidence Quote */}
+      <AnimatePresence>
+        {showEvidence && finding.verbatim_quote && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="p-3.5 bg-slate-900 text-slate-100 rounded-xl text-xs space-y-1.5 border border-slate-800 mt-2">
+              <div className="flex items-center justify-between text-[10px] text-amber-300 font-bold uppercase tracking-wider">
+                <span>Verbatim Transcript Evidence</span>
+                {finding.timestamp && (
+                  <span className="font-mono text-slate-400">⏱ {finding.timestamp}</span>
+                )}
+              </div>
+              <p className="italic font-serif leading-relaxed text-slate-200">
+                "{finding.verbatim_quote}"
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ── Main Component (Kraftshala Sidebar Layout) ───────────────────────────
 export function OogwayGoReview({
   sessionId,
@@ -508,7 +607,7 @@ export function OogwayGoReview({
                 </div>
               )}
 
-              {/* Quality Audit Checklist (PROMINENT TICK AND CROSS BADGES) */}
+              {/* Quality Audit Checklist */}
               {result.pre_scoring_checklist && result.pre_scoring_checklist.length > 0 && (
                 <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-4">
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -530,7 +629,6 @@ export function OogwayGoReview({
                         }`}
                       >
                         <div className="flex items-start gap-3.5">
-                          {/* Solid Circle Badge with ✓ or ✕ */}
                           <div className={`w-7 h-7 rounded-full flex items-center justify-center font-black text-sm shrink-0 shadow-sm mt-0.5 ${
                             item.passed ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
                           }`}>
@@ -558,7 +656,7 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 2: Specific Dimension View (SYNTHESIZED UNIFIED DIMENSION CARD AT FIRST GLANCE) */}
+          {/* VIEW 2: Specific Dimension View (SPACIOUS FULL-WIDTH HORIZONTAL CARDS) */}
           {selectedDimensionItem && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
               {(() => {
@@ -574,7 +672,6 @@ export function OogwayGoReview({
                     (sDim.includes('fluency') && fDim.includes('fluency'));
                 });
 
-                // Compute worst severity badge among findings for this dimension
                 let worstSeverityTag = selectedDimensionItem.severity_tag || 'CLEAN';
                 if (dimensionFindings.some(f => f.severity?.toUpperCase() === 'NOTABLE')) worstSeverityTag = 'NOTABLE';
                 else if (dimensionFindings.some(f => f.severity?.toUpperCase() === 'MODERATE')) worstSeverityTag = 'MODERATE';
@@ -591,7 +688,7 @@ export function OogwayGoReview({
                           </div>
                           <div>
                             <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
-                            <p className="text-xs text-slate-500 font-medium">Dimension Quality Synthesis</p>
+                            <p className="text-xs text-slate-500 font-medium">Dimension Quality Audit</p>
                           </div>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${sevBadge.bg} ${sevBadge.text} ${sevBadge.border}`}>
@@ -627,91 +724,30 @@ export function OogwayGoReview({
                       )}
                     </div>
 
-                    {/* UNIFIED SYNTHESIS ANALYSIS CARD (Everything Combined at First Glance) */}
-                    <div className="ks-card p-6 rounded-2xl border-slate-200 space-y-5 shadow-sm bg-white">
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <div className="flex items-center gap-2">
-                          <FileText className="w-4.5 h-4.5 text-amber-500" />
-                          <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Unified Dimension Analysis</h4>
-                        </div>
+                    {/* SPACIOUS HORIZONTAL FINDING CARDS WITH EXPANDABLE TRANSCRIPT EVIDENCE */}
+                    <div className="space-y-4 pt-2">
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                        <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">
+                          Key Audit Observations & Recommendations
+                        </h4>
                         <span className="text-xs font-bold text-slate-500">
-                          {dimensionFindings.length} Finding{dimensionFindings.length === 1 ? '' : 's'} Synthesized
+                          {dimensionFindings.length} Finding{dimensionFindings.length === 1 ? '' : 's'}
                         </span>
                       </div>
 
                       {dimensionFindings.length === 0 ? (
-                        <p className="text-xs font-medium text-slate-500 py-2">
-                          No critical gaps flagged for this dimension. The expert consistently satisfied Kraftshala quality standards.
-                        </p>
+                        <div className="ks-card p-6 text-center text-slate-500 rounded-2xl">
+                          <p className="text-xs font-medium">No critical gaps flagged for this dimension. The expert consistently satisfied Kraftshala quality standards.</p>
+                        </div>
                       ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-                          {/* Combined What Happened */}
-                          <div className="space-y-2">
-                            <span className="font-extrabold text-slate-400 uppercase tracking-wider text-[10px] block">
-                              What Happened (Combined Observations)
-                            </span>
-                            <ul className="space-y-2.5">
-                              {dimensionFindings.map((f, i) => (
-                                <li key={i} className="text-slate-800 font-medium leading-relaxed pl-3 border-l-2 border-slate-300">
-                                  {f.what_happened}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {/* Combined Why It Matters */}
-                          <div className="space-y-2">
-                            <span className="font-extrabold text-slate-400 uppercase tracking-wider text-[10px] block">
-                              Why It Matters (Impact on Students)
-                            </span>
-                            <ul className="space-y-2.5">
-                              {dimensionFindings.map((f, i) => (
-                                <li key={i} className="text-slate-700 leading-relaxed pl-3 border-l-2 border-amber-300">
-                                  {f.why_it_matters}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {/* Combined Action Recommendations */}
-                          <div className="space-y-2">
-                            <span className="font-extrabold text-emerald-600 uppercase tracking-wider text-[10px] block">
-                              Action Recommendations
-                            </span>
-                            <ul className="space-y-2.5">
-                              {dimensionFindings.map((f, i) => (
-                                <li key={i} className="text-emerald-900 font-medium bg-emerald-50/80 p-2.5 rounded-xl border border-emerald-100 leading-relaxed">
-                                  {f.recommendation}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Supporting Transcript Evidence & Timestamps Bar */}
-                      {dimensionFindings.some(f => f.verbatim_quote || f.timestamp) && (
-                        <div className="pt-4 border-t border-slate-100 space-y-3">
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block">
-                            Transcript Evidence & Timestamp Moments
-                          </span>
-                          <div className="space-y-2">
-                            {dimensionFindings.map((f, i) => (
-                              <div key={i} className="p-3 bg-amber-50/60 border border-amber-200/70 rounded-xl text-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                                <div className="min-w-0 flex-1">
-                                  {f.verbatim_quote ? (
-                                    <p className="italic text-amber-950 font-serif leading-relaxed">"{f.verbatim_quote}"</p>
-                                  ) : (
-                                    <p className="text-slate-700 font-medium">{f.what_happened}</p>
-                                  )}
-                                </div>
-                                {f.timestamp && (
-                                  <TimestampPill timestamp={f.timestamp} onClick={handleTimestamp} />
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
+                        dimensionFindings.map((finding, idx) => (
+                          <FindingCard
+                            key={idx}
+                            finding={finding}
+                            idx={idx}
+                            onTimestampClick={handleTimestamp}
+                          />
+                        ))
                       )}
                     </div>
                   </div>
