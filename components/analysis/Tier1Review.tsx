@@ -215,8 +215,6 @@ export function OogwayPulse({
           )}
         </AnimatePresence>
       </div>
-
-      <SessionTimeline sessionFlow={sessionFlow} onTimestampClick={onTimestampClick} />
     </div>
   );
 }

@@ -74,12 +74,24 @@ SESSION CONTEXT:
 ${sessionContext}
 
 INSTRUCTIONS:
-1. Score each of the 6 dimensions (1-10) using the exact benchmarks defined in the rubric.
-2. Apply the HARD RULES: If any NOTABLE finding → cap overall_score at 7.0. If score < 7.0 → populate critical_red_flags.
-3. Provide 8-15 detailed_findings ordered by severity (NOTABLE first). EVERY finding must have a verbatim_quote and timestamp.
-4. Generate both feedback email variants (warm + direct), 200-300 words each.
-5. Be SPECIFIC: reference exact timestamps, student names, and verbatim quotes. Generic observations are unacceptable.
-6. Remember: Student confusion = Expert failure. Repeated similar doubts = the initial explanation was insufficient.`
+1. Run the pre-scoring checklist first — verify all 8 items against the transcript before scoring any dimension.
+2. Score each of the 6 dimensions (1-10) using the EXACT benchmarks defined in the rubric. Use the skill file dimension names exactly: "Content Accuracy", "Pedagogical Approach", "Live Platform Walkthrough", "Pacing and Time Management", "Student Emotional Support", "Delivery Fluency".
+3. Apply ALL hard rules:
+   - Never score ≥ 8 if a live platform walkthrough was missing for platform-action concepts
+   - Never score ≥ 8 if factual errors were left uncorrected
+   - If any Notable finding exists → cap overall_score at 7.0
+   - If overall_score < 7.0 → populate critical_red_flags (mandatory)
+4. Provide minimum 5, aim for 10-15 detailed_findings ordered by severity (Notable first). EVERY finding must have a verbatim_quote and timestamp.
+5. Generate both feedback email variants (Warm + Direct), 200-300 words each:
+   - NEVER mention the numerical score in either email
+   - NEVER use vague language — name the specific gap
+   - ALWAYS reference the session name and batch
+   - ALWAYS include what the expert did well — even in the Direct variant
+   - ALWAYS include a clear, single actionable ask for the next session
+   - Sign both as: Prerna
+6. Be SPECIFIC: reference exact timestamps, student names, and verbatim quotes. Generic or vague observations are unacceptable.
+7. Use Indian brand examples where applicable (boAt, Nykaa, Mamaearth, CRED, Zepto, Swiggy, etc.) and flag them as illustrative.
+8. Terminology: Never write "Advantage+ Shopping Campaigns" — use "Advantage+ Sales Campaigns (previously Advantage+ Shopping Campaigns)" on first mention.`
 
     const finalResult = await callStage<any>({
       model: 'gemini-2.5-flash',

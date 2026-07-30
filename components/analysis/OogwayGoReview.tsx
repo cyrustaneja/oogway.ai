@@ -222,10 +222,10 @@ export function OogwayGoReview({
               <Target className="w-10 h-10" />
             </div>
             <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Oogway Go</h3>
-            <p className="text-sm text-slate-600 font-medium max-w-sm mx-auto leading-relaxed mb-1">
-              Deep 6-dimension expert audit powered by the SST rubric. Scorecard, timestamped findings, and ready-to-send feedback emails.
+            <p className="text-sm text-slate-600 font-medium max-w-md mx-auto leading-relaxed mb-1">
+              Deep 6-dimension expert audit with strict scoring criteria, detailed timestamped findings, and ready-to-send feedback emails.
             </p>
-            <p className="text-xs text-slate-400 font-medium">Takes 1–2 minutes</p>
+            <p className="text-xs text-slate-400 font-medium">Takes 1–2 minutes • (Pulse provides instant overview)</p>
 
             {status === 'FAILED' && (
               <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
@@ -266,7 +266,7 @@ export function OogwayGoReview({
               <Target className="w-10 h-10" />
             </div>
             <h3 className="text-xl font-black text-slate-900 tracking-tight mb-2">Oogway Go is Analyzing...</h3>
-            <p className="text-sm text-slate-500 font-medium">Running 6-dimension SST audit. This takes 1–2 minutes.</p>
+            <p className="text-sm text-slate-500 font-medium">Running deep 6-dimension session audit. This takes 1–2 minutes.</p>
 
             <div className="mt-6 space-y-2">
               {['Reading transcript', 'Scoring 6 dimensions', 'Finding evidence', 'Generating feedback emails'].map((step, i) => (
