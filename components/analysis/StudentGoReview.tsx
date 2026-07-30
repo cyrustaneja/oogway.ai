@@ -160,7 +160,11 @@ export function StudentGoReview({
 
   const handleTrigger = async () => {
     setTriggerLoading(true);
+    setResult(null);
     setProgress(5);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(`student_go_progress_${sessionId}`);
+    }
     setStatus('RUNNING');
     try {
       const res = await fetch(`/api/analysis/${sessionId}/student-go`, { method: 'POST' });
@@ -316,8 +320,35 @@ export function StudentGoReview({
 
       {/* Main Layout: Left Sidebar + Right Panel */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* Left Sidebar */}
-        <div className="w-full md:w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
+        {/* MOBILE HORIZONTAL NAVIGATION (< md) */}
+        <div className="w-full md:hidden flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-slate-200 shadow-sm overflow-x-auto no-scrollbar scroll-smooth">
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSideNav === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveSideNav(item.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs whitespace-nowrap flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-blue-600 text-white font-black shadow-xs'
+                    : 'bg-slate-100 text-slate-700 font-bold hover:bg-slate-200'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{item.label}</span>
+                {item.count !== undefined && item.count > 0 && (
+                  <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-mono ${isActive ? 'bg-blue-800 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                    {item.count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* DESKTOP LEFT SIDEBAR (>= md) */}
+        <div className="hidden md:block w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
           <div className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
             Student Audit Navigation
           </div>

@@ -90,20 +90,15 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
           activeTab={activeTab}
         />
 
-        {/* ── Sticky Tab Bar with Sticky View Source Button on Right ── */}
-        <div className="sticky top-[72px] sm:top-[80px] z-20 bg-[var(--background)]/90 backdrop-blur-xl border-b border-[var(--border)] pt-3 pb-3">
-          <div className="flex items-center justify-between gap-2 px-4 max-w-5xl mx-auto">
-            {/* Left: Progressive Tabs (Timeline -> Pulse -> Expert Go -> Student Go) */}
-            <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] shadow-inner overflow-x-auto scrollbar-hide flex-shrink min-w-0">
+        {/* ── Mobile-Optimized Sticky Tab Bar ── */}
+        <div className="sticky top-[72px] sm:top-[80px] z-20 bg-[var(--background)]/95 backdrop-blur-xl border-b border-[var(--border)] py-2.5 px-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 max-w-6xl mx-auto">
+            {/* Horizontal Scroll Pill Container */}
+            <div className="w-full md:w-auto flex items-center gap-1.5 sm:gap-2 p-1.5 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] shadow-inner overflow-x-auto no-scrollbar scroll-smooth">
               {TABS.map((tab) => {
                 const isActive = activeTab === tab.id;
                 const Icon = tab.icon;
 
-                // Distinct theme progression:
-                // Timeline -> Dark Slate
-                // Oogway Pulse -> Amber Yellow
-                // Expert Go -> Deep Gold / Orange
-                // Student Go -> Electric Blue / Indigo
                 let styleClass = '';
                 if (tab.id === 'timeline') {
                   styleClass = isActive
@@ -127,7 +122,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as TabId)}
-                    className={`relative px-3.5 sm:px-5 py-1.5 transition-all rounded-xl whitespace-nowrap flex flex-col items-start justify-center active:scale-95 cursor-pointer ${styleClass}`}
+                    className={`relative px-3.5 sm:px-4.5 py-1.5 transition-all rounded-xl whitespace-nowrap flex flex-col items-start justify-center active:scale-95 cursor-pointer shrink-0 ${styleClass}`}
                   >
                     <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold">
                       <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -139,14 +134,16 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               })}
             </div>
 
-            {/* Right: Single Sticky "View Source" Button */}
-            <button
-              onClick={() => setShowSourceDrawer(!showSourceDrawer)}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-md transition-all active:scale-95 cursor-pointer shrink-0 border border-slate-700"
-            >
-              <Video className="w-4 h-4 text-orange-400" />
-              <span>{showSourceDrawer ? 'Close Source' : 'View Source'}</span>
-            </button>
+            {/* Sticky "View Source" Button */}
+            <div className="w-full md:w-auto flex justify-end shrink-0">
+              <button
+                onClick={() => setShowSourceDrawer(!showSourceDrawer)}
+                className="w-full md:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 shadow-md transition-all active:scale-95 cursor-pointer shrink-0 border border-slate-700"
+              >
+                <Video className="w-4 h-4 text-orange-400" />
+                <span>{showSourceDrawer ? 'Close Source' : 'View Source'}</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -186,7 +183,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               </motion.div>
             )}
 
-            {/* Persistent DOM Mounting for Expert Go & Student Go so progress & background tasks persist across tab switches */}
+            {/* Persistent DOM Mounting for Expert Go & Student Go */}
             <div className={activeTab === 'expert_go' ? 'block' : 'hidden'}>
               <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
             </div>
@@ -197,10 +194,10 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
           </AnimatePresence>
         </div>
 
-        {/* ── Source Modal / Drawer (Triggered by sticky View Source button) ── */}
+        {/* ── Source Modal / Drawer (Triggered by View Source button) ── */}
         <AnimatePresence>
           {showSourceDrawer && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -222,7 +219,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6 overflow-y-auto">
+                <div className="p-4 sm:p-6 space-y-6 overflow-y-auto">
                   {data.videoUrl ? (
                     <div className="ks-card overflow-hidden">
                       <div className="aspect-video bg-black relative">
@@ -235,14 +232,14 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                       </div>
                     </div>
                   ) : (
-                    <div className="p-6 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-sm font-medium">
+                    <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-amber-900 text-xs sm:text-sm font-medium">
                       No video URL provided for this session. Reviewing raw transcript text below.
                     </div>
                   )}
 
                   {/* Transcript Viewer */}
-                  <div className="ks-card p-5 space-y-3 border-slate-200">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="ks-card p-4 sm:p-5 space-y-3 border-slate-200">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <FileText className="w-4.5 h-4.5 text-amber-500" />
                         <h4 className="text-sm font-bold text-slate-900">Session Transcript (.vtt)</h4>
@@ -276,14 +273,14 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
         </AnimatePresence>
 
         {/* ── FLOATING CHATBOT WIDGET (Ask Master Oogway) ── */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex flex-col items-end">
           <AnimatePresence>
             {isChatOpen && (
               <motion.div
                 initial={{ opacity: 0, y: 20, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                className="mb-4 w-[380px] sm:w-[420px] h-[520px] max-h-[80vh] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
+                className="mb-3 w-[calc(100vw-32px)] sm:w-[420px] h-[480px] sm:h-[520px] max-h-[80vh] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col"
               >
                 <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 text-white flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-2.5">
@@ -291,7 +288,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                       🐢
                     </div>
                     <div>
-                      <h4 className="text-xs font-black tracking-wide">Ask Master Oogway</h4>
+                      <h4 className="text-xs sm:text-sm font-black tracking-wide text-white">Ask Master Oogway</h4>
                       <p className="text-[10px] text-amber-300 font-medium">Session Intelligence Assistant</p>
                     </div>
                   </div>
@@ -312,7 +309,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
 
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-gradient-to-r from-slate-900 via-amber-950 to-slate-900 text-white font-extrabold text-xs shadow-2xl hover:shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-amber-500/40"
+            className="flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-gradient-to-r from-slate-900 via-amber-950 to-slate-900 text-white font-extrabold text-xs shadow-2xl hover:shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-amber-500/40"
           >
             <div className="w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black">
               🐢

@@ -211,7 +211,11 @@ export function OogwayGoReview({
 
   const handleTrigger = async () => {
     setTriggerLoading(true);
+    setResult(null);
     setProgress(5);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(`expert_go_progress_${sessionId}`);
+    }
     setStatus('RUNNING');
     try {
       const res = await fetch(`/api/analysis/${sessionId}/oogway-go`, { method: 'POST' });
@@ -431,8 +435,42 @@ export function OogwayGoReview({
 
       {/* ── Main Layout: Kraftshala Left Sidebar + Right Panel ── */}
       <div className="flex flex-col md:flex-row gap-6 items-start">
-        {/* ── LEFT SIDEBAR (Kraftshala Navigation Style) ── */}
-        <div className="w-full md:w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
+        {/* ── MOBILE HORIZONTAL NAVIGATION (Shown only on small screens < md) ── */}
+        <div className="w-full md:hidden flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-slate-200 shadow-sm overflow-x-auto no-scrollbar scroll-smooth">
+          <button
+            onClick={() => setActiveSideNav('overview')}
+            className={`px-3.5 py-2 rounded-xl text-xs whitespace-nowrap flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+              activeSideNav === 'overview'
+                ? 'bg-amber-500 text-white font-black shadow-xs'
+                : 'bg-slate-100 text-slate-700 font-bold hover:bg-slate-200'
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>Audit Overview</span>
+          </button>
+
+          {result.scorecard.map((dim) => {
+            const Icon = DIMENSION_ICONS[dim.dimension] || BookOpen;
+            const isActive = activeSideNav === dim.dimension;
+            return (
+              <button
+                key={dim.dimension}
+                onClick={() => setActiveSideNav(dim.dimension)}
+                className={`px-3.5 py-2 rounded-xl text-xs whitespace-nowrap flex items-center gap-2 transition-all shrink-0 cursor-pointer ${
+                  isActive
+                    ? 'bg-amber-500 text-white font-black shadow-xs'
+                    : 'bg-slate-100 text-slate-700 font-bold hover:bg-slate-200'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{dim.dimension}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ── DESKTOP LEFT SIDEBAR (Shown on screens >= md) ── */}
+        <div className="hidden md:block w-72 ks-card p-3 rounded-2xl border-slate-200 shrink-0 space-y-1 shadow-sm">
           <div className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
             Audit Navigation
           </div>
@@ -771,7 +809,7 @@ export function OogwayGoReview({
               <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Mail className="w-5 h-5 text-amber-300" />
-                  <h3 className="text-base font-extrabold">Send Feedback Email</h3>
+                  <h3 className="text-base font-extrabold text-white">Send Feedback Email</h3>
                 </div>
                 <button
                   onClick={() => setShowEmailModal(false)}
@@ -831,9 +869,9 @@ export function OogwayGoReview({
                 {/* Pre-filled Email Box */}
                 <div className="ks-card overflow-hidden shadow-md border-slate-300 rounded-2xl bg-white">
                   <div className="bg-slate-900 text-white p-4 space-y-1.5 text-xs font-mono">
-                    <p><span className="text-slate-500 font-bold">To:</span> {expertEmail ? `${expertName} <${expertEmail}>` : `${expertName}`}</p>
-                    <p><span className="text-slate-500 font-bold">Subject:</span> {emailSubject}</p>
-                    <p><span className="text-slate-500 font-bold">Signed by:</span> {userName}</p>
+                    <p><span className="text-amber-300 font-bold">To:</span> <span className="text-white font-medium">{expertEmail ? `${expertName} <${expertEmail}>` : `${expertName}`}</span></p>
+                    <p><span className="text-amber-300 font-bold">Subject:</span> <span className="text-white font-medium">{emailSubject}</span></p>
+                    <p><span className="text-amber-300 font-bold">Signed by:</span> <span className="text-white font-medium">{userName}</span></p>
                   </div>
 
                   <div className="p-6">
