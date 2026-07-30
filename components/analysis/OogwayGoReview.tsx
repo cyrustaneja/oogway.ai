@@ -125,105 +125,6 @@ function TimestampPill({
   );
 }
 
-// ── Full-Width Horizontal Finding Card with Expandable Transcript Evidence ──
-function FindingCard({
-  finding,
-  idx,
-  onTimestampClick,
-}: {
-  finding: Finding;
-  idx: number;
-  onTimestampClick?: (t: string) => void;
-}) {
-  const [showEvidence, setShowEvidence] = useState(false);
-  const findingSev = getSeverityBadge(finding.severity);
-
-  return (
-    <div className="ks-card p-6 rounded-2xl border-slate-200 shadow-sm bg-white space-y-4 hover:shadow-md transition-shadow">
-      {/* Horizontal Card Header */}
-      <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-3 flex-wrap">
-        <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center shadow-xs">
-            {finding.finding_number || idx + 1}
-          </span>
-          <span className={`px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${findingSev.bg} ${findingSev.text} ${findingSev.border}`}>
-            {findingSev.label}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          {finding.verbatim_quote && (
-            <button
-              onClick={() => setShowEvidence(!showEvidence)}
-              className="text-[11px] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1 rounded-full transition-colors cursor-pointer flex items-center gap-1.5 border border-slate-200"
-            >
-              <FileText className="w-3.5 h-3.5 text-amber-600" />
-              <span>{showEvidence ? 'Hide Evidence ✕' : 'View Transcript Evidence 📜'}</span>
-            </button>
-          )}
-          {finding.timestamp && (
-            <TimestampPill timestamp={finding.timestamp} onClick={onTimestampClick} />
-          )}
-        </div>
-      </div>
-
-      {/* Row 1: What Happened (Full Width) */}
-      <div className="space-y-1">
-        <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">
-          What Happened (Observed Detail)
-        </span>
-        <p className="text-sm font-semibold text-slate-900 leading-relaxed">
-          {finding.what_happened}
-        </p>
-      </div>
-
-      {/* Row 2: Why It Matters (Full Width Container) */}
-      <div className="space-y-1">
-        <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider">
-          Why It Matters (Impact on Student Job Readiness)
-        </span>
-        <div className="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-950 font-medium leading-relaxed">
-          {finding.why_it_matters}
-        </div>
-      </div>
-
-      {/* Row 3: Action Recommendation (Full Width Container) */}
-      <div className="space-y-1">
-        <span className="text-[10px] font-black uppercase text-emerald-700 tracking-wider">
-          Action Recommendation for Next Session
-        </span>
-        <div className="p-3.5 rounded-xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 font-medium leading-relaxed">
-          {finding.recommendation}
-        </div>
-      </div>
-
-      {/* Row 4: Expandable Transcript Evidence Quote */}
-      <AnimatePresence>
-        {showEvidence && finding.verbatim_quote && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div className="p-3.5 bg-slate-900 text-slate-100 rounded-xl text-xs space-y-1.5 border border-slate-800 mt-2">
-              <div className="flex items-center justify-between text-[10px] text-amber-300 font-bold uppercase tracking-wider">
-                <span>Verbatim Transcript Evidence</span>
-                {finding.timestamp && (
-                  <span className="font-mono text-slate-400">⏱ {finding.timestamp}</span>
-                )}
-              </div>
-              <p className="italic font-serif leading-relaxed text-slate-200">
-                "{finding.verbatim_quote}"
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 // ── Main Component (Kraftshala Sidebar Layout) ───────────────────────────
 export function OogwayGoReview({
   sessionId,
@@ -248,6 +149,7 @@ export function OogwayGoReview({
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [activeEmailVariant, setActiveEmailVariant] = useState<'warm' | 'direct'>('warm');
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [showEvidence, setShowEvidence] = useState(false);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -347,7 +249,7 @@ export function OogwayGoReview({
     return (
       <div className="flex flex-col items-center justify-center py-20 animate-pulse">
         <Loader2 className="w-8 h-8 text-orange-500 animate-spin mb-3" />
-        <p className="text-sm text-slate-500 font-medium">Loading Oogway Go Audit…</p>
+        <p className="text-sm text-slate-500 font-medium">Loading Expert Go Audit…</p>
       </div>
     );
   }
@@ -365,7 +267,7 @@ export function OogwayGoReview({
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-orange-200/50">
               <Target className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Oogway Go Audit</h3>
+            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Expert Go Audit</h3>
             <p className="text-sm text-slate-600 font-medium max-w-md mx-auto leading-relaxed mb-1">
               Deep 6-dimension session quality audit powered by Kraftshala evaluation standards.
             </p>
@@ -386,7 +288,7 @@ export function OogwayGoReview({
               {triggerLoading ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Starting Audit...</>
               ) : (
-                <><Rocket className="w-4 h-4" /> Run Oogway Go Audit</>
+                <><Rocket className="w-4 h-4" /> Run Expert Go Audit</>
               )}
             </button>
           </div>
@@ -408,7 +310,7 @@ export function OogwayGoReview({
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white mx-auto mb-5 shadow-lg shadow-orange-200/50 animate-pulse">
               <Target className="w-10 h-10" />
             </div>
-            <h3 className="text-xl font-black text-slate-900 tracking-tight mb-1">Oogway Go is Analyzing...</h3>
+            <h3 className="text-xl font-black text-slate-900 tracking-tight mb-1">Expert Go is Analyzing...</h3>
             <p className="text-xs text-slate-500 font-medium">Deep 6-dimension session audit in progress.</p>
 
             {/* Percentage Bar */}
@@ -484,7 +386,7 @@ export function OogwayGoReview({
           </div>
           <div>
             <div className="flex items-center gap-2 justify-center sm:justify-start">
-              <h2 className="text-lg font-black text-slate-900 tracking-tight">Oogway Go Audit</h2>
+              <h2 className="text-lg font-black text-slate-900 tracking-tight">Expert Go Audit</h2>
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider border ${getVerdictBadgeStyle(result.overall_verdict)}`}>
                 {result.overall_verdict}
               </span>
@@ -656,7 +558,7 @@ export function OogwayGoReview({
             </motion.div>
           )}
 
-          {/* VIEW 2: Specific Dimension View (SPACIOUS FULL-WIDTH HORIZONTAL CARDS) */}
+          {/* VIEW 2: Specific Dimension View (EXACTLY ONE SINGLE SYNTHESIZED CARD PER DIMENSION) */}
           {selectedDimensionItem && (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
               {(() => {
@@ -688,7 +590,7 @@ export function OogwayGoReview({
                           </div>
                           <div>
                             <h3 className="text-base font-black text-slate-900">{selectedDimensionItem.dimension}</h3>
-                            <p className="text-xs text-slate-500 font-medium">Dimension Analysis</p>
+                            <p className="text-xs text-slate-500 font-medium">Dimension Analysis & Findings</p>
                           </div>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border ${sevBadge.bg} ${sevBadge.text} ${sevBadge.border}`}>
@@ -724,30 +626,112 @@ export function OogwayGoReview({
                       )}
                     </div>
 
-                    {/* SPACIOUS HORIZONTAL FINDING CARDS WITH EXPANDABLE TRANSCRIPT EVIDENCE */}
-                    <div className="space-y-4 pt-2">
-                      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                        <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider">
-                          Dimension Analysis & Findings
-                        </h4>
+                    {/* ONE SINGLE SYNTHESIZED DIMENSION ANALYSIS CARD FOR ALL FINDINGS */}
+                    <div className="ks-card p-6 rounded-2xl border-slate-200 bg-white shadow-sm space-y-5">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4.5 h-4.5 text-amber-500" />
+                          <h4 className="text-xs font-black text-slate-900 uppercase tracking-wider">Dimension Analysis & Findings</h4>
+                        </div>
                         <span className="text-xs font-bold text-slate-500">
-                          {dimensionFindings.length} Finding{dimensionFindings.length === 1 ? '' : 's'}
+                          {dimensionFindings.length} Observation{dimensionFindings.length === 1 ? '' : 's'}
                         </span>
                       </div>
 
                       {dimensionFindings.length === 0 ? (
-                        <div className="ks-card p-6 text-center text-slate-500 rounded-2xl">
-                          <p className="text-xs font-medium">No critical gaps flagged for this dimension. The expert consistently satisfied Kraftshala quality standards.</p>
-                        </div>
+                        <p className="text-xs font-medium text-slate-500 py-2">
+                          No critical gaps flagged for this dimension. The expert consistently satisfied Kraftshala quality standards.
+                        </p>
                       ) : (
-                        dimensionFindings.map((finding, idx) => (
-                          <FindingCard
-                            key={idx}
-                            finding={finding}
-                            idx={idx}
-                            onTimestampClick={handleTimestamp}
-                          />
-                        ))
+                        <div className="space-y-5">
+                          {/* Row 1: What Happened (Combined Stacked Observations) */}
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block">
+                              What Happened (Observed Detail)
+                            </span>
+                            <div className="space-y-2">
+                              {dimensionFindings.map((f, i) => (
+                                <div key={i} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200/80 text-xs sm:text-sm font-semibold text-slate-900 leading-relaxed flex items-start justify-between gap-3">
+                                  <div className="flex items-start gap-2.5">
+                                    <span className="w-5 h-5 rounded-full bg-slate-900 text-white text-[10px] font-black flex items-center justify-center shrink-0 mt-0.5">
+                                      {i + 1}
+                                    </span>
+                                    <span>{f.what_happened}</span>
+                                  </div>
+                                  {f.timestamp && (
+                                    <TimestampPill timestamp={f.timestamp} onClick={handleTimestamp} />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Row 2: Why It Matters (Combined Full-Width Amber Block) */}
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-black uppercase text-amber-700 tracking-wider block">
+                              Why It Matters (Impact on Student Job Readiness)
+                            </span>
+                            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-950 font-medium leading-relaxed space-y-2.5">
+                              {dimensionFindings.map((f, i) => (
+                                <p key={i} className="pl-3 border-l-2 border-amber-400">
+                                  {f.why_it_matters}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Row 3: Action Recommendations (Combined Full-Width Emerald Block) */}
+                          <div className="space-y-2">
+                            <span className="text-[10px] font-black uppercase text-emerald-700 tracking-wider block">
+                              Action Recommendation for Next Session
+                            </span>
+                            <div className="p-4 rounded-2xl bg-emerald-50/80 border border-emerald-200/80 text-xs text-emerald-950 font-medium leading-relaxed space-y-2.5">
+                              {dimensionFindings.map((f, i) => (
+                                <p key={i} className="pl-3 border-l-2 border-emerald-500">
+                                  {f.recommendation}
+                                </p>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Row 4: Expandable / Collapsible Transcript Evidence */}
+                          {dimensionFindings.some(f => f.verbatim_quote) && (
+                            <div className="pt-3 border-t border-slate-100">
+                              <button
+                                onClick={() => setShowEvidence(!showEvidence)}
+                                className="text-[11px] font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-full transition-colors cursor-pointer flex items-center gap-1.5 border border-slate-200"
+                              >
+                                <FileText className="w-3.5 h-3.5 text-amber-600" />
+                                <span>{showEvidence ? 'Hide Transcript Evidence ✕' : 'View Transcript Evidence 📜'}</span>
+                              </button>
+
+                              <AnimatePresence>
+                                {showEvidence && (
+                                  <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="overflow-hidden mt-3 space-y-2"
+                                  >
+                                    {dimensionFindings.filter(f => f.verbatim_quote).map((f, i) => (
+                                      <div key={i} className="p-3.5 bg-slate-900 text-slate-100 rounded-xl text-xs space-y-1.5 border border-slate-800">
+                                        <div className="flex items-center justify-between text-[10px] text-amber-300 font-bold uppercase tracking-wider">
+                                          <span>Transcript Evidence #{i + 1}</span>
+                                          {f.timestamp && (
+                                            <TimestampPill timestamp={f.timestamp} onClick={handleTimestamp} />
+                                          )}
+                                        </div>
+                                        <p className="italic font-serif leading-relaxed text-slate-200">
+                                          "{f.verbatim_quote}"
+                                        </p>
+                                      </div>
+                                    ))}
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
+                            </div>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
