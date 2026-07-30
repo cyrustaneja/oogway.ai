@@ -8,7 +8,7 @@ import { OogwayGoReview } from '@/components/analysis/OogwayGoReview';
 import { SessionTimeline } from '@/components/analysis/tier1/SessionTimeline';
 import { VideoPreviewProvider } from '@/components/analysis/VideoPreviewContext';
 import { AnalysisHeader } from '@/components/analysis/sections';
-import { FileText, Zap, Video, Clock, Target, Copy, Check, Download, X } from "lucide-react";
+import { FileText, Zap, Video, Clock, Target, Copy, Check, Download, X, MessageCircle, Sparkles } from "lucide-react";
 
 const TABS = [
   { id: 'timeline',       label: 'Timeline',     icon: Clock },
@@ -23,6 +23,7 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
   const [seekTime, setSeekTime] = useState<number | null>(null);
   const [showSourceDrawer, setShowSourceDrawer] = useState(false);
   const [copiedTranscript, setCopiedTranscript] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   React.useEffect(() => {
@@ -293,15 +294,57 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
           )}
         </AnimatePresence>
 
-        {/* ── Ask Master Oogway Chat Box strictly below main content ── */}
-        <div className="max-w-4xl mx-auto px-4 pb-24 border-t border-[var(--border)] pt-8 mt-12">
-          <div className="mb-4 text-center">
-            <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight">Ask Master Oogway</h3>
-            <p className="text-xs text-[var(--muted)] mt-1">Have a specific question about this session? Ask below.</p>
-          </div>
-          <div className="ks-card overflow-hidden shadow-lg">
-            <AskOogwayChat sessionId={sessionId} />
-          </div>
+        {/* ── Floating Chatbot Widget (Bottom-Right Corner) ── */}
+        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+          <AnimatePresence>
+            {isChatOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="w-[90vw] sm:w-[400px] h-[540px] bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden mb-3 flex flex-col"
+              >
+                {/* Chatbot Header */}
+                <div className="bg-gradient-to-r from-purple-700 via-indigo-700 to-purple-800 text-white p-4 flex items-center justify-between shadow-md">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-amber-300">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black tracking-tight">Ask Master Oogway</h4>
+                      <p className="text-[10px] text-purple-200">Session AI Chatbot</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setIsChatOpen(false)}
+                    className="p-1.5 rounded-full hover:bg-white/20 transition-colors text-white/80 hover:text-white cursor-pointer"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Chatbot Window Body */}
+                <div className="flex-1 overflow-y-auto p-3 bg-slate-50">
+                  <AskOogwayChat sessionId={sessionId} />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Chatbot Trigger Bubble Button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            className="flex items-center gap-2.5 px-5 py-3 rounded-full bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white font-black text-xs shadow-xl hover:shadow-2xl transition-all cursor-pointer border border-purple-400/40"
+          >
+            <MessageCircle className="w-4 h-4 text-amber-300" />
+            <span>{isChatOpen ? 'Close Chatbot' : 'Ask Oogway 💬'}</span>
+            {!isChatOpen && (
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            )}
+          </motion.button>
         </div>
       </div>
     </VideoPreviewProvider>
