@@ -6,6 +6,7 @@ import { TOKENS, chipKeyForLabel, chipKeyForScore } from '@/lib/ui/tokens';
 import { RubricChip } from '../primitives/RubricChip';
 import { RubricReference } from '../RubricReference';
 import { Calendar, Clock, FileDown, Loader2, Coins, Video } from 'lucide-react';
+import { OogwayProductTour } from '@/components/analysis/OogwayProductTour';
 
 type Props = {
   data: SessionAnalysis;
@@ -110,8 +111,22 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeT
     }
   }
 
+  const [showTour, setShowTour] = useState(false);
+
+  // Auto-launch tour on first visit
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasSeen = localStorage.getItem('has_seen_oogway_tour');
+      if (!hasSeen) {
+        setShowTour(true);
+        localStorage.setItem('has_seen_oogway_tour', 'true');
+      }
+    }
+  }, []);
+
   return (
     <header className="mb-6 lg:mb-8">
+      <OogwayProductTour isOpen={showTour} onClose={() => setShowTour(false)} />
       <div className="glass-card p-5 md:p-7 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-brand-orange to-transparent opacity-60" />
 
@@ -136,6 +151,13 @@ export function SessionSummary({ data, sessionId, sessionInfo, chapters, activeT
           </div>
 
           <div className="flex flex-wrap items-center gap-2 md:gap-3">
+            <button
+              onClick={() => setShowTour(true)}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 hover:opacity-90 transition-all cursor-pointer shadow-sm border border-amber-300 active:scale-95"
+              title="Click to launch interactive Oogway product tour"
+            >
+              <span>❓ Product Walkthrough</span>
+            </button>
             <RubricChip
               rubricKey="hygiene_camera"
               label={data.hygiene?.camera?.label ?? '—'}

@@ -147,51 +147,37 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
           </div>
         </div>
 
-        {/* ── Tab Content ── */}
+        {/* ── Tab Content Container ── */}
         <div className="px-3 sm:px-4 pb-12">
-          <AnimatePresence mode="wait">
-            {activeTab === 'timeline' && (
-              <motion.div
-                key="timeline"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-                className="max-w-3xl mx-auto mt-4"
-              >
-                {sessionFlow.length > 0 ? (
-                  <SessionTimeline sessionFlow={sessionFlow} onTimestampClick={handleTimestampClick} />
-                ) : (
-                  <div className="ks-card p-8 flex flex-col items-center justify-center text-center">
-                    <Clock className="w-10 h-10 text-[var(--muted)] mb-3 opacity-40" />
-                    <h4 className="font-bold text-[var(--foreground)]">No Timeline Data</h4>
-                    <p className="text-sm text-[var(--muted)] mt-1">Session flow timeline will appear after analysis completes.</p>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {activeTab === 'first_analysis' && (
-              <motion.div
-                key="first_analysis"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Tier1Review data={data} sessionId={sessionId} onTimestampClick={handleTimestampClick} />
-              </motion.div>
-            )}
-
-            {/* Persistent DOM Mounting for Expert Go & Student Go */}
-            <div className={activeTab === 'expert_go' ? 'block' : 'hidden'}>
-              <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
+          {/* Timeline Tab */}
+          <div className={activeTab === 'timeline' ? 'block' : 'hidden'}>
+            <div className="max-w-3xl mx-auto mt-4">
+              {sessionFlow.length > 0 ? (
+                <SessionTimeline sessionFlow={sessionFlow} onTimestampClick={handleTimestampClick} />
+              ) : (
+                <div className="ks-card p-8 flex flex-col items-center justify-center text-center">
+                  <Clock className="w-10 h-10 text-[var(--muted)] mb-3 opacity-40" />
+                  <h4 className="font-bold text-[var(--foreground)]">No Timeline Data</h4>
+                  <p className="text-sm text-[var(--muted)] mt-1">Session flow timeline will appear after analysis completes.</p>
+                </div>
+              )}
             </div>
+          </div>
 
-            <div className={activeTab === 'student_go' ? 'block' : 'hidden'}>
-              <StudentGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
-            </div>
-          </AnimatePresence>
+          {/* Oogway Pulse Tab */}
+          <div className={activeTab === 'first_analysis' ? 'block' : 'hidden'}>
+            <Tier1Review data={data} sessionId={sessionId} onTimestampClick={handleTimestampClick} />
+          </div>
+
+          {/* Expert Go Tab */}
+          <div className={activeTab === 'expert_go' ? 'block' : 'hidden'}>
+            <OogwayGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
+          </div>
+
+          {/* Student Go Tab */}
+          <div className={activeTab === 'student_go' ? 'block' : 'hidden'}>
+            <StudentGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
+          </div>
         </div>
 
         {/* ── Source Modal / Drawer (Triggered by View Source button) ── */}
