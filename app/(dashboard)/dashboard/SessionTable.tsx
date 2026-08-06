@@ -197,7 +197,7 @@ export function SessionTable({
   return (
     <div className="space-y-0">
       {/* Table Selection Header */}
-      <div className="flex items-center justify-between px-6 lg:px-8 py-2.5 bg-slate-50/90 dark:bg-slate-800/80 border-b border-[var(--card-border)] text-xs font-bold text-[var(--muted)]">
+      <div className="flex items-center justify-between px-6 lg:px-8 py-2.5 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 text-xs font-black text-slate-800 dark:text-slate-100">
         <label className="flex items-center gap-2.5 cursor-pointer select-none">
           <input
             type="checkbox"
@@ -205,7 +205,7 @@ export function SessionTable({
             onChange={toggleSelectAll}
             className="w-4 h-4 rounded border-slate-300 text-brand-orange focus:ring-brand-orange cursor-pointer"
           />
-          <span className="text-slate-700 dark:text-slate-300 font-extrabold">{allSelected ? "Deselect All Sessions" : "Select All Sessions"}</span>
+          <span className="text-slate-800 dark:text-slate-100 font-black">{allSelected ? "Deselect All Sessions" : "Select All Sessions"}</span>
         </label>
 
         {selectedIds.length > 0 && (
@@ -215,7 +215,7 @@ export function SessionTable({
         )}
       </div>
 
-      <div className="divide-y divide-[var(--card-border)] overflow-hidden">
+      <div className="divide-y divide-slate-200 dark:divide-slate-800 overflow-hidden">
         {sessions.map((a) => {
           const cfg = STATUS_CONFIG[a.v3Status] ?? STATUS_CONFIG.PENDING;
           const isDeleting = deletingId === a.id;
@@ -264,9 +264,9 @@ export function SessionTable({
             <div 
               key={a.id} 
               className={cn(
-                "flex flex-col lg:grid lg:grid-cols-13 gap-4 lg:gap-4 px-6 lg:px-8 py-4 lg:py-4 items-start lg:items-center hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition-all duration-200 relative",
+                "flex flex-col lg:grid lg:grid-cols-13 gap-4 lg:gap-4 px-6 lg:px-8 py-4 lg:py-4 items-start lg:items-center hover:bg-slate-100/90 dark:hover:bg-slate-800/80 transition-all duration-200 relative bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800/80",
                 isDeleting || isRerunning ? 'opacity-50 pointer-events-none' : '',
-                isChecked ? 'bg-amber-50/60 dark:bg-amber-950/20' : ''
+                isChecked ? 'bg-amber-50/80 dark:bg-amber-950/40' : ''
               )}
             >
               {/* Checkbox & Session & Module Identity (col-span-4) */}
@@ -283,22 +283,22 @@ export function SessionTable({
                     <div className="flex flex-wrap items-center gap-1.5">
                       <Link 
                         href={`/modules/${a.sessionNote.moduleId || a.sessionNote.module?.id}`}
-                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-brand-orange hover:bg-amber-500/20 font-extrabold text-[10px] uppercase tracking-wider transition-colors shrink-0"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/30 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25 font-black text-[10px] uppercase tracking-wider transition-colors shrink-0"
                       >
-                        <Target className="w-3 h-3 shrink-0 text-brand-orange" />
+                        <Target className="w-3 h-3 shrink-0 text-amber-500" />
                         <span>{a.sessionNote.module?.name || "Unmapped Topic"}</span>
                       </Link>
-                      <span className="text-[10px] text-[var(--muted)] opacity-60">•</span>
+                      <span className="text-[10px] text-slate-400 opacity-80">•</span>
                       <Link 
                         href={`/session-notes/${a.sessionNoteId}`}
-                        className="text-[11px] text-[var(--muted)] hover:text-brand-orange font-medium truncate max-w-[200px]"
+                        className="text-[11px] text-slate-600 dark:text-slate-300 hover:text-brand-orange font-semibold truncate max-w-[200px]"
                         title={a.sessionNote.name}
                       >
                         {a.sessionNote.name}
                       </Link>
                     </div>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[10px] font-bold uppercase tracking-wider">
                       Standalone Analysis
                     </span>
                   )}
@@ -306,7 +306,7 @@ export function SessionTable({
                   {/* Bottom Line: Session Name */}
                   <div className="flex items-center gap-2 flex-wrap">
                     <Link href={`/sessions/${a.id}`} className="group block min-w-0">
-                      <p className="text-sm font-extrabold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
+                      <p className="text-sm font-black text-slate-900 dark:text-slate-100 truncate group-hover:text-brand-orange transition-colors">
                         {a.name}
                       </p>
                     </Link>
@@ -326,31 +326,31 @@ export function SessionTable({
               </div>
 
               {/* Mobile Data Wrapper / Desktop Content */}
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full lg:contents border-t border-[var(--inner-border)] lg:border-none pt-3 lg:pt-0">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-3 w-full lg:contents border-t border-slate-200 dark:border-slate-800 lg:border-none pt-3 lg:pt-0">
                 {/* Batch / Course (col-span-2) */}
                 <div className="lg:col-span-2 min-w-0 flex flex-col gap-1 lg:block">
-                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Cohort</span>
+                  <span className="lg:hidden text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Cohort</span>
                   {a.batch?.name ? (
                     <Link 
                       href={`/batches/${a.batchId}`}
-                      className="text-[12px] font-bold text-brand-orange hover:underline truncate block"
+                      className="text-[12px] font-black text-brand-orange dark:text-amber-400 hover:underline truncate block"
                     >
                       {a.batch.name}
                     </Link>
                   ) : (
-                    <span className="text-[11px] text-[var(--muted-foreground)] font-medium italic">Unassigned</span>
+                    <span className="text-[11px] text-slate-400 font-medium italic">Unassigned</span>
                   )}
                 </div>
 
                 {/* Expert Partner (col-span-3) */}
                 <div className="lg:col-span-3 flex items-center gap-2.5 min-w-0">
-                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em] mr-1">Expert</span>
-                  <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-[11px] font-extrabold text-[var(--foreground)] shrink-0 shadow-sm capitalize">
+                  <span className="lg:hidden text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mr-1">Expert</span>
+                  <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-[11px] font-black text-brand-orange dark:text-amber-300 shrink-0 shadow-sm capitalize">
                     {a.expert?.name?.[0] || "?"}
                   </div>
                   <Link 
                     href={`/experts/${a.expertId}`}
-                    className="text-[12px] font-bold text-[var(--foreground)] opacity-90 truncate hover:text-brand-orange transition-colors"
+                    className="text-[12px] font-extrabold text-slate-900 dark:text-slate-100 truncate hover:text-brand-orange transition-colors"
                   >
                     {a.expert?.name || "Unassigned"}
                   </Link>
@@ -363,17 +363,17 @@ export function SessionTable({
                 </div>
 
                 {/* Timeline (col-span-1) */}
-                <div className="lg:col-span-1 text-[11px] font-semibold text-[var(--muted)] flex items-center gap-2">
-                  <span className="lg:hidden text-[9px] font-bold text-[var(--muted)] uppercase tracking-[0.2em]">Conducted</span>
+                <div className="lg:col-span-1 text-[11px] font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                  <span className="lg:hidden text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em]">Conducted</span>
                   {new Date(a.conductedAt || a.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
                 </div>
               </div>
 
               {/* Actions (col-span-1) */}
-              <div className="flex items-center justify-end gap-1.5 w-full lg:w-auto lg:col-span-1 mt-3 lg:mt-0 pt-3 lg:pt-0 border-t border-[var(--inner-border)] lg:border-none">
+              <div className="flex items-center justify-end gap-1.5 w-full lg:w-auto lg:col-span-1 mt-3 lg:pt-0 border-t border-slate-200 dark:border-slate-800 lg:border-none">
                 <Link 
                   href={`/sessions/${a.id}`}
-                  className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-brand-orange hover:text-white dark:hover:bg-brand-orange text-slate-600 dark:text-slate-300 transition-all hover:scale-105 shadow-sm"
+                  className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-brand-orange hover:text-white dark:hover:bg-brand-orange text-slate-700 dark:text-slate-200 transition-all hover:scale-105 shadow-sm"
                   title="Open Session Details"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -381,7 +381,7 @@ export function SessionTable({
                 <button
                   onClick={() => handleRerun(a.id, a.name)}
                   disabled={isRerunning || isDeleting}
-                  className="p-2 rounded-lg bg-amber-50 border border-amber-200 text-brand-orange hover:bg-amber-100 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
+                  className="p-2 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-brand-orange hover:bg-amber-100 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
                   title="Re-run / Re-analyse Session"
                 >
                   {isRerunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <RotateCcw className="w-4 h-4" />}
@@ -389,7 +389,7 @@ export function SessionTable({
                 <button
                   onClick={() => handleDelete(a.id, a.name)}
                   disabled={isDeleting || isRerunning}
-                  className="p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
+                  className="p-2 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-400 hover:bg-rose-100 transition-all hover:scale-105 cursor-pointer disabled:opacity-50"
                   title="Delete Session"
                 >
                   {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
