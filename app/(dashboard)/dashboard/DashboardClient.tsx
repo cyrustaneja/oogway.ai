@@ -3,7 +3,10 @@
 import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Search, X, CheckCircle2, Loader2, AlertOctagon, Zap, ListFilter } from "lucide-react";
+import { 
+  Search, X, CheckCircle2, Loader2, AlertOctagon, Zap, ListFilter,
+  Target, Building2, User, ArrowUpDown, Filter, RotateCcw
+} from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { SessionTable } from "./SessionTable";
 
@@ -17,6 +20,7 @@ const fadeInUp = {
 };
 
 type StatusFilter = 'all' | 'processing' | 'pulse' | 'complete' | 'failed';
+type SortOption = 'newest' | 'oldest' | 'name';
 
 const STATUS_FILTERS: { id: StatusFilter; label: string; icon: React.ReactNode }[] = [
   { id: 'all',        label: 'All',         icon: <ListFilter className="w-3 h-3" /> },
@@ -51,9 +55,55 @@ export default function DashboardClient({
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [selectedModule, setSelectedModule] = useState<string>('all');
+  const [selectedBatch, setSelectedBatch] = useState<string>('all');
+  const [selectedExpert, setSelectedExpert] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<SortOption>('newest');
 
-  const clearFilters = () => {
-    React.startTransition(() => router.push("/dashboard"));
+  // Extract unique options dynamically for filter dropdowns
+  const uniqueModules = useMemo(() => {
+    const map = new Map<string, string>();
+    analyses.forEach((a) => {
+      const name = a.sessionNote?.module?.name;
+      if (name) {
+        map.set(name, name);
+      }
+    });
+    return Array.from(map.values()).sort();
+  }, [analyses]);
+
+  const uniqueBatches = useMemo(() => {
+    const map = new Map<string, string>();
+    analyses.forEach((a) => {
+      const name = a.batch?.name;
+      if (name) {
+        map.set(name, name);
+      }
+    });
+    return Array.from(map.values()).sort();
+  }, [analyses]);
+
+  const uniqueExperts = useMemo(() => {
+    const map = new Map<string, string>();
+    analyses.forEach((a) => {
+      const name = a.expert?.name;
+      if (name) {
+        map.set(name, name);
+      }
+    });
+    return Array.from(map.values()).sort();
+  }, [analyses]);
+
+  const resetAllFilters = () => {
+    setSearchQuery("");
+    setStatusFilter('all');
+    setSelectedModule('all');
+    setSelectedBatch('all');
+    setSelectedExpert('all');
+    setSortBy('newest');
+    if (filteredExpertId || filteredBatchId) {
+      React.startTransition(() => router.push("/dashboard"));
+    }
   };
 
   const activeFilterLabel = expertName
@@ -62,13 +112,39 @@ export default function DashboardClient({
     ? `Batch: ${batchName}`
     : null;
 
+  const hasActiveFilters = searchQuery !== "" || 
+    statusFilter !== 'all' || 
+    selectedModule !== 'all' || 
+    selectedBatch !== 'all' || 
+    selectedExpert !== 'all' ||
+    Boolean(filteredExpertId) ||
+    Boolean(filteredBatchId);
+
   const displayAnalyses = useMemo(() => {
-    return analyses.filter((a) => {
+    let result = analyses.filter((a) => {
       // URL-based filters (expert / batch)
       if (filteredExpertId && a.expertId !== filteredExpertId) return false;
       if (filteredBatchId && a.batchId !== filteredBatchId) return false;
 
-      // Text search (Session ID, Module ID, Session Name, Module Name, Expert, Batch)
+      // Module Filter
+      if (selectedModule !== 'all') {
+        const modName = a.sessionNote?.module?.name;
+        if (modName !== selectedModule) return false;
+      }
+
+      // Batch Filter
+      if (selectedBatch !== 'all') {
+        const bName = a.batch?.name;
+        if (bName !== selectedBatch) return false;
+      }
+
+      // Expert Filter
+      if (selectedExpert !== 'all') {
+        const eName = a.expert?.name;
+        if (eName !== selectedExpert) return false;
+      }
+
+      // Text search (Session ID, Module ID, Session Name, Module Name, Session Note, Expert, Batch)
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const inName = a.name?.toLowerCase().includes(q);
@@ -109,7 +185,21 @@ export default function DashboardClient({
       }
       return true;
     });
-  }, [analyses, filteredExpertId, filteredBatchId, searchQuery, statusFilter]);
+
+    // Apply Sorting
+    return [...result].sort((a, b) => {
+      if (sortBy === 'newest') {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortBy === 'oldest') {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      if (sortBy === 'name') {
+        return (a.name || '').localeCompare(b.name || '');
+      }
+      return 0;
+    });
+  }, [analyses, filteredExpertId, filteredBatchId, searchQuery, statusFilter, selectedModule, selectedBatch, selectedExpert, sortBy]);
 
   const [workerRunning, setWorkerRunning] = useState(false);
   const [workerMsg, setWorkerMsg] = useState("");
@@ -141,7 +231,7 @@ export default function DashboardClient({
   }, []);
 
   return (
-    <div className="space-y-16 sm:space-y-24 max-w-5xl mx-auto px-4 lg:px-0 pt-10 sm:pt-16">
+    <div className="space-y-16 sm:space-y-24 max-w-6xl mx-auto px-4 lg:px-0 pt-10 sm:pt-16">
 
       {/* Hero Section */}
       <motion.div
@@ -217,97 +307,196 @@ export default function DashboardClient({
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeInUp}
-        className="ks-card mt-12 sm:mt-20"
+        className="ks-card mt-12 sm:mt-20 overflow-hidden shadow-xl border border-[var(--card-border)] rounded-2xl"
       >
-        {/* Table header with search + filters */}
-        <div className="px-4 sm:px-8 py-5 border-b border-[var(--card-border)] space-y-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 flex-1">
-              <div className="p-2 rounded-xl bg-gray-50 border border-[var(--card-border)]">
-                <Search className="w-4 h-4 text-gray-500" />
+        {/* Table Controls Panel */}
+        <div className="px-5 sm:px-8 py-6 border-b border-[var(--card-border)] bg-gradient-to-b from-slate-50/80 to-white dark:from-slate-900/50 dark:to-slate-900 space-y-5">
+          {/* Top Row: Stream Title & Global Search */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-brand-orange/10 border border-brand-orange/20 text-brand-orange">
+                <Filter className="w-4 h-4" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-[#1A2B47] hidden sm:block">Recent Activity Stream</p>
-                {activeFilterLabel && (
-                  <div className="flex items-center gap-2 mt-0.5">
-                    <div className="px-2 py-0.5 rounded-md bg-[#E8A020]/10 border border-[#E8A020]/20 flex items-center gap-1.5">
-                      <span className="text-[10px] font-bold text-[#E8A020]">{activeFilterLabel}</span>
-                    </div>
-                    <button
-                      onClick={clearFilters}
-                      className="p-0.5 rounded-md hover:bg-gray-100 text-gray-500 transition-colors"
-                      title="Clear Filter"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </div>
-                )}
+              <div>
+                <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Recent Activity Stream</h3>
+                <p className="text-xs text-[var(--muted)] font-medium">Filter sessions by module, batch, expert, or search term</p>
               </div>
             </div>
 
-            {/* Search input */}
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--muted)]" />
+            {/* Universal Search Input */}
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by ID (S101, MM109), Name, Expert..."
-                className="w-full pl-8 pr-3 py-2 text-xs bg-[var(--inner-bg)] border border-[var(--inner-border)] rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange/50 transition-all"
+                placeholder="Search module, session name, expert..."
+                className="w-full pl-9 pr-8 py-2.5 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-orange/40 focus:border-brand-orange transition-all font-medium placeholder:text-slate-400 shadow-sm"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--foreground)]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               )}
-              <span className="text-[10px] text-[var(--muted)] font-medium block mt-1 ml-1 opacity-75">
-                🔍 Search using Session ID, Module ID, or Name
-              </span>
             </div>
           </div>
 
-          {/* Status filter chips */}
-          <div className="flex items-center gap-2 flex-wrap">
-            {STATUS_FILTERS.map((f) => (
-              <button
-                key={f.id}
-                onClick={() => setStatusFilter(f.id)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all ${
-                  statusFilter === f.id
-                    ? 'bg-brand-orange text-white border-brand-orange shadow-sm shadow-brand-orange/20'
-                    : 'bg-white text-[var(--muted)] border-[var(--card-border)] hover:border-brand-orange/40 hover:text-brand-orange'
-                }`}
+          {/* Middle Row: Searchable Filter Dropdowns & Sorting */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 pt-1">
+            {/* Module Filter Dropdown */}
+            <div className="relative">
+              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1 block flex items-center gap-1">
+                <Target className="w-2.5 h-2.5 text-brand-orange" /> Module
+              </label>
+              <select
+                value={selectedModule}
+                onChange={(e) => setSelectedModule(e.target.value)}
+                className="w-full pl-3 pr-8 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition-all appearance-none cursor-pointer shadow-sm"
               >
-                {f.icon}
-                {f.label}
-                {f.id === 'all' && (
-                  <span className="ml-1 opacity-60">({analyses.length})</span>
+                <option value="all">All Modules ({uniqueModules.length})</option>
+                {uniqueModules.map((m) => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-[26px] pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+
+            {/* Batch Filter Dropdown */}
+            <div className="relative">
+              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1 block flex items-center gap-1">
+                <Building2 className="w-2.5 h-2.5 text-brand-orange" /> Batch / Cohort
+              </label>
+              <select
+                value={selectedBatch}
+                onChange={(e) => setSelectedBatch(e.target.value)}
+                className="w-full pl-3 pr-8 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition-all appearance-none cursor-pointer shadow-sm"
+              >
+                <option value="all">All Batches ({uniqueBatches.length})</option>
+                {uniqueBatches.map((b) => (
+                  <option key={b} value={b}>{b}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-[26px] pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+
+            {/* Expert Partner Dropdown */}
+            <div className="relative">
+              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1 block flex items-center gap-1">
+                <User className="w-2.5 h-2.5 text-brand-orange" /> Expert Partner
+              </label>
+              <select
+                value={selectedExpert}
+                onChange={(e) => setSelectedExpert(e.target.value)}
+                className="w-full pl-3 pr-8 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition-all appearance-none cursor-pointer shadow-sm"
+              >
+                <option value="all">All Experts ({uniqueExperts.length})</option>
+                {uniqueExperts.map((ex) => (
+                  <option key={ex} value={ex}>{ex}</option>
+                ))}
+              </select>
+              <div className="absolute right-3 top-[26px] pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+
+            {/* Sort Selector */}
+            <div className="relative">
+              <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-wider mb-1 block flex items-center gap-1">
+                <ArrowUpDown className="w-2.5 h-2.5 text-brand-orange" /> Sort By
+              </label>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="w-full pl-3 pr-8 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-700 dark:text-slate-200 focus:ring-2 focus:ring-brand-orange/30 focus:border-brand-orange transition-all appearance-none cursor-pointer shadow-sm"
+              >
+                <option value="newest">Newest Conducted First</option>
+                <option value="oldest">Oldest First</option>
+                <option value="name">Session Name (A-Z)</option>
+              </select>
+              <div className="absolute right-3 top-[26px] pointer-events-none text-slate-400 text-xs">▼</div>
+            </div>
+          </div>
+
+          {/* Bottom Row: Status Pills & Active Filter Tags */}
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-200/60 dark:border-slate-800">
+            {/* Status Tabs */}
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {STATUS_FILTERS.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => setStatusFilter(f.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-extrabold border transition-all cursor-pointer ${
+                    statusFilter === f.id
+                      ? 'bg-brand-orange text-white border-brand-orange shadow-md shadow-brand-orange/20 scale-[1.02]'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-orange/50 hover:text-brand-orange'
+                  }`}
+                >
+                  {f.icon}
+                  {f.label}
+                  {f.id === 'all' && (
+                    <span className="ml-0.5 opacity-75">({analyses.length})</span>
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Active Filter Chips & Reset All */}
+            {hasActiveFilters && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-[11px] font-bold text-slate-500">
+                  Found <span className="text-brand-orange font-black">{displayAnalyses.length}</span> of {analyses.length}
+                </span>
+
+                {selectedModule !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                    Module: {selectedModule}
+                    <button onClick={() => setSelectedModule('all')} className="hover:text-amber-900"><X className="w-3 h-3" /></button>
+                  </span>
                 )}
-              </button>
-            ))}
-            {(searchQuery || statusFilter !== 'all') && (
-              <span className="text-[11px] text-[var(--muted)] ml-1">
-                {displayAnalyses.length} result{displayAnalyses.length !== 1 ? 's' : ''}
-              </span>
+                {selectedBatch !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 text-[10px] font-bold text-blue-700 dark:text-blue-300">
+                    Batch: {selectedBatch}
+                    <button onClick={() => setSelectedBatch('all')} className="hover:text-blue-900"><X className="w-3 h-3" /></button>
+                  </span>
+                )}
+                {selectedExpert !== 'all' && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-[10px] font-bold text-purple-700 dark:text-purple-300">
+                    Expert: {selectedExpert}
+                    <button onClick={() => setSelectedExpert('all')} className="hover:text-purple-900"><X className="w-3 h-3" /></button>
+                  </span>
+                )}
+                {activeFilterLabel && (
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                    {activeFilterLabel}
+                    <button onClick={() => router.push("/dashboard")} className="hover:text-emerald-900"><X className="w-3 h-3" /></button>
+                  </span>
+                )}
+
+                <button
+                  onClick={resetAllFilters}
+                  className="px-2.5 py-1 text-[11px] font-bold text-slate-500 hover:text-rose-600 flex items-center gap-1 transition-colors underline cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" /> Reset All
+                </button>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Column headers — desktop only */}
-        <div className="hidden lg:grid grid-cols-13 gap-4 px-8 py-4 bg-gray-50/50 text-[11px] font-semibold text-gray-500 tracking-widest border-b border-[var(--card-border)] uppercase">
-          <div className="col-span-4">Session Identity</div>
+        {/* Column Headers — Desktop Grid Aligned (13 columns total) */}
+        <div className="hidden lg:grid grid-cols-13 gap-4 px-8 py-3.5 bg-slate-100/70 dark:bg-slate-800/60 text-[11px] font-extrabold text-slate-500 uppercase tracking-wider border-b border-[var(--card-border)]">
+          <div className="col-span-4">Session & Module</div>
           <div className="col-span-2">Batch / Course</div>
-          <div className="col-span-2">Expert Partner</div>
+          <div className="col-span-3">Expert Partner</div>
           <div className="col-span-2">Growth Status</div>
-          <div className="col-span-2 text-right pr-4">Timeline</div>
-          <div className="col-span-1"></div>
+          <div className="col-span-1">Timeline</div>
+          <div className="col-span-1 text-right pr-2">Actions</div>
         </div>
 
-        <SessionTable initialSessions={displayAnalyses} />
+        <SessionTable initialSessions={displayAnalyses} onClearFilters={resetAllFilters} />
       </motion.div>
     </div>
   );
 }
+
