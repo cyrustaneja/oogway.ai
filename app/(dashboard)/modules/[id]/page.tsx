@@ -2,13 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { BookOpen, Activity, ChevronLeft, Target, Award, Users } from "lucide-react";
+import { BookOpen, Activity, ChevronLeft, Target, Award, Users, ClipboardList } from "lucide-react";
 import Link from "next/link";
 import { SessionTable } from "../../dashboard/SessionTable";
 import { Loader2 } from "lucide-react";
-
 import { MacroPulseCard } from "@/components/analysis/MacroPulseCard";
+import { EvaluationConfigPanel } from "@/components/courses/EvaluationConfigPanel";
 
 const fadeInUp: any = {
   hidden: { opacity: 0, y: 20 },
@@ -19,19 +20,33 @@ const fadeInUp: any = {
   }
 };
 
+type Tab = 'sessions' | 'evaluations';
+
 export default function ModuleDetailPage() {
   const { id } = useParams();
+  const { data: session } = useSession();
+  const role = (session?.user as any)?.role ?? 'TEAM';
+  const isAdmin = role === 'ADMIN';
+
   const [module, setModule] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<Tab>('sessions');
 
   useEffect(() => {
     fetch(`/api/modules/${id}`)
       .then(r => r.json())
       .then(data => {
-        setModule(data);
+        if (data.error || !data.name) {
+          setModule(null);
+        } else {
+          setModule(data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setModule(null);
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return (
@@ -101,43 +116,90 @@ export default function ModuleDetailPage() {
         </div>
       </motion.div>
 
-      {/* 10-Session Macro AI Audit Card */}
-      <MacroPulseCard
-        targetType="module"
-        targetId={id as string}
-        targetName={module.name}
-      />
+      {/* Tab bar */}
+      <div className="flex items-center gap-1 p-1 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] w-fit">
+        <button
+          onClick={() => setActiveTab('sessions')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'sessions'
+              ? 'bg-white text-[var(--foreground)] shadow-sm border border-[var(--border)]'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <Activity className="w-3.5 h-3.5" />
+          Sessions
+        </button>
+        <button
+          onClick={() => setActiveTab('evaluations')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'evaluations'
+              ? 'bg-white text-[var(--foreground)] shadow-sm border border-[var(--border)]'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <ClipboardList className="w-3.5 h-3.5" />
+          Evaluations
+          {(module.evaluationConfigs?.length ?? 0) > 0 && (
+            <span className="w-4 h-4 rounded-full bg-violet-100 text-violet-700 text-[9px] font-black flex items-center justify-center">
+              {module.evaluationConfigs.length}
+            </span>
+          )}
+        </button>
+      </div>
 
-      {/* Cross-Session Analysis */}
-      <motion.div 
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={fadeInUp}
-        className="glass-card shadow-2xl"
-      >
-        <div className="px-8 py-6 border-b border-[var(--card-border)] flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="p-2.5 rounded-xl bg-brand-orange/10 border border-brand-orange/20">
-              <Activity className="w-5 h-5 text-brand-orange" />
+      {/* Tab content */}
+      {activeTab === 'sessions' && (
+        <>
+          {/* 10-Session Macro AI Audit Card */}
+          <MacroPulseCard
+            targetType="module"
+            targetId={id as string}
+            targetName={module.name}
+          />
+
+          {/* Cross-Session Analysis */}
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+            className="glass-card shadow-2xl"
+          >
+            <div className="px-8 py-6 border-b border-[var(--card-border)] flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-2.5 rounded-xl bg-brand-orange/10 border border-brand-orange/20">
+                  <Activity className="w-5 h-5 text-brand-orange" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--foreground)]">Curriculum Intelligence Folder</h2>
+                  <p className="text-[10px] text-[var(--muted)] font-bold tracking-widest mt-0.5">TOPIC-WISE DELIVERY LOGS</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <h2 className="text-lg font-bold text-[var(--foreground)]">Curriculum Intelligence Folder</h2>
-              <p className="text-[10px] text-[var(--muted)] font-bold tracking-widest mt-0.5">TOPIC-WISE DELIVERY LOGS</p>
+
+            <div className="grid grid-cols-12 gap-4 px-8 py-4 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest border-b border-[var(--card-border)]">
+              <div className="col-span-4">Session Identity</div>
+              <div className="col-span-2">Batch / Course</div>
+              <div className="col-span-2">Expert Partner</div>
+              <div className="col-span-2">Growth Status</div>
+              <div className="col-span-2 text-right pr-4">Timeline</div>
             </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-12 gap-4 px-8 py-4 bg-black/[0.02] dark:bg-white/[0.02] text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest border-b border-[var(--card-border)]">
-          <div className="col-span-4">Session Identity</div>
-          <div className="col-span-2">Batch / Course</div>
-          <div className="col-span-2">Expert Partner</div>
-          <div className="col-span-2">Growth Status</div>
-          <div className="col-span-2 text-right pr-4">Timeline</div>
-        </div>
+            <SessionTable initialSessions={module.allAnalyses || []} />
+          </motion.div>
+        </>
+      )}
 
-        <SessionTable initialSessions={module.allAnalyses || []} />
-      </motion.div>
+      {activeTab === 'evaluations' && (
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="glass-card p-8 shadow-2xl"
+        >
+          <EvaluationConfigPanel moduleId={id as string} isAdmin={isAdmin} />
+        </motion.div>
+      )}
     </div>
   );
 }

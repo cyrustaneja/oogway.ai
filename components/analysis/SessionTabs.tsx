@@ -9,7 +9,8 @@ import { StudentGoReview } from '@/components/analysis/StudentGoReview';
 import { SessionTimeline } from '@/components/analysis/tier1/SessionTimeline';
 import { VideoPreviewProvider } from '@/components/analysis/VideoPreviewContext';
 import { AnalysisHeader } from '@/components/analysis/sections';
-import { FileText, Zap, Video, Clock, Target, Copy, Check, Download, X, MessageCircle, Sparkles, GraduationCap } from "lucide-react";
+import { FileText, Zap, Video, Clock, Target, Copy, Check, Download, X, MessageCircle, Sparkles, GraduationCap, ClipboardCheck } from "lucide-react";
+import { EvaluationReview } from '@/components/analysis/EvaluationReview';
 
 const TABS = [
   { id: 'timeline',       label: 'Timeline',     subtitle: 'Milestones', icon: Clock },
@@ -21,7 +22,22 @@ const TABS = [
 type TabId = (typeof TABS)[number]['id'];
 
 export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
-  const [activeTab, setActiveTab] = useState<TabId>('timeline');
+  const isEvaluation = data?.analysisType === 'EVALUATION';
+
+  const TABS = isEvaluation
+    ? [
+        { id: 'evaluation', label: 'Evaluation Audit', subtitle: data?.evaluationConfig?.evaluationType ?? 'Mark Audit', icon: ClipboardCheck },
+      ]
+    : [
+        { id: 'timeline',       label: 'Timeline',     subtitle: 'Milestones', icon: Clock },
+        { id: 'first_analysis', label: 'Oogway Pulse', subtitle: 'Session overview', icon: Zap },
+        { id: 'expert_go',      label: 'Expert Go',    subtitle: 'Deep expert audit', icon: Target },
+        { id: 'student_go',     label: 'Student Go',   subtitle: 'Batch & doubts audit', icon: GraduationCap },
+      ];
+
+  type TabId = string;
+
+  const [activeTab, setActiveTab] = useState<string>(isEvaluation ? 'evaluation' : 'timeline');
   const [seekTime, setSeekTime] = useState<number | null>(null);
   const [showSourceDrawer, setShowSourceDrawer] = useState(false);
   const [copiedTranscript, setCopiedTranscript] = useState(false);
@@ -116,6 +132,10 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
                   styleClass = isActive
                     ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-sky-600 text-white font-black shadow-lg border border-blue-400 scale-[1.02]'
                     : 'bg-blue-100/90 text-blue-950 hover:bg-blue-200 border border-blue-300 font-bold';
+                } else if (tab.id === 'evaluation') {
+                  styleClass = isActive
+                    ? 'bg-gradient-to-r from-violet-600 to-purple-600 text-white font-black shadow-lg border border-violet-400 scale-[1.02]'
+                    : 'bg-violet-100/90 text-violet-950 hover:bg-violet-200 border border-violet-300 font-bold';
                 }
 
                 return (
@@ -178,6 +198,13 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
           <div className={activeTab === 'student_go' ? 'block' : 'hidden'}>
             <StudentGoReview sessionId={sessionId} sessionData={data} onTimestampClick={handleTimestampClick} />
           </div>
+
+          {/* Evaluation Tab */}
+          {isEvaluation && (
+            <div className={activeTab === 'evaluation' ? 'block' : 'hidden'}>
+              <EvaluationReview data={data} sessionId={sessionId} onTimestampClick={handleTimestampClick} />
+            </div>
+          )}
         </div>
 
         {/* ── Source Modal / Drawer (Triggered by View Source button) ── */}
@@ -270,8 +297,8 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
               >
                 <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-4 text-white flex items-center justify-between shadow-sm">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm">
-                      🐢
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-sm p-0.5">
+                      <img src="/oogway.png" alt="Oogway" className="w-full h-full object-contain rounded-full bg-white/90" />
                     </div>
                     <div>
                       <h4 className="text-xs sm:text-sm font-black tracking-wide text-white">Ask Master Oogway</h4>
@@ -297,8 +324,8 @@ export function SessionTabs({ data, sessionId, chapters, sessionInfo }: any) {
             onClick={() => setIsChatOpen(!isChatOpen)}
             className="flex items-center gap-2.5 px-4 py-2.5 sm:px-5 sm:py-3 rounded-full bg-gradient-to-r from-slate-900 via-amber-950 to-slate-900 text-white font-extrabold text-xs shadow-2xl hover:shadow-amber-500/20 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-amber-500/40"
           >
-            <div className="w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black">
-              🐢
+            <div className="w-6 h-6 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black p-0.5">
+              <img src="/oogway.png" alt="Oogway" className="w-full h-full object-contain rounded-full bg-white/90" />
             </div>
             <span>{isChatOpen ? 'Close Oogway' : 'Ask Master Oogway 💬'}</span>
           </button>

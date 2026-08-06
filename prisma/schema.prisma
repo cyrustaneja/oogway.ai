@@ -87,16 +87,17 @@ model Course {
 }
 
 model Module {
-  id             String        @id @default(cuid())
-  name           String
-  order          Int           @default(0)
-  courseId       String
-  sheetModuleId  String?       // Module ID from the Google Sheet (e.g. MM109)
-  deletedAt      DateTime?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  course         Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  sessions       SessionNote[]
+  id                String             @id @default(cuid())
+  name              String
+  order             Int                @default(0)
+  courseId          String
+  sheetModuleId     String?            // Module ID from the Google Sheet (e.g. MM109)
+  deletedAt         DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  course            Course             @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  sessions          SessionNote[]
+  evaluationConfigs EvaluationConfig[]
 
   @@index([deletedAt])
   @@index([courseId])
@@ -173,16 +174,23 @@ model AnalysisSession {
   oogwayGoStatus             String?                 @default("NOT_STARTED")
   studentGoResult            Json?
   studentGoStatus            String?                 @default("NOT_STARTED")
+  // ─── Evaluation fields ────────────────────────────────────────────────────
+  analysisType               String                  @default("LIVE_SESSION")  // "LIVE_SESSION" | "EVALUATION"
+  evaluationTypeId           String?                 // FK → EvaluationConfig
+  evaluationStudentName      String?                 // Name used to look up student in sheet
+  evaluationResult           Json?                   // AI per-student verdict output
   AnalysisChapterResult      AnalysisChapterResult[]
   batch                      Batch?                  @relation(fields: [batchId], references: [id])
   expert                     Expert                  @relation(fields: [expertId], references: [id])
   sessionNote                SessionNote?            @relation(fields: [sessionNoteId], references: [id])
+  evaluationConfig           EvaluationConfig?       @relation(fields: [evaluationTypeId], references: [id])
   v2Analysis                 AnalysisV2?
 
   @@index([deletedAt])
   @@index([expertId])
   @@index([next_action_at])
   @@index([pipeline_stage])
+  @@index([analysisType])
 }
 
 model AnalysisV2 {
@@ -213,6 +221,26 @@ model AnalysisV2 {
   updatedAt             DateTime        @updatedAt
   schema_version        String?         @default("v1")
   session               AnalysisSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+// ─── Evaluation Configuration (per module, per evaluation type) ──────────────
+model EvaluationConfig {
+  id               String            @id @default(cuid())
+  moduleId         String
+  evaluationType   String            // "VIVA" | "INTERVIEW" (extensible)
+  name             String            // Display name e.g. "Programmatic Viva"
+  description      String?
+  sheetUrl         String?           // Google Sheets CSV export URL (persistent, updated in place)
+  scoreScale       Int               @default(4)  // Max score per criterion (e.g. 4 → scores 1-4)
+  rubric           Json              @default("[]") // Array of RubricCriterion objects
+  deletedAt        DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  module           Module            @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  analysisSessions AnalysisSession[]
+
+  @@index([moduleId])
+  @@index([deletedAt])
 }
 
 model Batch {

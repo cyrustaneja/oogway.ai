@@ -28,10 +28,17 @@ export default function CourseDetailPage() {
     fetch(`/api/courses/${id}`)
       .then(r => r.json())
       .then(data => {
-        setCourse(data);
+        if (data.error || !data.name) {
+          setCourse(null);
+        } else {
+          setCourse(data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setCourse(null);
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return (

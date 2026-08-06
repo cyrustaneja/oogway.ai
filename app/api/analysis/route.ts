@@ -48,6 +48,10 @@ export async function GET() {
       zoom_recording_id: true,
       zoom_download_url: true,
       source: true,
+      analysisType: true,
+      evaluationTypeId: true,
+      evaluationStudentName: true,
+      evaluationConfig: { select: { id: true, name: true, evaluationType: true } },
       expert: { select: { id: true, name: true } },
       sessionNote: { select: { id: true, name: true } },
     },
@@ -69,6 +73,10 @@ const createSessionSchema = z.object({
   transcriptText: z.string().optional(),
   tier: z.enum(["TIER1", "TIER3"]).default("TIER1"),
   sessionDate: z.string().optional(),
+  // Evaluation-specific
+  analysisType: z.enum(["LIVE_SESSION", "EVALUATION"]).default("LIVE_SESSION"),
+  evaluationTypeId: z.string().optional(),
+  evaluationStudentName: z.string().optional(),
 });
 
 // POST /api/analysis — create a new AnalysisSession
@@ -92,7 +100,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const { name, expertId, sessionNoteId, schedDuration, batchId, videoUrl, transcriptUrl, transcriptText, tier, sessionDate } = parsed.data;
+    const { name, expertId, sessionNoteId, schedDuration, batchId, videoUrl, transcriptUrl, transcriptText, tier, sessionDate, analysisType, evaluationTypeId, evaluationStudentName } = parsed.data;
+
+    // Validation for evaluation type
+    if (analysisType === "EVALUATION" && !evaluationTypeId) {
+      return NextResponse.json(
+        { error: "evaluationTypeId is required when analysisType is EVALUATION" },
+        { status: 400 }
+      );
+    }
 
     // Validate VTT format if transcriptText is provided
     if (transcriptText && !transcriptText.includes('-->') && !transcriptText.toUpperCase().includes('WEBVTT')) {
@@ -125,7 +141,14 @@ export async function POST(req: Request) {
         transcriptRaw: transcriptText || null,
         v3Status: "PENDING",
         tier,
-        pipeline_stage: tier === "TIER1" ? "PULSE_PENDING" : "UPLOADED",
+        // Evaluation fields
+        analysisType,
+        evaluationTypeId: evaluationTypeId || null,
+        evaluationStudentName: evaluationStudentName || null,
+        // Pipeline stage depends on analysis type
+        pipeline_stage: analysisType === "EVALUATION"
+          ? "EVALUATION_PENDING"
+          : (tier === "TIER1" ? "PULSE_PENDING" : "UPLOADED"),
         next_action_at: new Date(),
       },
     });

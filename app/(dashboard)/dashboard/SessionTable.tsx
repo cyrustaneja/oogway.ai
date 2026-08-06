@@ -195,9 +195,16 @@ export function SessionTable({ initialSessions }: { initialSessions: any[] }) {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between lg:block">
                     <Link href={`/sessions/${a.id}`} className="group block min-w-0">
-                      <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
-                        {a.name}
-                      </p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-bold text-[var(--foreground)] truncate group-hover:text-brand-orange transition-colors">
+                          {a.name}
+                        </p>
+                        {a.analysisType === "EVALUATION" && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-violet-100 text-violet-800 border border-violet-300 uppercase tracking-wide shrink-0">
+                            {a.evaluationConfig?.evaluationType ?? "EVALUATION"}
+                          </span>
+                        )}
+                      </div>
                     </Link>
                     {/* Mobile-only status indicator */}
                     <div className="lg:hidden flex items-center gap-2 shrink-0">

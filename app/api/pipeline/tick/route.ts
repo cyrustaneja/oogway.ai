@@ -23,6 +23,7 @@ import { handleStage2 } from '@/lib/pipeline/handlers/stage2-chapter-extractor'
 import { handleStage3 } from '@/lib/pipeline/handlers/stage3-synthesizer'
 import { handleStage4 } from '@/lib/pipeline/handlers/stage4-flag-generator'
 import { handleTier1Review } from '@/lib/pipeline/handlers/stage1-tier1-reviewer'
+import { handleEvaluation } from '@/lib/pipeline/handlers/evaluation-handler'
 
 // Map pipeline_stage → handler + timeout
 const STAGE_MAP: Record<string, {
@@ -31,12 +32,13 @@ const STAGE_MAP: Record<string, {
   stageKey: string
   lockWindowMs: number
 }> = {
-  PULSE_PENDING:      { handler: handleTier1Review,  timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'tier1',  lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
-  UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                  stageKey: 'stage0', lockWindowMs: LIMITS.tickClaimWindowStage0Ms },
-  PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,   stageKey: 'stage1', lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
-  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs,   stageKey: 'stage2', lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
-  EXTRACTED:          { handler: handleStage3,       timeoutMs: LIMITS.stage3TimeoutMs,   stageKey: 'stage3', lockWindowMs: LIMITS.tickClaimWindowStage3Ms },
-  SYNTHESIZED:        { handler: handleStage4,       timeoutMs: LIMITS.stage4TimeoutMs,   stageKey: 'stage4', lockWindowMs: LIMITS.tickClaimWindowStage4Ms },
+  PULSE_PENDING:      { handler: handleTier1Review,  timeoutMs: LIMITS.stage1TimeoutMs,      stageKey: 'tier1',      lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
+  UPLOADED:           { handler: handlePreprocessor, timeoutMs: 30_000,                     stageKey: 'stage0',     lockWindowMs: LIMITS.tickClaimWindowStage0Ms },
+  PREPROCESSED:       { handler: handleStage1,       timeoutMs: LIMITS.stage1TimeoutMs,      stageKey: 'stage1',     lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
+  CHAPTERS_DETECTED:  { handler: handleStage2,       timeoutMs: LIMITS.stage2TimeoutMs,      stageKey: 'stage2',     lockWindowMs: LIMITS.tickClaimWindowStage2Ms },
+  EXTRACTED:          { handler: handleStage3,       timeoutMs: LIMITS.stage3TimeoutMs,      stageKey: 'stage3',     lockWindowMs: LIMITS.tickClaimWindowStage3Ms },
+  SYNTHESIZED:        { handler: handleStage4,       timeoutMs: LIMITS.stage4TimeoutMs,      stageKey: 'stage4',     lockWindowMs: LIMITS.tickClaimWindowStage4Ms },
+  EVALUATION_PENDING: { handler: handleEvaluation,   timeoutMs: LIMITS.evaluationTimeoutMs,  stageKey: 'evaluation', lockWindowMs: LIMITS.tickClaimWindowStage1Ms },
 }
 
 const TERMINAL_STAGES = new Set(['COMPLETE', 'FAILED'])

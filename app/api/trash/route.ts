@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { NextResponse } from "next/server";
+import { getAuthToken } from "@/lib/auth-token";
 import { prisma } from "@/lib/db";
 import { restore } from "@/lib/db/soft-delete";
 
@@ -8,6 +9,14 @@ import { restore } from "@/lib/db/soft-delete";
  * This includes Experts, Courses, Modules, SessionNotes, AnalysisSessions, and Batches.
  */
 export async function GET() {
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const role = (token as any).role;
+  if (role !== "ADMIN" && role !== "TEAM") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const fetchDeleted = async (model: any, name: string) => {
       const items = await model.findMany({
@@ -39,6 +48,14 @@ export async function GET() {
  * POST: Restores an item from the Recycle Bin.
  */
 export async function POST(req: Request) {
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const role = (token as any).role;
+  if (role !== "ADMIN" && role !== "TEAM") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const { id, type } = await req.json();
     if (!id || !type) return NextResponse.json({ error: "id and type are required" }, { status: 400 });
@@ -63,6 +80,14 @@ export async function POST(req: Request) {
  * DELETE: Permanently removes a record from the database or empties the entire Recycle Bin.
  */
 export async function DELETE(req: Request) {
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const role = (token as any).role;
+  if (role !== "ADMIN" && role !== "TEAM") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const body = await req.json();
 

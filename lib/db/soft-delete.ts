@@ -73,6 +73,15 @@ export async function restore(model: string, id: string) {
       where: { OR: [{ expertId: id }, { id }] },
       data: { deletedAt: null },
     });
+    await prisma.analysisSession.updateMany({
+      where: { expertId: id },
+      data: { deletedAt: null },
+    });
+  } else if (model === "batch") {
+    await prisma.analysisSession.updateMany({
+      where: { batchId: id },
+      data: { deletedAt: null },
+    });
   }
 
   return await modelClient.update({

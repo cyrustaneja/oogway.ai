@@ -19,6 +19,7 @@ export function TopNav() {
     { label: "Users", href: "/experts", adminOnly: true },
     { label: "Batches", href: "/batches" },
     { label: "Course Content", href: "/courses" },
+    { label: "Evaluation Criteria", href: "/evaluations" },
   ];
 
   const navItems = rawNavItems.filter((item) => !(item.adminOnly && isExpertUser));
@@ -38,7 +39,7 @@ export function TopNav() {
         <div className="flex items-center gap-3">
           <Link href="/dashboard" className="flex items-center gap-2 group">
             <div className="flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-              <img src="/oogway.jpg" alt="Oogway Logo" className="w-9 h-9 sm:w-12 sm:h-12 object-contain rounded-full border border-[var(--border)]" />
+              <img src="/oogway.png" alt="Oogway Logo" className="w-9 h-9 sm:w-12 sm:h-12 object-contain rounded-full border border-[var(--border)] shadow-sm p-0.5 bg-amber-50/50" />
             </div>
             <div className="flex flex-col justify-center -ml-0.5">
               <p className="text-ks-navy font-black text-xl sm:text-2xl tracking-tighter leading-none" style={{ fontFamily: "'Montserrat', sans-serif" }}>

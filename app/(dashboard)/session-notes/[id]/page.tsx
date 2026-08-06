@@ -26,10 +26,17 @@ export default function SessionNoteDetailPage() {
     fetch(`/api/session-notes/${id}`)
       .then(r => r.json())
       .then(data => {
-        setNote(data);
+        if (data.error || !data.name) {
+          setNote(null);
+        } else {
+          setNote(data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setNote(null);
+        setLoading(false);
+      });
   }, [id]);
 
   if (loading) return (

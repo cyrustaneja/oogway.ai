@@ -146,8 +146,8 @@ export function AskOogwayChat({ sessionId }: { sessionId: string }) {
               className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.role === 'assistant' && (
-                <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center shrink-0 border border-brand-orange/20 mt-1">
-                  <Bot className="w-4 h-4 text-brand-orange" />
+                <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center shrink-0 border border-brand-orange/20 mt-1 p-0.5 overflow-hidden">
+                  <img src="/oogway.png" alt="Master Oogway" className="w-full h-full object-contain" />
                 </div>
               )}
 

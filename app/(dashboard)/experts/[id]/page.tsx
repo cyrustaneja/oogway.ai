@@ -34,10 +34,17 @@ export default function ExpertDetailPage() {
     fetch(`/api/experts/${id}`)
       .then(r => r.json())
       .then(data => {
-        setExpert(data);
+        if (data.error || !data.name) {
+          setExpert(null);
+        } else {
+          setExpert(data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setExpert(null);
+        setLoading(false);
+      });
   }, [id, isExpertUser]);
 
   const [pulse, setPulse] = useState<any>(null);

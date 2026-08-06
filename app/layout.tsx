@@ -20,6 +20,11 @@ export const metadata: Metadata = {
   title: "Oogway | The Intelligence of KraftShala",
   description: "Oogway — Intelligent session analysis and expert coaching for KraftShala.",
   keywords: ["KraftShala", "session analysis", "expert coaching", "edtech"],
+  icons: {
+    icon: "/oogway.png",
+    shortcut: "/oogway.png",
+    apple: "/oogway.png",
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +33,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jakarta.variable} ${montserrat.variable}`}>
       <head>
+        <link rel="icon" type="image/png" href="/oogway.png" />
+        <link rel="apple-touch-icon" href="/oogway.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

@@ -33,6 +33,7 @@ export const LIMITS = {
   stage2TimeoutMs: 300_000,            // per-chapter call = 5 min max
   stage3TimeoutMs: 300_000,
   stage4TimeoutMs: 60_000,
+  evaluationTimeoutMs: 120_000,        // Evaluation mark-audit = 2 min max
 
   // ─── Output Caps ──────────────────────────────────────────────────────────
   maxAnalogiesPerChapter: 5,

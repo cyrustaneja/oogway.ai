@@ -238,10 +238,10 @@ export function AnalysisInProgress({ sessionId }: Props) {
                   repeat: Infinity,
                   ease: 'easeInOut',
                 }}
-                className="w-40 h-40 rounded-3xl bg-gradient-to-br from-brand-orange/30 via-brand-orange/10 to-transparent border border-brand-orange/30 flex items-center justify-center text-[80px] shadow-2xl shadow-brand-orange/20"
+                className="w-40 h-40 rounded-3xl bg-gradient-to-br from-brand-orange/30 via-brand-orange/10 to-transparent border border-brand-orange/30 flex items-center justify-center p-3 shadow-2xl shadow-brand-orange/20"
                 aria-hidden
               >
-                🐢
+                <img src="/oogway.png" alt="Master Oogway" className="w-full h-full object-contain drop-shadow-md" />
               </motion.div>
               <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-2xl bg-[var(--inner-bg)] border border-[var(--inner-border)] flex items-center justify-center backdrop-blur-md">
                 <Loader2 className="w-5 h-5 text-brand-orange animate-spin" />

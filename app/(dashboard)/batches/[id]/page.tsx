@@ -28,10 +28,17 @@ export default function BatchDetailPage() {
     fetch(`/api/batches/${id}`)
       .then(r => r.json())
       .then(data => {
-        setBatch(data);
+        if (data.error || !data.name) {
+          setBatch(null);
+        } else {
+          setBatch(data);
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setBatch(null);
+        setLoading(false);
+      });
   }, [id]);
 
   const [batchPulse, setBatchPulse] = useState<any>(null);

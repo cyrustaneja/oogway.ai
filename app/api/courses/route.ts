@@ -16,6 +16,9 @@ export async function GET() {
         where: { deletedAt: null },
         orderBy: { order: "asc" },
         include: {
+          evaluationConfigs: {
+            where: { deletedAt: null },
+          },
           sessions: {
             where: { deletedAt: null },
             orderBy: [{ weekOrder: "asc" }, { createdAt: "asc" }],

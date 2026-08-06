@@ -38,6 +38,19 @@ export async function getSessionAnalysis(
         orderBy: { chapter_index: 'asc' },
       },
       pipeline_stage: true,
+      analysisType: true,
+      evaluationTypeId: true,
+      evaluationStudentName: true,
+      evaluationResult: true,
+      evaluationConfig: {
+        select: {
+          id: true,
+          name: true,
+          evaluationType: true,
+          scoreScale: true,
+          rubric: true,
+        },
+      },
     },
   });
 
@@ -64,6 +77,23 @@ export async function getSessionAnalysis(
   };
 
   const rawTranscriptText = (session as any).transcript_clean || (session as any).transcriptRaw || '';
+
+  if (session.analysisType === 'EVALUATION') {
+    if (!session.evaluationResult && session.pipeline_stage !== 'COMPLETE') return null;
+    return {
+      data: {
+        ...((session.tier1Result as any) || {}),
+        analysisType: session.analysisType,
+        evaluationResult: session.evaluationResult,
+        evaluationConfig: session.evaluationConfig,
+        session_info,
+        videoUrl: session.videoUrl,
+        transcriptUrl: session.transcriptUrl,
+        transcriptText: rawTranscriptText,
+      },
+      tier: 'EVALUATION',
+    };
+  }
 
   if (session.tier === 'TIER1') {
     if (!session.tier1Result) return null;

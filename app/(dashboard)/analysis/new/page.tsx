@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Upload, ChevronDown, ArrowLeft, Loader2, CheckCircle, BookOpen, X, Search } from "lucide-react";
+import { Upload, ChevronDown, ArrowLeft, Loader2, CheckCircle, BookOpen, X, Search, Video, ClipboardList } from "lucide-react";
 
 interface Expert { id: string; name: string; email: string }
 interface SessionNote { 
@@ -25,6 +25,16 @@ interface Batch {
   courseId: string | null;
   course?: { name: string }
 }
+interface EvalConfig {
+  id: string;
+  name: string;
+  evaluationType: string;
+  scoreScale: number;
+  rubric: any[];
+  sheetUrl?: string;
+}
+
+type AnalysisMode = 'LIVE_SESSION' | 'EVALUATION';
 
 export default function NewAnalysisPage() {
   const router = useRouter();
@@ -36,6 +46,15 @@ export default function NewAnalysisPage() {
   const [uploading, setUploading]   = useState(false);
   const [sessionId, setSessionId]   = useState<string | null>(null);
   const [error, setError]           = useState("");
+
+  // ── Analysis mode ───────────────────────────────────────────────────────────
+  const [analysisMode, setAnalysisMode] = useState<AnalysisMode>('LIVE_SESSION');
+
+  // ── Evaluation-specific state ────────────────────────────────────────────────
+  const [evalConfigs, setEvalConfigs]           = useState<EvalConfig[]>([]);
+  const [evalConfigsLoading, setEvalConfigsLoading] = useState(false);
+  const [evaluationTypeId, setEvaluationTypeId] = useState("");
+  const [evaluationStudentName, setEvaluationStudentName] = useState("");
 
   const [expertId, setExpertId]     = useState("");
   const [expertSearch, setExpertSearch] = useState("");
@@ -100,6 +119,20 @@ export default function NewAnalysisPage() {
     });
   }, []);
 
+  // Load evaluation configs when module is selected and mode is EVALUATION
+  useEffect(() => {
+    if (analysisMode !== 'EVALUATION' || !selectedModuleId) {
+      setEvalConfigs([]);
+      setEvaluationTypeId("");
+      return;
+    }
+    setEvalConfigsLoading(true);
+    fetch(`/api/modules/${selectedModuleId}/evaluation-configs`)
+      .then((r) => r.json())
+      .then((d) => { setEvalConfigs(Array.isArray(d) ? d : []); setEvaluationTypeId(""); })
+      .finally(() => setEvalConfigsLoading(false));
+  }, [analysisMode, selectedModuleId]);
+
   const uniqueModules = Array.from(
     new Map(
       allSessions
@@ -155,6 +188,11 @@ export default function NewAnalysisPage() {
     if (transcriptMode === 'url' && !transcriptUrl.trim()) { setError("Please provide a VTT Transcript URL."); return; }
     if (transcriptMode === 'file' && !transcriptText.trim()) { setError("Please select a valid .vtt transcript file."); return; }
 
+    // Evaluation-mode specific validation
+    if (analysisMode === 'EVALUATION') {
+      if (!selectedModuleId) { setError("Please select a module to load evaluation types."); return; }
+      if (!evaluationTypeId) { setError("Please select an evaluation type."); return; }
+    }
     setLoading(true);
     try {
       const createRes = await fetch("/api/analysis", {
@@ -168,6 +206,11 @@ export default function NewAnalysisPage() {
           videoUrl: videoUrl.trim(),
           transcriptUrl: transcriptMode === 'url' ? transcriptUrl.trim() : undefined,
           transcriptText: transcriptMode === 'file' ? transcriptText.trim() : undefined,
+          // Mode fields
+          analysisType: analysisMode,
+          ...(analysisMode === 'EVALUATION' ? {
+            evaluationTypeId,
+          } : {}),
         }),
       });
 
@@ -244,6 +287,34 @@ export default function NewAnalysisPage() {
             Bulk Import
           </button>
         </div>
+      </div>
+
+      {/* ── Analysis Mode Toggle ── */}
+      <div className="flex items-center gap-1 p-1 rounded-2xl bg-[var(--layer-2)] border border-[var(--border)] w-full sm:w-auto">
+        <button
+          type="button"
+          onClick={() => { setAnalysisMode('LIVE_SESSION'); setEvaluationTypeId(''); setEvaluationStudentName(''); }}
+          className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+            analysisMode === 'LIVE_SESSION'
+              ? 'bg-white text-[var(--foreground)] shadow-md border border-[var(--border)]'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <Video className="w-3.5 h-3.5" />
+          Live Session
+        </button>
+        <button
+          type="button"
+          onClick={() => setAnalysisMode('EVALUATION')}
+          className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+            analysisMode === 'EVALUATION'
+              ? 'bg-violet-600 text-white shadow-md'
+              : 'text-[var(--muted)] hover:text-[var(--foreground)]'
+          }`}
+        >
+          <ClipboardList className="w-3.5 h-3.5" />
+          Evaluation
+        </button>
       </div>
 
       {error && (
@@ -545,7 +616,54 @@ export default function NewAnalysisPage() {
 
         <div className="w-full h-px bg-[var(--border)] my-6" />
 
-        {/* Asset Inputs */}
+        {/* Evaluation-specific fields — shown only when mode = EVALUATION */}
+        {analysisMode === 'EVALUATION' && (
+          <>
+            <div className="w-full h-px bg-violet-200 my-2" />
+            <div className="p-4 rounded-2xl bg-violet-50 border border-violet-200 space-y-4">
+              <p className="text-[11px] font-bold text-violet-700 uppercase tracking-widest flex items-center gap-1.5">
+                <ClipboardList className="w-3.5 h-3.5" /> Evaluation Settings
+              </p>
+
+              {/* Evaluation Type picker */}
+              <div>
+                <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase mb-2">
+                  Evaluation Type * {!selectedModuleId && <span className="text-violet-500 normal-case font-medium">(select a module first)</span>}
+                </label>
+                {evalConfigsLoading ? (
+                  <div className="flex items-center gap-2 liquid-input text-sm text-[var(--muted)]">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Loading configs...
+                  </div>
+                ) : (
+                  <select
+                    value={evaluationTypeId}
+                    onChange={(e) => setEvaluationTypeId(e.target.value)}
+                    className="w-full liquid-input appearance-none"
+                    disabled={!selectedModuleId || evalConfigs.length === 0}
+                    required={analysisMode === 'EVALUATION'}
+                  >
+                    <option value="">
+                      {!selectedModuleId
+                        ? 'Select a module above first'
+                        : evalConfigs.length === 0
+                        ? 'No evaluation types for this module'
+                        : 'Select evaluation type...'}
+                    </option>
+                    {evalConfigs.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        [{c.evaluationType}] {c.name} — {c.rubric.length} criteria
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </div>
+
+              <div className="p-3 rounded-xl bg-violet-50 dark:bg-violet-950/40 border border-violet-200 dark:border-violet-800 text-violet-800 dark:text-violet-300 text-xs leading-relaxed">
+                💡 <strong>Automated Multi-Student Audit:</strong> The AI will automatically extract all student names evaluated in this transcript and match each student against the linked evaluation Google Sheet for side-by-side score comparison.
+              </div>
+            </div>
+          </>
+        )}
         <div className="space-y-6">
           <div>
             <label className="block text-[11px] font-bold text-[var(--muted-foreground)] tracking-widest uppercase mb-2">Video Link *</label>
