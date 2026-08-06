@@ -500,9 +500,4 @@ export default function DashboardClient({
   );
 }
 
-        <SessionTable initialSessions={displayAnalyses} onClearFilters={resetAllFilters} />
-      </motion.div>
-    </div>
-  );
-}
 
