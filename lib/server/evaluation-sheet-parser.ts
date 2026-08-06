@@ -2,7 +2,8 @@
  * evaluation-sheet-parser.ts
  *
  * Fetches a Google Sheet published as CSV and parses it into structured student rows.
- * Extracts student names, batch names, official questions asked, expert notes, and expert scores.
+ * Uses dynamic header recognition to support sheets with ANY column layout or header structure.
+ * Extracts student names, batch names, emails, official questions asked, expert notes, and expert scores.
  */
 
 export interface SheetQuestionEntry {
@@ -39,9 +40,192 @@ export async function fetchAndParseSheet(sheetUrl: string): Promise<ParsedStuden
 }
 
 /**
- * Robust state-machine CSV parser that properly handles multiline cells.
+ * State-machine CSV parser that handles multiline cells and dynamic headers.
  */
 export function parseCSVText(text: string): ParsedStudentEvaluation[] {
+  const rawRows = parseRawCSVRows(text);
+  if (rawRows.length < 2) return [];
+
+  // Find main header row dynamically
+  let headerRowIdx = 0;
+  for (let r = 0; r < Math.min(4, rawRows.length); r++) {
+    const rStr = rawRows[r].join(' ').toLowerCase();
+    if (
+      (rStr.includes('name') || rStr.includes('student')) &&
+      (rStr.includes('q1') || rStr.includes('question') || rStr.includes('email'))
+    ) {
+      headerRowIdx = r;
+      break;
+    }
+  }
+
+  const h0 = rawRows[headerRowIdx] || [];
+  const h1 = rawRows[headerRowIdx + 1] || [];
+
+  const maxCols = Math.max(...rawRows.map((r) => r.length));
+  const combinedHeaders: string[] = [];
+  for (let c = 0; c < maxCols; c++) {
+    const text0 = h0[c] || '';
+    const text1 =
+      headerRowIdx + 1 < rawRows.length &&
+      (rawRows[headerRowIdx + 1][0]?.toLowerCase().includes('timestamp') ||
+        rawRows[headerRowIdx + 1][1]?.toLowerCase().includes('name'))
+        ? ''
+        : h1[c] || '';
+    combinedHeaders.push(`${text0} ${text1}`.trim());
+  }
+
+  // 1. Identify Name, Email, Batch columns
+  let nameCol = -1;
+  let emailCol = -1;
+  let batchCol = -1;
+  let timestampCol = -1;
+
+  combinedHeaders.forEach((h, idx) => {
+    const l = h.toLowerCase();
+    if (
+      nameCol === -1 &&
+      (l === 'name' ||
+        l === 'student full name' ||
+        l === 'student name' ||
+        l === 'candidate' ||
+        (l.includes('name') && !l.includes('expert')))
+    ) {
+      nameCol = idx;
+    } else if (emailCol === -1 && l.includes('email')) {
+      emailCol = idx;
+    } else if (
+      batchCol === -1 &&
+      (l.includes('batch') || l.includes('cohort') || l === 'column d')
+    ) {
+      batchCol = idx;
+    } else if (timestampCol === -1 && l.includes('timestamp')) {
+      timestampCol = idx;
+    }
+  });
+
+  if (nameCol === -1) nameCol = 0;
+
+  // 2. Identify Question Triplets (Question Text, Notes, Score) dynamically
+  interface Triplet {
+    qIndex: string;
+    qCol: number;
+    notesCol: number;
+    scoreCol: number;
+  }
+
+  const questionTriplets: Triplet[] = [];
+
+  for (let c = 0; c < maxCols; c++) {
+    const h = combinedHeaders[c];
+    const l = h.toLowerCase();
+
+    // Check if column starts a question group
+    const isQHeader = /^q\d+/i.test(h) || l.includes('question') || l.includes('choose the');
+    const isNoteOrScore =
+      l.includes('note') ||
+      l.includes('score') ||
+      l.includes('mark') ||
+      /^n\d+/i.test(h) ||
+      /^s\d+/i.test(h);
+
+    if (isQHeader && !isNoteOrScore) {
+      let notesCol = -1;
+      let scoreCol = -1;
+
+      // Look ahead up to 3 columns for notes and score
+      for (let look = c + 1; look < Math.min(c + 4, maxCols); look++) {
+        const lh = combinedHeaders[look].toLowerCase();
+        if (
+          notesCol === -1 &&
+          (lh.includes('note') || lh.includes('feedback') || /^n\d+/i.test(combinedHeaders[look]))
+        ) {
+          notesCol = look;
+        } else if (
+          scoreCol === -1 &&
+          (lh.includes('score') || lh.includes('mark') || /^s\d+/i.test(combinedHeaders[look]))
+        ) {
+          scoreCol = look;
+        }
+      }
+
+      if (notesCol === -1 && c + 1 < maxCols) notesCol = c + 1;
+      if (scoreCol === -1 && c + 2 < maxCols) scoreCol = c + 2;
+
+      questionTriplets.push({
+        qIndex: `Q${questionTriplets.length + 1}`,
+        qCol: c,
+        notesCol,
+        scoreCol,
+      });
+
+      c = Math.max(c, notesCol, scoreCol);
+    }
+  }
+
+  // 3. Extract Student Rows
+  const dataStartIdx =
+    headerRowIdx + 1 < rawRows.length &&
+    (rawRows[headerRowIdx + 1][0]?.toLowerCase().includes('timestamp') ||
+      rawRows[headerRowIdx + 1][1]?.toLowerCase().includes('name'))
+      ? headerRowIdx + 2
+      : headerRowIdx + 1;
+
+  const students: ParsedStudentEvaluation[] = [];
+  for (let r = dataStartIdx; r < rawRows.length; r++) {
+    const row = rawRows[r];
+    if (!row || row.length === 0) continue;
+
+    const studentName = row[nameCol]?.trim() || '';
+    if (
+      !studentName ||
+      studentName.toLowerCase() === 'name' ||
+      studentName.toLowerCase() === 'student full name'
+    )
+      continue;
+
+    const studentEmail = emailCol >= 0 ? row[emailCol]?.trim() : '';
+    let batchName = batchCol >= 0 ? row[batchCol]?.trim() : '';
+    if (!batchName || batchName.toLowerCase() === 'column d') {
+      const bFound = row.find((v) => /mlp\s?\d+/i.test(v));
+      if (bFound) batchName = bFound;
+    }
+
+    const timestamp = timestampCol >= 0 ? row[timestampCol]?.trim() : '';
+
+    const questions: SheetQuestionEntry[] = [];
+    questionTriplets.forEach((tr, i) => {
+      const qText = row[tr.qCol]?.trim() || '';
+      const qNotes = row[tr.notesCol]?.trim() || '';
+      const qScoreStr = row[tr.scoreCol]?.trim() || '';
+
+      // Filter out total/pass-fail summary cells
+      if (qText.toLowerCase() === 'total' || qText.toLowerCase() === 'final') return;
+
+      if (qText || qNotes || qScoreStr) {
+        const scoreVal = parseInt(qScoreStr.replace(/[^0-9]/g, ''), 10);
+        questions.push({
+          qIndex: `Q${i + 1}`,
+          officialQuestion: qText,
+          expertNotes: qNotes,
+          expertScore: isNaN(scoreVal) ? 0 : scoreVal,
+        });
+      }
+    });
+
+    students.push({
+      studentName,
+      batchName: batchName || 'MLP 46 FT',
+      studentEmail,
+      timestamp,
+      questions,
+    });
+  }
+
+  return students;
+}
+
+function parseRawCSVRows(text: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
   let currentCell = '';
@@ -73,65 +257,11 @@ export function parseCSVText(text: string): ParsedStudentEvaluation[] {
       currentCell += char;
     }
   }
-
   if (currentCell || currentRow.length > 0) {
     currentRow.push(currentCell.trim());
     rows.push(currentRow);
   }
-
-  if (rows.length < 3) return [];
-
-  const students: ParsedStudentEvaluation[] = [];
-
-  // Data rows typically start at index 2 (line 3) after double header rows
-  const startIndex = rows[0]?.[1]?.toLowerCase().includes('name') || rows[1]?.[1]?.toLowerCase().includes('name') ? 2 : 1;
-
-  for (let r = startIndex; r < rows.length; r++) {
-    const rowData = rows[r];
-    if (!rowData || rowData.length < 3) continue;
-
-    const timestamp = rowData[0] || '';
-    const studentName = rowData[1] || '';
-    const batchName = rowData[2] || '';
-    const email = rowData[3] || '';
-
-    // Ignore header lookalikes
-    if (!studentName || studentName.toLowerCase() === 'student full name') continue;
-
-    // Extract Question Groups (Question Choice, Notes, Score) starting from index 4
-    const questions: SheetQuestionEntry[] = [];
-    let qNum = 1;
-
-    for (let c = 4; c < rowData.length; c += 3) {
-      const qText = rowData[c] || '';
-      const qNotes = rowData[c + 1] || '';
-      const qScoreStr = rowData[c + 2] || '';
-
-      // Skip summary / total columns that are not actual question entries
-      if (qText.includes('%') || qText.toLowerCase() === 'pass' || qText.toLowerCase() === 'fail') continue;
-
-      if (qText || qNotes || qScoreStr) {
-        const scoreVal = parseInt(qScoreStr.replace(/[^0-9]/g, ''), 10);
-        questions.push({
-          qIndex: `Q${qNum}`,
-          officialQuestion: qText,
-          expertNotes: qNotes,
-          expertScore: isNaN(scoreVal) ? 0 : scoreVal,
-        });
-        qNum++;
-      }
-    }
-
-    students.push({
-      studentName,
-      batchName,
-      studentEmail: email,
-      timestamp,
-      questions,
-    });
-  }
-
-  return students;
+  return rows;
 }
 
 /**
