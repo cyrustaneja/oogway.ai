@@ -70,6 +70,8 @@ export async function GET(
         createdAt: true,
         updatedAt: true,
         tier1Result: true,
+        analysisType: true,
+        evaluationResult: true,
         v2Analysis: { select: { sessionId: true, status: true } },
         AnalysisChapterResult: { select: { chapter_index: true } },
         expert: { select: { name: true } },
@@ -83,14 +85,21 @@ export async function GET(
       : 0
     const chaptersDone = s.AnalysisChapterResult.length
     const stage = s.pipeline_stage ?? 'UPLOADED'
-    const isComplete = (stage === 'COMPLETE' && !!s.v2Analysis) || (stage === 'WAITING_FOR_DEEP_ANALYSIS')
-    const isFailed = stage === 'FAILED'
+    
+    // Check readiness across ALL session types (Evaluation, Tier1, Full Analysis)
+    const isEvaluationReady = s.analysisType === 'EVALUATION' && (stage === 'COMPLETE' || s.v3Status === 'COMPLETE') && !!s.evaluationResult;
+    const isTier1Ready = (stage === 'WAITING_FOR_DEEP_ANALYSIS' || stage === 'COMPLETE') && !!s.tier1Result;
+    const isFullReady = (stage === 'COMPLETE' || s.v3Status === 'COMPLETE') && !!s.v2Analysis;
+
+    const isComplete = isEvaluationReady || isTier1Ready || isFullReady || stage === 'COMPLETE';
+    const isReady = isEvaluationReady || isTier1Ready || isFullReady || (stage === 'COMPLETE' && (!!s.tier1Result || !!s.v2Analysis || !!s.evaluationResult));
+    const isFailed = stage === 'FAILED';
 
     // Smooth, realistic progress percentage calculation
     let progress = 0;
     if (isFailed) {
       progress = 0;
-    } else if (isComplete) {
+    } else if (isComplete || isReady) {
       progress = 100;
     } else if (stage === 'PULSE_PENDING' || stage === 'UPLOADED' || s.v3Status === 'PENDING') {
       // Trigger tick non-blocking if session hasn't been claimed yet
@@ -120,7 +129,7 @@ export async function GET(
       progress,
       isComplete,
       isFailed,
-      isReady: (stage === 'COMPLETE' && !!s.v2Analysis) || (stage === 'WAITING_FOR_DEEP_ANALYSIS' && !!(s as any).tier1Result),
+      isReady,
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
       stageOrder: STAGE_ORDER,

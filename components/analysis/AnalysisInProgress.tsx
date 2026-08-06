@@ -139,12 +139,15 @@ export function AnalysisInProgress({ sessionId }: Props) {
         if (data.createdAt && !startedAt.current) {
           startedAt.current = new Date(data.createdAt);
         }
-        if (data.isReady && Date.now() - lastReadyAt.current > 1000) {
+        if ((data.isReady || data.isComplete) && Date.now() - lastReadyAt.current > 1000) {
           lastReadyAt.current = Date.now();
-          // Refresh the server-rendered shell so getSessionAnalysis runs again
           React.startTransition(() => {
             router.refresh();
           });
+          // Fallback: force full page reload if router refresh doesn't unmount this component within 3 seconds
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         }
       } catch (e: any) {
         setPollError(e?.message ?? 'Network error');
