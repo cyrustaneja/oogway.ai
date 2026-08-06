@@ -3,7 +3,7 @@
  *
  * Fetches a Google Sheet published as CSV and parses it into structured student rows.
  * Uses dynamic header recognition to support sheets with ANY column layout or header structure.
- * Extracts student names, batch names, emails, official questions asked, expert notes, and expert scores.
+ * Automatically normalizes any Google Sheet view URL into a direct CSV export link.
  */
 
 export interface SheetQuestionEntry {
@@ -24,15 +24,33 @@ export interface ParsedStudentEvaluation {
 export type SheetRow = Record<string, string>;
 
 /**
+ * Convert any Google Sheet URL (e.g. /edit?usp=sharing or /edit?gid=0) into a direct CSV export link.
+ */
+export function normalizeGoogleSheetCsvUrl(url: string): string {
+  if (!url) return url;
+  if (url.includes('/export?') && url.includes('format=csv')) return url;
+
+  const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  if (match && match[1]) {
+    const spreadsheetId = match[1];
+    const gidMatch = url.match(/gid=([0-9]+)/);
+    const gidParam = gidMatch ? `&gid=${gidMatch[1]}` : '';
+    return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=csv${gidParam}`;
+  }
+  return url;
+}
+
+/**
  * Fetch and parse a Google Sheets CSV export into structured student evaluation objects.
  */
 export async function fetchAndParseSheet(sheetUrl: string): Promise<ParsedStudentEvaluation[]> {
-  const res = await fetch(sheetUrl, {
+  const csvUrl = normalizeGoogleSheetCsvUrl(sheetUrl);
+  const res = await fetch(csvUrl, {
     headers: { 'User-Agent': 'Oogway-Evaluation-Pipeline/1.0' },
   });
 
   if (!res.ok) {
-    throw new Error(`[SheetParser] Failed to fetch sheet: HTTP ${res.status} from ${sheetUrl}`);
+    throw new Error(`[SheetParser] Failed to fetch sheet: HTTP ${res.status} from ${csvUrl}`);
   }
 
   const text = await res.text();
